@@ -7,7 +7,6 @@ Program::Program(QObject *parent)
     : QObject(parent)
     , m_rarmAdress(QStringLiteral("127.0.0.1"))
     , m_rarmPort(4242)
-    , m_settingsFileName(QStringLiteral("settings.ini"))
 {
     CreateObjects();
     ConnectObjects();
@@ -23,8 +22,8 @@ Program::~Program()
 void Program::CreateObjects()
 {
     m_rarmSocket=new RarmSocket(m_rarmAdress, m_rarmPort, this);
-    m_meteoMediator=new MeteoMediator(m_settingsFileName, this);
-    m_ustirovMediator=new UstirovMediator(m_settingsFileName, this);
+    m_meteoMediator=new MeteoMediator("meteoSettings.ini", this);
+    m_ustirovMediator=new UstirovMediator("ustirovSettings", this);
     qDebug()<<" UKS - ustirov kit socket";
 }
 

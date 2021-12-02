@@ -6,21 +6,26 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
 macro(use_cxx11)
-  if (CMAKE_VERSION VERSION_LESS "3.1")
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-      set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+    if (CMAKE_VERSION VERSION_LESS "3.1")
+        if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+            set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+        endif ()
+    else ()
+        set (CMAKE_CXX_STANDARD 11)
     endif ()
-  else ()
-    set (CMAKE_CXX_STANDARD 11)
-  endif ()
 endmacro(use_cxx11)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set (CMAKE_PREFIX_PATH "\\usr\\lib\\x86_64-linux-gnu\\cmake")
+IF (WIN32)
+# set stuff for windows
+ELSE()
+    set (CMAKE_PREFIX_PATH "\\usr\\lib\\x86_64-linux-gnu\\cmake")
+ENDIF()
+
 
 find_package(Qt5 COMPONENTS Core Network REQUIRED)
 
-project(devices LANGUAGES CXX VERSION 0.0.1)
+project(devices LANGUAGES CXX VERSION 0.0.2)
 message(STATUS "DEVICES: PCB 687263.035 and meteo\nVersions:\n program : ${CMAKE_PROJECT_VERSION};\n cmake : ${CMAKE_VERSION};\n qt-core : ${Qt5Core_VERSION}; ")
 
 set(
@@ -51,7 +56,7 @@ set(
     program.h
     program.cpp
     main.cpp
-)
+    )
 
 add_executable(devices ${SOURCE_LIST})
 

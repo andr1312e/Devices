@@ -21,7 +21,6 @@ private:
 private:
     const QString m_rarmAdress;
     const quint16 m_rarmPort;
-    const QString m_settingsFileName;
     RarmSocket *m_rarmSocket;
 
     MeteoMediator *m_meteoMediator;

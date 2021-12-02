@@ -70,7 +70,7 @@ enum MESSAGES_ID	{
     VOI_POI_DRIVE_UM_COMMAND_MESSAGE		= 107,					// Сообщение с командой угломестным приводам
     VOI_POI_DRIVE_AZ_COMMAND_MESSAGE        = 108,					// Сообщение с командой азимутальному приводу
     VOI_RMO_PRIORITY_SECTOR_MESSAGE         = 109,                  // Сообщение с подтверждеием/отменой высокого приоритета у сектора
-    VOI_RMO_STATE_METEO_MESSAGE             = 110,                  // Сообщение о состоянии метеостанции
+
 
     RDDS_OUT_UNIT_POINT_OBJ                 = 140,                  // Сообщение UnitPointObj в RDDS
     RDDS_OUT_UNIT_POINT_OBJ_FOR_DIST        = 141,                  // Сообщение UnitPointObjForDist в RDDS
@@ -84,8 +84,10 @@ enum MESSAGES_ID	{
     PC_SYNC_MESSAGE                         = 150,                  // Сообщение синхронизации
 
     // MOXA id 160 - 169
-    DEVICES_ADJUSTING_KIT_SET_STATE         = 160,                  // Отправка данных в модуль обмена с периферийными устройствами(юстировочный комплект)
-    DEVICES_ADJUSTING_KIT_GET_STATE         = 161,                  // Получение данных из модуль обмена с периферийными устройствами(юстировочный комплект)
+    DEVICES_ADJUSTING_KIT_SET_STATE         = 160,                  // Сообщение c данными в модуль обмена с периферийными устройствами(юстировочный комплект)
+    DEVICES_ADJUSTING_KIT_GET_STATE         = 161,                  // Сообщение с информацией из модуля обмена с периферийными устройствами(юстировочный комплект)
+    DEVICES_METEO_KIT_GET_MESSAGE           = 162,                  // Сообщение с информацией из модуля обмена с периферийными устройствами(метеостанция)
+    DEVICES_MOXA_STATE_MESSAGE              = 163,                  // Сообщение о состоянии преобразователя последовательных интерфейсов, 4xRS-232/422/485(Moxa)
 
     //id message Registration 240 - 249
 
