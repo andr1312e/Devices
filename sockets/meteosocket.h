@@ -31,6 +31,7 @@ private Q_SLOTS:
     void OnNewSocketConnected();
     void OnDisconnectedFromHost();
     void OnErrorOccurred(QAbstractSocket::SocketError socketError);
+    void OnStateChanged(QAbstractSocket::SocketState state);
 public:
     void SendMessage(const QByteArray &message);
     bool IsMeteoConnected();

@@ -50,7 +50,7 @@ void UstrirovMessageRepository::SetBadState()
     m_repository.WorkMode=255;
 }
 
-const DevicesAdjustingKitMessage &UstrirovMessageRepository::GetMessage() const
+DevicesAdjustingKitMessage &UstrirovMessageRepository::GetMessage()
 {
     return m_repository;
 }

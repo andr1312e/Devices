@@ -94,7 +94,6 @@ void MeteoMediator::OnMakeNewRequest()
 
     if (m_meteoServer->IsMeteoConnected())
     {
-        qDebug()<< QStringLiteral("MM::OnMakeNewRequest make request");
         OnClearQueue();
         m_messagesToSendQueue->push(CreateMessage(60, 1));
         m_messagesToSendQueue->push(CreateMessage(60, 2));
@@ -103,7 +102,6 @@ void MeteoMediator::OnMakeNewRequest()
     }
     else
     {
-        qDebug()<< "MM::OnMakeNewRequest send NoConnectionMessage";
         Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->NoConnectionMessage());
     }
 }
@@ -114,14 +112,12 @@ void MeteoMediator::OnMakeNewRequest()
 
 void MeteoMediator::OnGetStateFromMessage(const QByteArray &message)
 {
-    qDebug()<< "MM::OnGetStateFromMessage";
     m_meteoMessageGetter->ParseMessage(message);
     SendingNextMessageInQueue();
 }
 
 void MeteoMediator::OnNoAnswerGet()
 {
-    qDebug()<< "MM::OnNoAnswerGet";
     OnClearQueue();
     Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->MessageTimeOut());
 }
@@ -129,7 +125,6 @@ void MeteoMediator::OnNoAnswerGet()
 
 void MeteoMediator::OnClearQueue()
 {
-    qDebug()<< "MM::OnClearQueue";
     while(!m_messagesToSendQueue->empty())
     {
         m_messagesToSendQueue->pop();
@@ -138,11 +133,9 @@ void MeteoMediator::OnClearQueue()
 
 void MeteoMediator::SendingNextMessageInQueue()
 {
-    qDebug()<< "MM::SendingNextMessageInQueue";
     if(m_messagesToSendQueue->empty())
     {
         Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->GetMessage());
-        qDebug()<< "MM - All messages send";
     }
     else
     {
@@ -153,7 +146,6 @@ void MeteoMediator::SendingNextMessageInQueue()
 
 void MeteoMediator::OnAllDataCollected()
 {
-    qDebug()<< "MM::OnAllDataCollected ";
     Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->GetMessage());
 }
 

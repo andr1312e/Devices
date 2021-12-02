@@ -23,14 +23,14 @@ Program::~Program()
 void Program::CreateObjects()
 {
     m_rarmSocket=new RarmSocket(m_rarmAdress, m_rarmPort, this);
-//    m_meteoMediator=new MeteoMediator(m_settingsFileName, this);
+    m_meteoMediator=new MeteoMediator(m_settingsFileName, this);
     m_ustirovMediator=new UstirovMediator(m_settingsFileName, this);
     qDebug()<<" UKS - ustirov kit socket";
 }
 
 void Program::ConnectObjects()
 {
-//    connect(m_meteoMediator, &MeteoMediator::ToSendRarmMeteoState, m_rarmSocket, &RarmSocket::OnSendRarmMeteoState);
+    connect(m_meteoMediator, &MeteoMediator::ToSendRarmMeteoState, m_rarmSocket, &RarmSocket::OnSendRarmMeteoState);
     connect(m_ustirovMediator, &UstirovMediator::ToSendRarmUstirovState, m_rarmSocket, &RarmSocket::OnSendRarmUPCBState);
     connect(m_rarmSocket, &RarmSocket::ToSetUstirovState, m_ustirovMediator, &UstirovMediator::OnSetUstirovState);
     connect(m_rarmSocket, &RarmSocket::ToGetUstirovState, m_ustirovMediator, &UstirovMediator::OnGetUstirovState);

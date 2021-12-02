@@ -52,19 +52,19 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
     }
 }
 
-const VOIStateMeteoMessage &MeteoMessageGetter::MessageTimeOut()
+ VOIStateMeteoMessage &MeteoMessageGetter::MessageTimeOut()
 {
     m_repository->SetTimeoutState();
     return m_repository->GetMessage();
 }
 
-const VOIStateMeteoMessage &MeteoMessageGetter::NoConnectionMessage()
+VOIStateMeteoMessage &MeteoMessageGetter::NoConnectionMessage()
 {
     m_repository->SetNoConnectionState();
     return m_repository->GetMessage();
 }
 
-const VOIStateMeteoMessage &MeteoMessageGetter::GetMessage() const
+ VOIStateMeteoMessage &MeteoMessageGetter::GetMessage() const
 {
     return m_repository->GetMessage();
 }

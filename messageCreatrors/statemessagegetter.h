@@ -21,7 +21,7 @@ public:
     ~StateMessageGetter();
     bool FillDataIntoStructFromMessage(const QByteArray &message);
     void SetBadState();
-    const DevicesAdjustingKitMessage &GetMessage() const;
+    DevicesAdjustingKitMessage &GetMessage();
 Q_SIGNALS:
     void ToAllDataCollected();
 private:

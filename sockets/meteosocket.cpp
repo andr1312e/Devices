@@ -22,7 +22,7 @@ MeteoServer::~MeteoServer()
 void MeteoServer::CreateObjects()
 {
     m_serverMeteo = new QTcpServer(this);
-    m_socketMeteo = new QTcpSocket(this);
+//    m_socketMeteo = new QTcpSocket();
     m_noAnswerTimer = new QTimer(this);
 }
 
@@ -38,16 +38,15 @@ void MeteoServer::ConnectObjects()
 {
     connect(m_serverMeteo, &QTcpServer::newConnection, this, &MeteoServer::OnNewSocketConnected);
     connect(m_noAnswerTimer, &QTimer::timeout, this, &MeteoServer::ToNoAnswerGet);
+    connect(m_serverMeteo, &QTcpServer::acceptError, this, &MeteoServer::OnErrorOccurred);
 }
 
 void MeteoServer::OnNewSocketConnected()
 {
     QTcpSocket *socket = m_serverMeteo->nextPendingConnection();
-    qDebug() << "MS: новый сокет подключен, адрес: " << socket->peerAddress() << " порт: " << socket->peerPort();
 
     if(socket->peerPort() == m_meteoKitPort)
     {
-        qDebug() << "MS: Подключен!";
         m_socketMeteo = socket;
         ConnectMeteoSocketObject();
     }
@@ -60,7 +59,6 @@ void MeteoServer::OnNewSocketConnected()
 void MeteoServer::OnReadyRead()
 {
     StopNoAnswerTimer();
-    qDebug() << "MS: Получено сообщение";
     m_readyReadBuffer.append(m_socketMeteo->readAll());
     if(m_readyReadBuffer.length() >= m_returnedMessageSize) // длина ответа 11 байт
     {
@@ -74,11 +72,13 @@ void MeteoServer::OnReadyRead()
 void MeteoServer::OnDisconnectedFromHost()
 {
     m_socketMeteo->disconnectFromHost();
-    qDebug()<< "MS: Отключен...";
+    qDebug()<< "MS: Отключен...!!!!!!!!!!!";
 }
 
 void MeteoServer::OnErrorOccurred(QAbstractSocket::SocketError socketError)
 {
+    qDebug()<< "MS::OnErrorOccurred!!!!!";
+    m_socketMeteo->disconnectFromHost();
     switch (socketError) {
     case QAbstractSocket::ConnectionRefusedError:
         qDebug()<< QStringLiteral("Истекло время ожидания");
@@ -155,6 +155,29 @@ void MeteoServer::OnErrorOccurred(QAbstractSocket::SocketError socketError)
     }
 }
 
+void MeteoServer::OnStateChanged(QAbstractSocket::SocketState state)
+{
+    qDebug()<< "MS::OnStateChanged!!!!!";
+    switch (state) {
+    case QAbstractSocket::UnconnectedState:
+        break;
+    case QAbstractSocket::HostLookupState:
+        break;
+    case QAbstractSocket::ConnectingState:
+        break;
+    case QAbstractSocket::ConnectedState:
+        break;
+    case QAbstractSocket::BoundState:
+        break;
+    case QAbstractSocket::ListeningState:
+        break;
+    case QAbstractSocket::ClosingState:
+        break;
+    default:
+        break;
+    }
+}
+
 void MeteoServer::SendMessage(const QByteArray &array)
 {
     if (m_socketMeteo->state()==QAbstractSocket::ConnectedState)
@@ -171,27 +194,21 @@ void MeteoServer::SendMessage(const QByteArray &array)
 
 bool MeteoServer::IsMeteoConnected()
 {
-    qDebug()<< QString::fromUtf8("MS::Метео");
     return m_socketMeteo->state()==QAbstractSocket::ConnectedState;
 }
 
 void MeteoServer::ConnectMeteoSocketObject()
 {
-    qDebug()<< "MS::ConnecMeteoSocketObject";
     connect(m_noAnswerTimer, &QTimer::timeout, this, &MeteoServer::ToNoAnswerGet);
     connect(m_socketMeteo, &QTcpSocket::connected, this, &MeteoServer::OnNewSocketConnected);
     connect(m_socketMeteo, &QTcpSocket::readyRead, this, &MeteoServer::OnReadyRead);
     connect(m_socketMeteo, &QTcpSocket::disconnected, this, &MeteoServer::OnDisconnectedFromHost);
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    connect(m_socketMeteo, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), this, &MeteoServer::OnErrorOccurred);
-#else
-    connect(m_socketMeteo, &QTcpSocket::errorOccurred, this, &MeteoServer::OnErrorOccurred);
-#endif
+    connect(m_socketMeteo, &QTcpSocket::stateChanged, this, &MeteoServer::OnStateChanged);
+    connect(m_socketMeteo, &QTcpSocket::aboutToClose, [&](){qDebug()<< "&QTcpSocket::aboutToClose";});
 }
 
 void MeteoServer::StopNoAnswerTimer()
 {
-    qDebug()<< "MS::StopNoAnswerTimer";
     if (m_noAnswerTimer->isActive())
     {
         m_noAnswerTimer->stop();

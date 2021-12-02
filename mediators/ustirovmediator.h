@@ -22,7 +22,7 @@ private:
     void CreateObjects();
     void ConnectObjects();
 Q_SIGNALS:
-    void ToSendRarmUstirovState(const DevicesAdjustingKitMessage &upcbState);
+    void ToSendRarmUstirovState(DevicesAdjustingKitMessage &upcbState);
 public Q_SLOTS:
     void OnSetUstirovState(const DevicesAdjustingKitMessage &state);
     void OnGetUstirovState();

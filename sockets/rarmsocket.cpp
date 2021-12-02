@@ -102,8 +102,8 @@ void RarmSocket::OnReadyRead()
             {
                 DevicesAdjustingKitMessage setStateMessage;
                 in.readRawData((char *) &setStateMessage, messageSize - 1);
-                Q_EMIT ToSetUstirovState(setStateMessage);
                 qDebug() << "получили DEVICES_ADJUSTING_KIT_SET_STATE";
+                Q_EMIT ToSetUstirovState(setStateMessage);
             }
             else
             {
@@ -180,40 +180,32 @@ void RarmSocket::OnCheckConnection()
     }
 }
 
-void RarmSocket::OnSendRarmMeteoState(const VOIStateMeteoMessage &meteoState)
+void RarmSocket::OnSendRarmMeteoState(VOIStateMeteoMessage &meteoState)
 {
-    qDebug()<< "RarmSocket::OnSendRarmMeteoState";
     QByteArray meteoMessage;
 
     QDateTime currentDateTime(QDateTime::currentDateTime());
-    timeval64 currentTimeVal;
-    currentTimeVal.usecs=currentDateTime.toMSecsSinceEpoch();
-    currentTimeVal.secs=currentDateTime.toSecsSinceEpoch();
+    meteoState.sTimeMeasurement.usecs=currentDateTime.toMSecsSinceEpoch();
+    meteoState.sTimeMeasurement.secs=currentDateTime.toSecsSinceEpoch();
 
     QDataStream out(&meteoMessage, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_3);
     out.setByteOrder(QDataStream::LittleEndian);
     out.setFloatingPointPrecision(QDataStream::SinglePrecision);
 
-    out << qint16(sizeof (VOIStateMeteoMessage));
+    out << qint16(sizeof (VOIStateMeteoMessage) + 1);
     out << quint8(VOI_RMO_STATE_METEO_MESSAGE);//id сообщения которое я отправляю
-    out << currentTimeVal.usecs;
-    out << currentTimeVal.secs;
-    out << meteoState.state;
-    out << meteoState.pressure;
-    out << meteoState.temperature;
-    out << meteoState.wet;
+    out.writeRawData(reinterpret_cast<const char *>(&meteoState), sizeof(VOIStateMeteoMessage));
     SendRarmMessage(meteoMessage);
 }
 
-void RarmSocket::OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState)
+void RarmSocket::OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState)
 {
     QByteArray ustirovMessage;
 
     QDateTime currentDateTime(QDateTime::currentDateTime());
-    timeval64 currentTimeVal;
-    currentTimeVal.usecs=currentDateTime.toMSecsSinceEpoch();
-    currentTimeVal.secs=currentDateTime.toSecsSinceEpoch();
+    upcbState.sTimeMeasurement.usecs=currentDateTime.toMSecsSinceEpoch();
+    upcbState.sTimeMeasurement.secs=currentDateTime.toSecsSinceEpoch();
 
     QDataStream out(&ustirovMessage, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_3);
@@ -238,7 +230,6 @@ void RarmSocket::OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState
 
 void RarmSocket::SendRarmMessage(const QByteArray &message)
 {
-    qDebug()<< "SendRarmMessage" << QString::number(m_pTcpSocketToRarm->state()==QAbstractSocket::ConnectedState);
     m_pTcpSocketToRarm->write(message);
     m_pTcpSocketToRarm->flush();
 }

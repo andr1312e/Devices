@@ -53,17 +53,19 @@ void UstirovSocket::ConnectObjects()
 void UstirovSocket::OnReadyRead()
 {
     m_readyReadBuffer.append(m_socket->readAll());
+    qDebug()<< "getOnReady read " << m_readyReadBuffer.toHex();
     if (m_messagesIdToGetState==m_readyReadBuffer.front())
     {
         if (m_readyReadBuffer.count()>2)
         {
-            char messageId=m_readyReadBuffer.at(2);
+            quint8 messageId=m_readyReadBuffer.at(1);
             if (messageId>0 && messageId<m_messageSize->count())
             {
                 if (m_readyReadBuffer.count()==m_messageSize->at(messageId))
                 {
-                    qDebug()<< "UKS - Get message with state: " << m_readyReadBuffer.toHex();
+//                    qDebug()<< "UKS - Get message with state: " << m_readyReadBuffer.toHex();
                     Q_EMIT ToStateGettingFromMessage(m_readyReadBuffer);
+                    m_readyReadBuffer.clear();
                 }
                 else
                 {
@@ -190,7 +192,7 @@ void UstirovSocket::OnErrorOccurred(QAbstractSocket::SocketError socketError)
 
 void UstirovSocket::OnCheckConnectionTimerTimeOut()
 {
-    qDebug()<< "UKS - Time to check connection ip: " << m_moxaIpAdress << " port: " << m_moxaPort;
+//    qDebug()<< "UKS - Time to check connection ip: " << m_moxaIpAdress << " port: " << m_moxaPort;
     if (!IsUstirovConnected())
     {
         m_socket->connectToHost(m_moxaIpAdress, m_moxaPort, QIODevice::ReadWrite);
@@ -204,9 +206,10 @@ void UstirovSocket::SendMessage(const QByteArray &message)
     m_lastMessage=message;
     if (IsUstirovConnected())
     {
+        qDebug()<< "UKS - send message successfully " << message.toHex();
         m_socket->write(message);
         m_socket->flush();
-        qDebug()<< "UKS - send message successfully " << message.toHex();
+
     }
     else
     {

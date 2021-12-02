@@ -21,7 +21,7 @@ private:
     void InitObjects();
     void ConnectObjects();
 Q_SIGNALS:
-    void ToSendRarmMeteoState(const VOIStateMeteoMessage &meteoState);
+    void ToSendRarmMeteoState(VOIStateMeteoMessage &meteoState);
 private Q_SLOTS:
     void OnMakeNewRequest();
     void OnGetStateFromMessage(const QByteArray &message);

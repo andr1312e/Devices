@@ -18,7 +18,7 @@ public:
     void SetWrongData();
     void SetGoodState();
     void SetTimeoutState();
-    const VOIStateMeteoMessage &GetMessage() const;
+    VOIStateMeteoMessage &GetMessage();
     void ResetRepository();
 private:
     VOIStateMeteoMessage m_repository;

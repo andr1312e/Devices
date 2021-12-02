@@ -32,8 +32,8 @@ private Q_SLOTS:
    void OnCheckConnection();
 
 public Q_SLOTS:
-   void OnSendRarmMeteoState(const VOIStateMeteoMessage &meteoState);
-   void OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState);
+   void OnSendRarmMeteoState(VOIStateMeteoMessage &meteoState);
+   void OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState);
 
 private:
    const QString m_rarmAdress;

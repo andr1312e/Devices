@@ -16,8 +16,8 @@ StateMessageGetter::~StateMessageGetter()
 
 bool StateMessageGetter::FillDataIntoStructFromMessage(const QByteArray &message)
 {
-    //    qDebug()<< "GET"<<message.toHex();
     quint8 sendedMessageId=message.at(m_indexInByteArrayOfGettingMessageId);
+     qDebug()<< "GET id "<<sendedMessageId << " GET "<<message.toHex();;
     switch (sendedMessageId) {
     case 1:
         return GetFvcoFromFirstMessage(message);
@@ -42,7 +42,7 @@ void StateMessageGetter::SetBadState()
     m_repository->SetBadState();
 }
 
-const DevicesAdjustingKitMessage &StateMessageGetter::GetMessage() const
+DevicesAdjustingKitMessage &StateMessageGetter::GetMessage()
 {
     return m_repository->GetMessage();
 }
@@ -83,7 +83,6 @@ bool StateMessageGetter::GetDoplerFromSecondMessage(const QByteArray &message)
     {
         if(message.count()==8)
         {
-            qDebug()<< QStringLiteral("ЮСМГ - Приняли ") << message.toHex();
             QByteArray arrayINTTX;
             arrayINTTX.append(message.at(2));
             arrayINTTX.append(message.at(3));

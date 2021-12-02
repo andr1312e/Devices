@@ -65,6 +65,7 @@ void UstirovMediator::OnSendingNext()
     }
     else
     {
+        qDebug()<< "message to send " << m_messagesToSendQueue->front().toHex();
         m_ustirovSocket->SendMessage(m_messagesToSendQueue->front());
         m_messagesToSendQueue->pop();
     }
@@ -109,7 +110,6 @@ void UstirovMediator::OnSetUstirovState(const DevicesAdjustingKitMessage &state)
         SetStateCommandsCreate(state);
         OnSendingNext();
     }
-    Q_EMIT ToSendRarmUstirovState(m_stateMessageGetter->GetMessage());
 }
 
 void UstirovMediator::OnGetUstirovState()
@@ -135,12 +135,24 @@ void UstirovMediator::SetStateCommandsCreate(const DevicesAdjustingKitMessage &s
     m_messagesToSendQueue->push(m_setMessageCreator->createFourthCommand(state.GAIN_TX, state.GAIN_RX));
     m_messagesToSendQueue->push(m_setMessageCreator->createFiveCommand(state.Attenuator));
     m_messagesToSendQueue->push(m_setMessageCreator->createSixCommand(state.WorkMode, state.PhaseIncrement));
+    for (int i=1; i<3; i++)
+    {
+        m_messagesToSendQueue->push(m_setMessageCreator->createSevenCommand(i));
+    }
+    for (int i=4; i<7; i++)
+    {
+        m_messagesToSendQueue->push(m_setMessageCreator->createSevenCommand(i));
+    }
 }
 
 void UstirovMediator::GetStateCommandsCreate()
 {
     OnResetQueue();
-    for (int i=1; i<7; i++)
+    for (int i=1; i<3; i++)
+    {
+        m_messagesToSendQueue->push(m_setMessageCreator->createSevenCommand(i));
+    }
+    for (int i=4; i<7; i++)
     {
         m_messagesToSendQueue->push(m_setMessageCreator->createSevenCommand(i));
     }

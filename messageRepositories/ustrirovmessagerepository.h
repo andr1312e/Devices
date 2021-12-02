@@ -15,7 +15,7 @@ public:
     void SetWorkMode(quint8 workMode);
     void SetPhaseIncrement(quint16 phaseIncrement);
     void SetBadState();
-    const DevicesAdjustingKitMessage &GetMessage() const;
+    DevicesAdjustingKitMessage &GetMessage();
     void ResetRepository();
 private:
     DevicesAdjustingKitMessage  m_repository;
