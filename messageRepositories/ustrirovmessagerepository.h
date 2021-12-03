@@ -7,16 +7,26 @@ class UstrirovMessageRepository
 public:
     UstrirovMessageRepository();
     ~UstrirovMessageRepository();
-    void SetFvco(quint32 Fvco);
+    void SetFvco(quint32 fvco);
     void SetDopler(int doplerFrequency);
-    void SetGainTx(quint8 GainTx);
-    void SetGainRx(quint8 GainRx);
+    void SetDistance(quint16 distance);
+    void SetDistanceToLocator(quint16 distanceToLocator);
+    void SetGainTx(quint8 gainTx);
+    void SetGainRx(quint8 gainRx);
     void SetAttenuator(quint8 attenuator);
     void SetWorkMode(quint8 workMode);
     void SetPhaseIncrement(quint16 phaseIncrement);
-    void SetBadState();
+
+    void SetNoConnectionState();
+    void SetTimeOutState();
+
     DevicesAdjustingKitMessage &GetMessage();
+public:
+    const quint16 GetDistanceToLocator() const;
+    const quint16 GetFvco() const;
+private:
     void ResetRepository();
+
 private:
     DevicesAdjustingKitMessage  m_repository;
 };

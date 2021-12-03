@@ -4,7 +4,6 @@
 #include <QtGlobal>
 #include <QMap>
 
-const double Fref=40000000.0;
 const QMap<quint8, quint8> atteniatorTable { {0, 15},
                                                  {1, 14},
                                                  {2, 13},

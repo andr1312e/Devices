@@ -1,6 +1,7 @@
 #include "meteomessagegetter.h"
 
-MeteoMessageGetter::MeteoMessageGetter(QObject *parent) : QObject(parent)
+MeteoMessageGetter::MeteoMessageGetter(QObject *parent)
+    : QObject(parent)
 {
     m_repository=QSharedPointer<MeteoMessageRepository>(new MeteoMessageRepository());
 }
@@ -12,7 +13,7 @@ MeteoMessageGetter::~MeteoMessageGetter()
 
 void MeteoMessageGetter::ParseMessage(const QByteArray &message)
 {
-    if(255==quint8(message.at(2)) && 255 == quint8(message.at(3))) // отказ метеостанции от исполнения команды
+    if(255==quint8(message.at(2)) && 255 == quint8(message.at(3))) // отказ метеостанции от исполнения команды, при первом запуске миниту может быть это норма
     {
         m_repository->SetDeclineState(); // отказ метеостанции от исполнения команды
         Q_EMIT ToAllDataCollected();
@@ -52,19 +53,19 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
     }
 }
 
- VOIStateMeteoMessage &MeteoMessageGetter::MessageTimeOut()
+ DevicesMeteoKitGetMessage &MeteoMessageGetter::MessageTimeOut()
 {
     m_repository->SetTimeoutState();
     return m_repository->GetMessage();
 }
 
-VOIStateMeteoMessage &MeteoMessageGetter::NoConnectionMessage()
+DevicesMeteoKitGetMessage &MeteoMessageGetter::NoConnectionMessage()
 {
     m_repository->SetNoConnectionState();
     return m_repository->GetMessage();
 }
 
- VOIStateMeteoMessage &MeteoMessageGetter::GetMessage() const
+DevicesMeteoKitGetMessage &MeteoMessageGetter::GetMessage() const
 {
     return m_repository->GetMessage();
 }

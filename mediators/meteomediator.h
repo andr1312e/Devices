@@ -21,11 +21,11 @@ private:
     void InitObjects();
     void ConnectObjects();
 Q_SIGNALS:
-    void ToSendRarmMeteoState(VOIStateMeteoMessage &meteoState);
+    void ToSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState);
 private Q_SLOTS:
     void OnMakeNewRequest();
     void OnGetStateFromMessage(const QByteArray &message);
-    void OnNoAnswerGet();
+    void OnRequestTimeOut();
     void OnClearQueue();
     void OnAllDataCollected();
 private:

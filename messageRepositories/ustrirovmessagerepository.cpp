@@ -10,9 +10,9 @@ UstrirovMessageRepository::~UstrirovMessageRepository()
 
 }
 
-void UstrirovMessageRepository::SetFvco(quint32 Fvco)
+void UstrirovMessageRepository::SetFvco(quint32 fvco)
 {
-    m_repository.Fvco=Fvco;
+    m_repository.Fvco=fvco;
 }
 
 void UstrirovMessageRepository::SetDopler(int doplerFrequency)
@@ -20,14 +20,24 @@ void UstrirovMessageRepository::SetDopler(int doplerFrequency)
     m_repository.DoplerFrequency=doplerFrequency;
 }
 
-void UstrirovMessageRepository::SetGainTx(quint8 GainTx)
+void UstrirovMessageRepository::SetDistance(quint16 distance)
 {
-    m_repository.GAIN_TX=GainTx;
+    m_repository.Distance=distance;
 }
 
-void UstrirovMessageRepository::SetGainRx(quint8 GainRx)
+void UstrirovMessageRepository::SetDistanceToLocator(quint16 distanceToLocator)
 {
-    m_repository.GAIN_RX=GainRx;
+    m_repository.DistanceToLocator=distanceToLocator;
+}
+
+void UstrirovMessageRepository::SetGainTx(quint8 gainTx)
+{
+    m_repository.GAIN_TX=gainTx;
+}
+
+void UstrirovMessageRepository::SetGainRx(quint8 gainRx)
+{
+    m_repository.GAIN_RX=gainRx;
 }
 
 void UstrirovMessageRepository::SetAttenuator(quint8 attenuator)
@@ -45,9 +55,16 @@ void UstrirovMessageRepository::SetPhaseIncrement(quint16 phaseIncrement)
     m_repository.PhaseIncrement=phaseIncrement;
 }
 
-void UstrirovMessageRepository::SetBadState()
+void UstrirovMessageRepository::SetNoConnectionState()
 {
-    m_repository.WorkMode=255;
+    ResetRepository();
+    m_repository.state=0;
+}
+
+void UstrirovMessageRepository::SetTimeOutState()
+{
+    ResetRepository();
+    m_repository.state=2;
 }
 
 DevicesAdjustingKitMessage &UstrirovMessageRepository::GetMessage()
@@ -64,5 +81,16 @@ void UstrirovMessageRepository::ResetRepository()
     m_repository.GAIN_RX=0;
     m_repository.GAIN_TX=0;
     m_repository.PhaseIncrement=0;
-    m_repository.WorkMode=255;
+    m_repository.WorkMode=0;
+    m_repository.state=1;
+}
+
+const quint16 UstrirovMessageRepository::GetDistanceToLocator() const
+{
+    return m_repository.DistanceToLocator;
+}
+
+const quint16 UstrirovMessageRepository::GetFvco() const
+{
+    return m_repository.Fvco;
 }

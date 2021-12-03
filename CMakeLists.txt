@@ -25,7 +25,7 @@ ENDIF()
 
 find_package(Qt5 COMPONENTS Core Network REQUIRED)
 
-project(devices LANGUAGES CXX VERSION 0.0.2)
+project(devices LANGUAGES CXX VERSION 0.0.3)
 message(STATUS "DEVICES: PCB 687263.035 and meteo\nVersions:\n program : ${CMAKE_PROJECT_VERSION};\n cmake : ${CMAKE_VERSION};\n qt-core : ${Qt5Core_VERSION}; ")
 
 set(
@@ -48,6 +48,8 @@ set(
     mediators/meteomediator.cpp
     mediators/ustirovmediator.h
     mediators/ustirovmediator.cpp
+    mediators/moxamediator.h
+    mediators/moxamediator.cpp
     messageRepositories/ustrirovmessagerepository.h
     messageRepositories/ustrirovmessagerepository.cpp
     messageRepositories/meteomessagerepository.h

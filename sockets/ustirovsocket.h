@@ -16,20 +16,23 @@ private:
     void InitObjects();
     void ConnectObjects();
 Q_SIGNALS:
-    void ToNoAnswerGet();
+    void ToRequestTimeOut();
     void ToSendingNext();
     void ToResetQueue();
-    void ToStateGettingFromMessage(const QByteArray &message);
+    void ToGetStateFromMessage(const QByteArray &message);
 private Q_SLOTS:
     void OnReadyRead();
     void OnHostConnected();
     void OnDisconnectedFromHost();
     void OnErrorOccurred(QAbstractSocket::SocketError socketError);
     void OnCheckConnectionTimerTimeOut();
+    void OnScoketStateChanged(QAbstractSocket::SocketState socketState);
 public:
     void SendMessage(const QByteArray &message);
     void TryToSendLastMessageAgain();
-    const bool IsUstirovConnected() const;
+    const bool IsUstirovPcbConnected() const;
+private:
+    void StopNoAnswerTimer();
 private:
     QTcpSocket *m_socket;
     const QString m_moxaIpAdress;

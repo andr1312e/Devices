@@ -13,28 +13,38 @@
 
 #include "messageRepositories/ustrirovmessagerepository.h"
 
-class StateMessageGetter:public QObject
+class UstirovMessageGetter:public QObject
 {
     Q_OBJECT
 public:
-    StateMessageGetter(QObject *parent);
-    ~StateMessageGetter();
-    bool FillDataIntoStructFromMessage(const QByteArray &message);
-    void SetBadState();
-    DevicesAdjustingKitMessage &GetMessage();
+    UstirovMessageGetter(const double f, const double fref,  QSharedPointer<UstrirovMessageRepository> &messageRepository, QObject *parent);
+    ~UstirovMessageGetter();
 Q_SIGNALS:
     void ToAllDataCollected();
+public:
+    bool FillDataIntoStructFromMessage(const QByteArray &message);
+    void SetNoConnectionState();
+    void SetTimeOutState();
+    DevicesAdjustingKitMessage &GetMessage();
 private:
-    bool GetFvcoFromFirstMessage(const QByteArray &message);
-    bool GetDoplerFromSecondMessage(const QByteArray &message);
-    bool GetDistanceFromThirdMessage(const QByteArray &message);
-    bool GetGainTxGainRXFromFourthMessage(const QByteArray &message);
-    bool GetAttenuatorRXFromFiveMessage(const QByteArray &message);
-    bool GetWorkModeFromSixMessage(const QByteArray &message);
+    bool SaveFvcoToRepository(const QByteArray &message);
+    bool SaveDoplerToRepository(const QByteArray &message);
+    bool SaveDistanceToRepository(const QByteArray &message);
+    bool SaveGainsToRepository(const QByteArray &message);
+    bool SaveAttenuatorToRepository(const QByteArray &message);
+    bool SaveWorkModeToRepository(const QByteArray &message);
+private:
+    quint16 GetIntFromMessage(const QByteArray &message) const;
+    quint32 GetFractFromMessage(const QByteArray &message) const;
+    bool GetDivFromMessage(const QByteArray &message) const;
+    quint16 GetDistanceFromMessage(const QByteArray &message) const;
 private:
     const quint8 m_indexInByteArrayOfGettingMessageId;
-    const quint8 m_maxWorkModeIndex;
-    UstrirovMessageRepository *m_repository;
+    const double f;
+    const double c=299792458.0;
+    const double Fref;
+    const quint8 m_countOfWorkModes;
+    const QSharedPointer<UstrirovMessageRepository> m_messageRepository;
 
 };
 

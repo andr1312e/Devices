@@ -22,9 +22,9 @@ Q_SIGNALS:
     void ToAllDataCollected();
 public:
     void ParseMessage(const QByteArray &message);
-    VOIStateMeteoMessage &MessageTimeOut();
-    VOIStateMeteoMessage &NoConnectionMessage();
-    VOIStateMeteoMessage &GetMessage() const;
+    DevicesMeteoKitGetMessage &MessageTimeOut();
+    DevicesMeteoKitGetMessage &NoConnectionMessage();
+    DevicesMeteoKitGetMessage &GetMessage() const;
 private:
     QSharedPointer<MeteoMessageRepository> m_repository;
 

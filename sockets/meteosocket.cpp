@@ -3,6 +3,7 @@
 
 MeteoServer::MeteoServer(const quint16 moxaPort, const quint16 meteoKitPort, QObject *parent)
     : QObject(parent)
+    , m_socketMeteo(Q_NULLPTR)
     , m_moxaPort(moxaPort)
     , m_meteoKitPort(meteoKitPort)
 {
@@ -15,14 +16,12 @@ MeteoServer::~MeteoServer()
 {
     OnDisconnectedFromHost();
     delete m_noAnswerTimer;
-    delete m_socketMeteo;
     delete m_serverMeteo;
 }
 
 void MeteoServer::CreateObjects()
 {
     m_serverMeteo = new QTcpServer(this);
-//    m_socketMeteo = new QTcpSocket();
     m_noAnswerTimer = new QTimer(this);
 }
 
@@ -37,7 +36,7 @@ void MeteoServer::InitObjects()
 void MeteoServer::ConnectObjects()
 {
     connect(m_serverMeteo, &QTcpServer::newConnection, this, &MeteoServer::OnNewSocketConnected);
-    connect(m_noAnswerTimer, &QTimer::timeout, this, &MeteoServer::ToNoAnswerGet);
+    connect(m_noAnswerTimer, &QTimer::timeout, this, &MeteoServer::ToRequestTimeOut);
     connect(m_serverMeteo, &QTcpServer::acceptError, this, &MeteoServer::OnErrorOccurred);
 }
 
@@ -71,6 +70,7 @@ void MeteoServer::OnReadyRead()
 
 void MeteoServer::OnDisconnectedFromHost()
 {
+    Q_EMIT ToResetQueue();
     m_socketMeteo->disconnectFromHost();
     qDebug()<< "MS: Отключен...!!!!!!!!!!!";
 }
@@ -180,7 +180,7 @@ void MeteoServer::OnStateChanged(QAbstractSocket::SocketState state)
 
 void MeteoServer::SendMessage(const QByteArray &array)
 {
-    if (m_socketMeteo->state()==QAbstractSocket::ConnectedState)
+    if (IsMeteoConnected())
     {
         m_socketMeteo->write(array);
         m_socketMeteo->flush();
@@ -188,18 +188,27 @@ void MeteoServer::SendMessage(const QByteArray &array)
     }
     else
     {
+        Q_EMIT ToResetQueue();
         qDebug() << "MS:SendMessage нет подключения при попытке отправить сообщение";
     }
 }
 
-bool MeteoServer::IsMeteoConnected()
+const bool MeteoServer::IsMeteoConnected() const
 {
-    return m_socketMeteo->state()==QAbstractSocket::ConnectedState;
+    if (m_socketMeteo==Q_NULLPTR)
+    {
+        return false;
+    }
+    else
+    {
+        return m_socketMeteo->state()==QAbstractSocket::ConnectedState;
+    }
+
 }
 
 void MeteoServer::ConnectMeteoSocketObject()
 {
-    connect(m_noAnswerTimer, &QTimer::timeout, this, &MeteoServer::ToNoAnswerGet);
+    connect(m_noAnswerTimer, &QTimer::timeout, this, &MeteoServer::ToRequestTimeOut);
     connect(m_socketMeteo, &QTcpSocket::connected, this, &MeteoServer::OnNewSocketConnected);
     connect(m_socketMeteo, &QTcpSocket::readyRead, this, &MeteoServer::OnReadyRead);
     connect(m_socketMeteo, &QTcpSocket::disconnected, this, &MeteoServer::OnDisconnectedFromHost);

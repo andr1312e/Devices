@@ -1,36 +1,67 @@
 #include "program.h"
-#include <QTextCodec>
 
-#define Utf QTextCodec::codecForLocale()->toUnicode [br]
-
-Program::Program(QObject *parent)
-    : QObject(parent)
+Program::Program(int &argc, char **argv)
+    : QCoreApplication(argc, argv)
+    , m_sharedMemory(QStringLiteral("DEVICES"), this)
     , m_rarmAdress(QStringLiteral("127.0.0.1"))
     , m_rarmPort(4242)
 {
-    CreateObjects();
-    ConnectObjects();
+    if(HasNoRunningInstances())
+    {
+        CreateObjects();
+        ConnectObjects();
+    }
 }
 
 Program::~Program()
 {
+    m_sharedMemory.detach();
     delete m_rarmSocket;
     delete m_meteoMediator;
     delete m_ustirovMediator;
 }
 
+bool Program::HasNoRunningInstances()
+{
+    if (m_sharedMemory.attach(QSharedMemory::ReadOnly))//есть участок с памятью с названием
+    {
+        m_sharedMemory.detach();//отключаемся
+        qDebug()<< QStringLiteral("Kill another instance of app from task manages Ctrl+Alt+Del+End Process Id: ")<< applicationPid();
+        return false;//что то работает
+    }
+    else
+    {
+        if (m_sharedMemory.create(1, QSharedMemory::ReadWrite))//создаем участок с памятью
+        {
+            qDebug()<< QStringLiteral("Devices Runned. Process id: ")<< applicationPid();
+            return true;
+        }
+        else
+        {
+            qDebug() << QStringLiteral("error ") << m_sharedMemory.errorString();
+            return false;
+        }
+    }
+}
+
 void Program::CreateObjects()
 {
+//    QThread meteoThread;
+//    QThread ustirovThread;
     m_rarmSocket=new RarmSocket(m_rarmAdress, m_rarmPort, this);
-    m_meteoMediator=new MeteoMediator("meteoSettings.ini", this);
-    m_ustirovMediator=new UstirovMediator("ustirovSettings", this);
-    qDebug()<<" UKS - ustirov kit socket";
+    m_moxaMediator=new MoxaMediator(QStringLiteral("moxaSettings.ini"), this);
+    m_meteoMediator=new MeteoMediator(QStringLiteral("meteoSettings.ini"), this);
+    m_ustirovMediator=new UstirovMediator(m_moxaMediator->GetMoxaIpAdress(), QStringLiteral("ustirovSettings.ini"), this);
+
+//    m_meteoMediator->moveToThread(&meteoThread);
+//    m_ustirovMediator->moveToThread(&ustirovThread);
 }
 
 void Program::ConnectObjects()
 {
+    connect(m_moxaMediator, &MoxaMediator::ToSendMoxaWorksState, m_rarmSocket,  &RarmSocket::OnSendMoxaWorksState);
     connect(m_meteoMediator, &MeteoMediator::ToSendRarmMeteoState, m_rarmSocket, &RarmSocket::OnSendRarmMeteoState);
     connect(m_ustirovMediator, &UstirovMediator::ToSendRarmUstirovState, m_rarmSocket, &RarmSocket::OnSendRarmUPCBState);
-    connect(m_rarmSocket, &RarmSocket::ToSetUstirovState, m_ustirovMediator, &UstirovMediator::OnSetUstirovState);
-    connect(m_rarmSocket, &RarmSocket::ToGetUstirovState, m_ustirovMediator, &UstirovMediator::OnGetUstirovState);
+    connect(m_rarmSocket, &RarmSocket::ToSetUstirovState, m_ustirovMediator, &UstirovMediator::OnSetDataToUstirov);
+    connect(m_rarmSocket, &RarmSocket::ToGetUstirovState, m_ustirovMediator, &UstirovMediator::OnGetDataFromUstirov);
 }

@@ -59,7 +59,7 @@ void MeteoMessageRepository::SetTimeoutState()
    m_repository.state=5;
 }
 
-VOIStateMeteoMessage &MeteoMessageRepository::GetMessage()
+DevicesMeteoKitGetMessage &MeteoMessageRepository::GetMessage()
 {
     return m_repository;
 }

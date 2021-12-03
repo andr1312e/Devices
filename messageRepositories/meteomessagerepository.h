@@ -18,10 +18,10 @@ public:
     void SetWrongData();
     void SetGoodState();
     void SetTimeoutState();
-    VOIStateMeteoMessage &GetMessage();
+    DevicesMeteoKitGetMessage &GetMessage();
     void ResetRepository();
 private:
-    VOIStateMeteoMessage m_repository;
+    DevicesMeteoKitGetMessage m_repository;
 };
 
 #endif // MESSAGEREPOSITORIES_METEOMESSAGEREPOSITORY_H

@@ -823,17 +823,6 @@ struct VOIPrioritySectorMessage {
     quint8 possible_priority; // 1 - возможен высокий приоритет, 0 - не возможен высокий приоритет (ставится низкий)
 };
 
-
-//ID: VOI_RMO_STATE_METEO_MESSAGE
-struct VOIStateMeteoMessage { // Сообщение о состоянии метеостанции
-    timeval64 sTimeMeasurement; // Время создание сообщения
-    float pressure;
-    float temperature;
-    float wet;
-    uint8_t state;  // 0 - нет связи, 1 - сообщение пришло, контрольная сумма не совпала, 2 - отказ метеостанции от исполнения команды,
-                    // 3 - неверные данные, 4 - всё штатно работает, 5 - время ожидания ответа истекло
-};
-
 //ID: VOI_RMO_MARK_MESSAGE
 struct VOIMarkMessage { // Сообщение с обнаруженной КТА
     timeval64 sTimeMeasurement; // Время измерения координат
@@ -1071,19 +1060,38 @@ struct RMOSilenceMessage {
     quint8 silence; //  0 - включить обмен, 1 - запретить обмен
 };
 
-//DEVICES_ADJUSTING_KIT_SET_STATE
-//DEVICES_ADJUSTING_KIT_GET_STATE
+//DEVICES_ADJUSTING_KIT_SET_STATE = 160
+//DEVICES_ADJUSTING_KIT_GET_STATE = 161
 struct DevicesAdjustingKitMessage {  // Отправка состояний в юстировочный комлект из РМО
     timeval64 sTimeMeasurement; // Время создание сообщения
     quint32 Fvco; // Рабочая точка Fvco для частот Tx и Rx: [Герцы]
     int DoplerFrequency ; // Частота Доплера (по желанию) для частоты Tx: можеть быть меньше 0 [Герцы]
-    quint32 Distance; // Дальность ответного сигнала [Метры]
+    quint16 Distance; // Дальность ответного сигнала [Метры]
+    quint16 DistanceToLocator; //Дальность от ответчика до локатора [Метры]
     quint8 GAIN_TX;//Усиление TX, <=63 [Децибелы]
     quint8 GAIN_RX;//Усиление RX, <=63 [Децибелы]
     quint8 Attenuator;//Установка ослабления [Децибелы]
-    quint8 WorkMode;//Режимы работы: 0 - все отключено, 1 - ответчик включен, 2 - шумогенератор включен,  3 - синус включен, 4 шумогенератор включен, 255 - нет связи
+    quint8 WorkMode;//Режимы работы: 0 - все отключено, 1 - ответчик включен, 2 - шумогенератор включен,  3 - синус включен, 4 шумогенератор включен
     quint16 PhaseIncrement;// Инкремент фазы прямого цифрового синтеза (Direct digital synthesizer) [Герцы]
+    quint8 state; // 0 - нет связи, 1 - всё штатно работает, 2 - время ожидания ответа истекло
 };
 
 
+//ID: DEVICES_METEO_KIT_GET_MESSAGE = 162
+// Сообщение о состоянии метеостанции
+struct DevicesMeteoKitGetMessage {
+    timeval64 sTimeMeasurement; // Время создание сообщения
+    float pressure;
+    float temperature;
+    float wet;
+    uint8_t state;  // 0 - нет связи, 1 - сообщение пришло, контрольная сумма не совпала, 2 - отказ метеостанции от исполнения команды,
+                    // 3 - неверные данные, 4 - всё штатно работает, 5 - время ожидания ответа истекло
+};
+
+// ID: DEVICES_MOXA_STATE_MESSAGE  = 163,
+// Сообщение о состоянии MOXA
+struct DevicesMoxaStateMessage {
+    timeval64 sTimeMeasurement; // Время создание сообщения
+    quint8 state; // 0 - нет связи, 1 - всё штатно работает
+};
 #endif // DATAMESSAGE_H

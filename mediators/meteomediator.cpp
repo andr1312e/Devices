@@ -20,48 +20,47 @@ MeteoMediator::~MeteoMediator()
 void MeteoMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
 {
     QSettings settings(settingsFileName, QSettings::IniFormat, this);
-    if (settings.contains(QStringLiteral("MeteoRequestInterval")))
+    if (settings.contains(QStringLiteral("meteoRequestInterval")))
     {
-        m_meteoRequestInterval=settings.value(QStringLiteral("MeteoRequestInterval"), 5000).toUInt();
+        m_meteoRequestInterval=settings.value(QStringLiteral("meteoRequestInterval"), 5000).toUInt();
     }
     else
     {
         m_meteoRequestInterval=5000;
-        settings.setValue(QStringLiteral("MeteoRequestInterval"), m_meteoRequestInterval);
+        settings.setValue(QStringLiteral("meteoRequestInterval"), m_meteoRequestInterval);
     }
 
-    if (settings.contains(QStringLiteral("MeteoTimeOutInterval")))
+    if (settings.contains(QStringLiteral("meteoTimeOutInterval")))
     {
-        m_meteoTimeOutInterval=settings.value(QStringLiteral("MeteoTimeOutInterval"), 500).toUInt();
+        m_meteoTimeOutInterval=settings.value(QStringLiteral("meteoTimeOutInterval"), 500).toUInt();
     }
     else
     {
         m_meteoTimeOutInterval=500;
-        settings.setValue(QStringLiteral("MeteoTimeOutInterval"), m_meteoTimeOutInterval);
+        settings.setValue(QStringLiteral("meteoTimeOutInterval"), m_meteoTimeOutInterval);
     }
 
-    if (settings.contains(QStringLiteral("MoxaMeteoPort")))
+    if (settings.contains(QStringLiteral("moxaPort")))
     {
-        m_moxaPort=settings.value(QStringLiteral("moxaMeteoPort"), 4101).toUInt();
+        m_moxaPort=settings.value(QStringLiteral("moxaPort"), 4101).toUInt();
     }
     else
     {
         m_moxaPort=4101;
-        settings.setValue(QStringLiteral("moxaMeteoPort"), m_moxaPort);
+        settings.setValue(QStringLiteral("moxaPort"), m_moxaPort);
 
     }
 
-    if (settings.contains(QStringLiteral("MeteoPort")))
+    if (settings.contains(QStringLiteral("meteoKitPort")))
     {
-        m_meteoPort=settings.value(QStringLiteral("meteoPort"), 5011).toUInt();
+        m_meteoPort=settings.value(QStringLiteral("meteoKitPort"), 5011).toUInt();
     }
     else
     {
         m_meteoPort=5011;
-        settings.setValue(QStringLiteral("meteoPort"), m_meteoPort);
+        settings.setValue(QStringLiteral("meteoKitPort"), m_meteoPort);
 
     }
-
     settings.sync();
 }
 
@@ -84,7 +83,7 @@ void MeteoMediator::ConnectObjects()
 {
     connect(m_meteoServer, &MeteoServer::ToGetStateFromMessage, this, &MeteoMediator::OnGetStateFromMessage);
     connect(m_meteoServer, &MeteoServer::ToResetQueue, this, &MeteoMediator::OnClearQueue);
-    connect(m_meteoServer, &MeteoServer::ToNoAnswerGet, this, &MeteoMediator::OnNoAnswerGet);
+    connect(m_meteoServer, &MeteoServer::ToRequestTimeOut, this, &MeteoMediator::OnRequestTimeOut);
     connect(m_makeNewRequestTimer, &QTimer::timeout, this, &MeteoMediator::OnMakeNewRequest);
     connect(m_meteoMessageGetter, &MeteoMessageGetter::ToAllDataCollected, this, &MeteoMediator::OnAllDataCollected);
 }
@@ -106,17 +105,13 @@ void MeteoMediator::OnMakeNewRequest()
     }
 }
 
-
-
-
-
 void MeteoMediator::OnGetStateFromMessage(const QByteArray &message)
 {
     m_meteoMessageGetter->ParseMessage(message);
     SendingNextMessageInQueue();
 }
 
-void MeteoMediator::OnNoAnswerGet()
+void MeteoMediator::OnRequestTimeOut()
 {
     OnClearQueue();
     Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->MessageTimeOut());

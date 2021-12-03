@@ -23,7 +23,7 @@ private:
     void InitObjects();
     void ConnectObjects();
 Q_SIGNALS:
-    void ToNoAnswerGet();
+    void ToRequestTimeOut();
     void ToResetQueue();
     void ToGetStateFromMessage(const QByteArray &message);
 private Q_SLOTS:
@@ -34,7 +34,7 @@ private Q_SLOTS:
     void OnStateChanged(QAbstractSocket::SocketState state);
 public:
     void SendMessage(const QByteArray &message);
-    bool IsMeteoConnected();
+    const bool IsMeteoConnected() const;
 private:
     void ConnectMeteoSocketObject();
     void StopNoAnswerTimer();

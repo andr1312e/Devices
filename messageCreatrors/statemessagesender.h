@@ -5,32 +5,39 @@
 #include <QIODevice>
 #include <QDataStream>
 #include <QVarLengthArray>
+#include <QSharedPointer>
 #include <cmath>
+
 #include "constants.h"
 
-class StateMessageSender
+#include "messageRepositories/ustrirovmessagerepository.h"
+
+class UstirovMessageSender
 {
 public:
-    explicit StateMessageSender();
-    ~StateMessageSender();
-    const QByteArray createZeroCommand();
-    QByteArray createFirstCommand(double Fvco);
-    QByteArray createSecondCommand(double Fvco, double doplerFreq);
-    QByteArray createThirdCommand(double distance);
-    QByteArray createFourthCommand(double gainTX, double gainRX);
-    QByteArray createFiveCommand(double AttenuatorDb);
-    QByteArray createSixCommand(double noiseType, double noiseValue);
-    QByteArray createSevenCommand(quint8 param);
+    explicit UstirovMessageSender(const double f, const double fref, QSharedPointer<UstrirovMessageRepository> &messageRepository);
+    ~UstirovMessageSender();
+    const QByteArray CreateZeroCommand() const;
+    const QByteArray CreateFirstCommand(double fvcoFreq) const;
+    const QByteArray CreateSecondCommand(double fvcoFreq, double doplerFreq) const;
+    const QByteArray CreateThirdCommand(double distance) const;
+    const QByteArray CreateFourthCommand(double gainTX, double gainRX) const;
+    const QByteArray CreateFiveCommand(double attenuator) const;
+    const QByteArray CreateSixCommand(double workMode, double noiseValue) const;
+    const QByteArray CreateSevenCommand(quint8 messageId) const;
 private:
-    const double c=299792458.0;
-    const double f=245000000.0;
-    const QVarLengthArray<quint8, 9> messagesIds={0,1,2,3,4,5,6,7,8};
+    quint16 CalculateInt(double fvcoFreq) const;
+    quint32 CalculateFract(double fvcoFreq) const;
+    quint8 CalculateGain(quint8 gain) const;
+    quint8 CalculateAttenuator(quint16 attenuator) const;
+    bool CalculateDiv(double fvcoFreq) const;
 private:
-    quint16 calculateINT_Rx(double Fvco) const;
-    quint32 calculateFRACT_Rx(double Fvco) const;
-    quint8 calculateGAIN(quint8 gain) const;
-    quint8 calculateAtteniator(quint16 atteniatorDb) const;
-    bool calculateDIV_rx(double Fvco) const;
+    const double m_c=299792458.0;
+    const double m_f;
+    const double m_fref;
+    const QVarLengthArray<quint8, 8> m_messagesIds={0,1,2,3,4,5,6,7};
+private:
+    const QSharedPointer<UstrirovMessageRepository> m_messageRepository;
 };
 
 #endif // MESSAGECREATORS_STATEMESSAGESENDER_H

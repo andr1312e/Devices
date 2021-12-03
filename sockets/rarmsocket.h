@@ -32,7 +32,8 @@ private Q_SLOTS:
    void OnCheckConnection();
 
 public Q_SLOTS:
-   void OnSendRarmMeteoState(VOIStateMeteoMessage &meteoState);
+   void OnSendMoxaWorksState(DevicesMoxaStateMessage &moxaState);
+   void OnSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState);
    void OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState);
 
 private:
