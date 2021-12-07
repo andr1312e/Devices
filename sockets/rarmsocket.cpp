@@ -202,7 +202,7 @@ void RarmSocket::OnSendMoxaWorksState(DevicesMoxaStateMessage &moxaState)
 
 void RarmSocket::OnSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState)
 {
-     qDebug()<< "RarmSocket::OnSendRarmMeteoState ";
+    qDebug()<< "RarmSocket::OnSendRarmMeteoState ";
     QByteArray meteoMessage;
 
     QDateTime currentDateTime(QDateTime::currentDateTime());

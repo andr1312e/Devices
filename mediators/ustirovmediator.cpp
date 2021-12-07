@@ -156,7 +156,11 @@ void UstirovMediator::SetStateCommandsCreate(const DevicesAdjustingKitMessage &s
 
 void UstirovMediator::GetStateCommandsCreate()
 {
-    for (int id=1; id<7; ++id)
+    for (int id=1; id<3; ++id)
+    {
+        m_messagesToSendQueue->push(m_ustirovMessageSetter->CreateSevenCommand(id));
+    }
+    for (int id=4; id<7; ++id)
     {
         m_messagesToSendQueue->push(m_ustirovMessageSetter->CreateSevenCommand(id));
     }

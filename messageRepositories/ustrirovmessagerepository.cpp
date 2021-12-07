@@ -90,7 +90,7 @@ const quint16 UstrirovMessageRepository::GetDistanceToLocator() const
     return m_repository.DistanceToLocator;
 }
 
-const quint16 UstrirovMessageRepository::GetFvco() const
+const quint32 UstrirovMessageRepository::GetFvco() const
 {
     return m_repository.Fvco;
 }

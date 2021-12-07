@@ -42,10 +42,12 @@ void MeteoServer::ConnectObjects()
 
 void MeteoServer::OnNewSocketConnected()
 {
-    QTcpSocket *socket = m_serverMeteo->nextPendingConnection();
 
+    QTcpSocket *socket = m_serverMeteo->nextPendingConnection();
+    qDebug()<< "Метео сервер - новое подключение";
     if(socket->peerPort() == m_meteoKitPort)
     {
+        qDebug()<< "Метео подключенo";
         m_socketMeteo = socket;
         ConnectMeteoSocketObject();
     }

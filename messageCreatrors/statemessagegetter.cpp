@@ -73,10 +73,10 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
         FRACT_RX=FRACT_RX/2.0;
         FRACT_RX=FRACT_RX*Fref*qPow(2, DIV_RX);
 
-        quint16 FRACT_RX_MGZ=(quint16)qCeil(FRACT_RX/1000000.0);
-        FRACT_RX_MGZ=FRACT_RX_MGZ+3;
+//        quint32 FRACT_RX_MGZ=(quint32)qCeil(FRACT_RX/1000000.0);
+////        FRACT_RX_MGZ=FRACT_RX_MGZ+3;
 
-        m_messageRepository->SetFvco(FRACT_RX_MGZ);
+        m_messageRepository->SetFvco((quint32)FRACT_RX);
         return true;
     }
     return false;
@@ -104,8 +104,8 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
             FRACT_TX=FRACT_TX+INT_TX+4.0;
             FRACT_TX=FRACT_TX/2.0;
             FRACT_TX=FRACT_TX*Fref*qPow(2, DIV_TX);
-            FRACT_TX=FRACT_TX+3000000;
-            m_messageRepository->SetDopler(qCeil(FRACT_TX-fvcoFreq*1000000));
+//            FRACT_TX=FRACT_TX+3000000;
+            m_messageRepository->SetDopler(qCeil(FRACT_TX-fvcoFreq));
             return true;
         }
         return false;
