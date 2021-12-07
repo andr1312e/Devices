@@ -1,4 +1,5 @@
 #include "meteomessagegetter.h"
+#include <QDebug>
 
 MeteoMessageGetter::MeteoMessageGetter(QObject *parent)
     : QObject(parent)
@@ -30,17 +31,20 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
         {
             m_repository->ResetRepository();
             m_repository->SetPressure(variable);
+            qDebug()<< "MMG : get Pressure " << variable;
             break;
         }
         case METEO_TEMPERATURE:
         {
             m_repository->SetTemperature(variable);
+            qDebug()<< "MMG : get Temperature " << variable;
             break;
         }
         case METEO_WET:
         {
             m_repository->SetWet(variable);
             m_repository->SetGoodState();
+            qDebug()<< "MMG : get Wet " << variable;
             break;
         }
         default:

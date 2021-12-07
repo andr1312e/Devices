@@ -72,11 +72,11 @@ void UstirovMediator::OnSendingNext()
 {
     if(m_messagesToSendQueue->empty())
     {
-        qDebug()<< "UM - All messages send";
+        qDebug()<< "UM: Message queue is clear";
     }
     else
     {
-        qDebug()<< "message to send " << m_messagesToSendQueue->front().toHex();
+        qDebug()<< "UM: Front message from queue " << m_messagesToSendQueue->front().toHex();
         m_ustirovSocket->SendMessage(m_messagesToSendQueue->front());
         m_messagesToSendQueue->pop();
     }
@@ -92,6 +92,7 @@ void UstirovMediator::OnResetQueue()
 
 void UstirovMediator::OnAllDataCollected()
 {
+    qDebug()<< "UM: Ready to rarm get message send";
     DevicesAdjustingKitMessage message=m_ustirovMessageGetter->GetMessage();
     Q_EMIT ToSendRarmUstirovState(message);
 }
@@ -110,12 +111,14 @@ void UstirovMediator::OnGetStateFromMessage(const QByteArray &message)
 
 void UstirovMediator::OnRequestTimeOut()
 {
+    qDebug()<< "UM: Timeout on request";
     m_ustirovMessageGetter->SetTimeOutState();
     Q_EMIT ToSendRarmUstirovState(m_ustirovMessageGetter->GetMessage());
 }
 
 void UstirovMediator::OnSetDataToUstirov(const DevicesAdjustingKitMessage &state)
 {
+    qDebug()<< "UM: Get from rarm request to set";
     m_ustirovMessageRepository->SetDistanceToLocator(state.DistanceToLocator);
     if(m_ustirovSocket->IsUstirovPcbConnected())
     {
@@ -132,6 +135,7 @@ void UstirovMediator::OnSetDataToUstirov(const DevicesAdjustingKitMessage &state
 
 void UstirovMediator::OnGetDataFromUstirov()
 {
+    qDebug()<< "UM: Get from rarm request to set";
     if(m_ustirovSocket->IsUstirovPcbConnected())
     {
         OnResetQueue();

@@ -55,7 +55,7 @@ void UstirovSocket::OnReadyRead()
 {
     StopNoAnswerTimer();
     m_readyReadBuffer.append(m_socket->readAll());
-    qDebug()<< "getOnReady read " << m_readyReadBuffer.toHex();
+    qDebug()<< "UKS: GetMessage " << m_readyReadBuffer.toHex();
     if (m_messagesIdToGetState==m_readyReadBuffer.front())
     {
         if (m_readyReadBuffer.count()>2)
@@ -65,7 +65,7 @@ void UstirovSocket::OnReadyRead()
             {
                 if (m_readyReadBuffer.count()==m_messageSize->at(messageId))
                 {
-//                    qDebug()<< "UKS - Get message with state: " << m_readyReadBuffer.toHex();
+                    qDebug()<< "UKS: Get message with state: " << m_readyReadBuffer.toHex();
                     Q_EMIT ToGetStateFromMessage(m_readyReadBuffer);
                     m_readyReadBuffer.clear();
                 }
@@ -194,11 +194,10 @@ void UstirovSocket::OnErrorOccurred(QAbstractSocket::SocketError socketError)
 
 void UstirovSocket::OnCheckConnectionTimerTimeOut()
 {
-//    qDebug()<< "UKS - Time to check connection ip: " << m_moxaIpAdress << " port: " << m_moxaPort;
     if (!IsUstirovPcbConnected())
     {
         m_socket->connectToHost(m_moxaIpAdress, m_moxaPort, QIODevice::ReadWrite);
-        qDebug()<< "UKS - ip: " << m_moxaIpAdress << " port: " << m_moxaPort << " reconnect";
+        qDebug()<< "UKS - ip: " << m_moxaIpAdress << " port: " << m_moxaPort << " try to connect";
     }
 }
 
@@ -207,25 +206,25 @@ void UstirovSocket::OnScoketStateChanged(QAbstractSocket::SocketState socketStat
     switch (socketState)
     {
     case QAbstractSocket::UnconnectedState:
-        qDebug()<< QStringLiteral("US: UnconnectedState The socket is not connected.");
+        qDebug()<< QStringLiteral("UKS - UnconnectedState The socket is not connected.");
         break;
     case QAbstractSocket::HostLookupState:
-        qDebug()<< QStringLiteral("US: HostLookupState The socket is performing a host name lookup.");
+        qDebug()<< QStringLiteral("US - HostLookupState The socket is performing a host name lookup.");
         break;
     case QAbstractSocket::ConnectingState:
-        qDebug()<< QStringLiteral("US: ConnectingState The socket has started establishing a connection.");
+        qDebug()<< QStringLiteral("UKS - ConnectingState The socket has started establishing a connection.");
         break;
     case QAbstractSocket::ConnectedState:
-        qDebug()<< QStringLiteral("US: ConnectedState A connection is established.");
+        qDebug()<< QStringLiteral("UKS - ConnectedState A connection is established.");
         break;
     case QAbstractSocket::BoundState:
-        qDebug()<< QStringLiteral("US: BoundState The socket is bound to an address and port.");
+        qDebug()<< QStringLiteral("UKS - BoundState The socket is bound to an address and port.");
         break;
     case QAbstractSocket::ListeningState:
-        qDebug()<< QStringLiteral("US: ListeningState The socket is about to close (data may still be waiting to be written).");
+        qDebug()<< QStringLiteral("UKS - ListeningState The socket is about to close (data may still be waiting to be written).");
         break;
     case QAbstractSocket::ClosingState:
-        qDebug()<< QStringLiteral("US:  ClosingState For internal use only.");
+        qDebug()<< QStringLiteral("UKS - ClosingState For internal use only.");
         break;
 
     }
@@ -233,11 +232,10 @@ void UstirovSocket::OnScoketStateChanged(QAbstractSocket::SocketState socketStat
 
 void UstirovSocket::SendMessage(const QByteArray &message)
 {
-    qDebug()<< "UstirovSocket::SendMessage";
     m_lastMessage=message;
     if (IsUstirovPcbConnected())
     {
-        qDebug()<< "UKS - send message successfully " << message.toHex();
+        qDebug()<< "UKS: send message " << message.toHex();
         m_socket->write(message);
         m_socket->flush();
         m_noAnswerTimer->start();
@@ -246,7 +244,7 @@ void UstirovSocket::SendMessage(const QByteArray &message)
     else
     {
         Q_EMIT ToResetQueue();
-        qDebug()<< "UKS - message doesn't send, socket don't connected " << message.toHex();
+        qDebug()<< "UKS: message doesn't send, socket don't connected " << message.toHex();
     }
 }
 
@@ -261,7 +259,7 @@ void UstirovSocket::TryToSendLastMessageAgain()
     else
     {
         Q_EMIT ToResetQueue();
-        qDebug()<< "UKS - message doesn't send, , socket don't connected " << m_lastMessage.toHex();
+        qDebug()<< "UKS: message doesn't send, , socket don't connected " << m_lastMessage.toHex();
     }
 }
 

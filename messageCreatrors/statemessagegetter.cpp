@@ -20,7 +20,6 @@ UstirovMessageGetter::~UstirovMessageGetter()
 bool UstirovMessageGetter::FillDataIntoStructFromMessage(const QByteArray &message)
 {
     quint8 sendedMessageId=message.at(m_indexInByteArrayOfGettingMessageId);
-//     qDebug()<< "GET id "<<sendedMessageId << " GET "<<message.toHex();;
     switch (sendedMessageId)
     {
     case 1:
@@ -59,7 +58,7 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
 {
     if(message.count()==8)
     {
-        qDebug()<< QStringLiteral("Приняли ") << message.toHex();
+
 
         quint16 INT_RX=GetIntFromMessage(message);
         double FRACT_RX=(double)GetFractFromMessage(message);
@@ -73,10 +72,8 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
         FRACT_RX=FRACT_RX/2.0;
         FRACT_RX=FRACT_RX*Fref*qPow(2, DIV_RX);
 
-//        quint32 FRACT_RX_MGZ=(quint32)qCeil(FRACT_RX/1000000.0);
-////        FRACT_RX_MGZ=FRACT_RX_MGZ+3;
-
         m_messageRepository->SetFvco((quint32)FRACT_RX);
+         qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
         return true;
     }
     return false;
@@ -88,7 +85,7 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
     if(fvcoFreq==0)
     {
            m_messageRepository->SetDopler(0);
-           qFatal("ddd");
+           qFatal("fvco is null but cant be null");
     }
     else
     {
@@ -98,14 +95,14 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
             double FRACT_TX=(double)GetFractFromMessage(message);
             bool DIV_TX=GetDivFromMessage(message);
 
-            //Значение сидит только здесь, первую парсить не нужно
+            //Значение сидит только здесь, первую INT_RX парсить не нужно
             double pow=qPow(2, 20);
             FRACT_TX=FRACT_TX/pow;
             FRACT_TX=FRACT_TX+INT_TX+4.0;
             FRACT_TX=FRACT_TX/2.0;
             FRACT_TX=FRACT_TX*Fref*qPow(2, DIV_TX);
-//            FRACT_TX=FRACT_TX+3000000;
             m_messageRepository->SetDopler(qCeil(FRACT_TX-fvcoFreq));
+            qDebug()<< QStringLiteral("UMG: Get Dopler ") << m_messageRepository->GetMessage().DoplerFrequency;
             return true;
         }
         return false;

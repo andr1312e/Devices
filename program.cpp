@@ -26,14 +26,14 @@ bool Program::HasNoRunningInstances()
     if (m_sharedMemory.attach(QSharedMemory::ReadOnly))//есть участок с памятью с названием
     {
         m_sharedMemory.detach();//отключаемся
-        qDebug()<< QStringLiteral("Kill another instance of app from task manages Ctrl+Alt+Del+End Process Id: ")<< applicationPid();
+        qDebug()<< QStringLiteral("Program - Kill another instance of app from task manages Ctrl+Alt+Del+End Process Id: ")<< applicationPid();
         return false;//что то работает
     }
     else
     {
         if (m_sharedMemory.create(1, QSharedMemory::ReadWrite))//создаем участок с памятью
         {
-            qDebug()<< QStringLiteral("Devices Runned. Process id: ")<< applicationPid();
+            qDebug()<< QStringLiteral("Program - Devices Runned. Process id: ")<< applicationPid();
             return true;
         }
         else
@@ -46,15 +46,10 @@ bool Program::HasNoRunningInstances()
 
 void Program::CreateObjects()
 {
-//    QThread meteoThread;
-//    QThread ustirovThread;
     m_rarmSocket=new RarmSocket(m_rarmAdress, m_rarmPort, this);
     m_moxaMediator=new MoxaMediator(QStringLiteral("moxaSettings.ini"), this);
     m_meteoMediator=new MeteoMediator(QStringLiteral("meteoSettings.ini"), this);
     m_ustirovMediator=new UstirovMediator(m_moxaMediator->GetMoxaIpAdress(), QStringLiteral("ustirovSettings.ini"), this);
-
-//    m_meteoMediator->moveToThread(&meteoThread);
-//    m_ustirovMediator->moveToThread(&ustirovThread);
 }
 
 void Program::ConnectObjects()

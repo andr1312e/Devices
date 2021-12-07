@@ -49,7 +49,7 @@ void RarmSocket::OnConnectedToRarm()
 {
     gettingMessageArray.clear();
 
-    qDebug() << QStringLiteral("SocketToRarm::OnConnectedToRarm Подкючились к рарму");
+    qDebug() << QStringLiteral("RS: ConnectedToRarm");
     QByteArray messageWidthIdWantsToGet;
 
     QDataStream dataStream(&messageWidthIdWantsToGet, QIODevice::WriteOnly);
@@ -102,28 +102,29 @@ void RarmSocket::OnReadyRead()
             {
                 DevicesAdjustingKitMessage setStateMessage;
                 in.readRawData((char *) &setStateMessage, messageSize - 1);
-                qDebug() << "получили DEVICES_ADJUSTING_KIT_SET_STATE";
+                qDebug() << "RS: Get DEVICES_ADJUSTING_KIT_SET_STATE";
                 Q_EMIT ToSetUstirovState(setStateMessage);
+                gettingMessageArray.clear();
             }
             else
             {
-                qDebug() << "DEVICES_ADJUSTING_KIT_SET_STATE размеры не соотвествующие:получили " << messageSize << " и должно быть " << sizeof (DevicesAdjustingKitMessage);
+                qDebug() << "RS: DEVICES_ADJUSTING_KIT_SET_STATE wrong size" << messageSize << " should be  " << sizeof (DevicesAdjustingKitMessage);
                 in.skipRawData(messageSize - 1);
             }
             break;
         }
         default:
         {
-            qDebug() << "Получено сообщение " << messageId << "  не обрабатываем! Убери из списка или напиши обработку";
+            qDebug() << "RS: no id " << messageId;
             if ((messageSize - 1) > (gettingMessageArray.size() - in.device()->pos())) {
                 gettingMessageArray.clear();
-                qDebug() << QStringLiteral("Отчищаем буфер сообщений");
+                qDebug() << QStringLiteral("RS: Clear buffer");
                 return;
             }
             else
             {
                 in.skipRawData(messageSize - 1);
-                qDebug() << "Пропустили " << messageSize << " байт";
+                qDebug() << "RS:  skip " << messageSize << " bytes";
             }
             break;
         }
@@ -155,34 +156,34 @@ void RarmSocket::OnConnectionError(QAbstractSocket::SocketError socketError)
             socketError ==  QAbstractSocket::SocketTimeoutError ||
             socketError ==  QAbstractSocket::NetworkError)
     {
-        qDebug() << "Пробуем получить соединение снова..." << socketError;
+        qDebug() << "RS - Try to reconnect..." << socketError;
         ReconnectToRarm();
     } else
     {
-        qDebug() << "Ошибка: " << socketError;
+        qDebug() << "RS - Error " << socketError;
     }
 }
 
 void RarmSocket::OnDisconnected()
 {
     ChangeReadyReadConnection(false);
-    qDebug() << QStringLiteral("Отсоединились от РАРМ...");
+    qDebug() << QStringLiteral("RS - Disconnect from rarm");
 }
 
 void RarmSocket::OnCheckConnection()
 {
-    qDebug() << "Время проверить поключение";
+
 
     if (!IsRarmConnected())
     {
+         qDebug() << "RS - Try to reconnect...";
         ReconnectToRarm();
-        qDebug() << "Переподключаемся";
     }
 }
 
 void RarmSocket::OnSendMoxaWorksState(DevicesMoxaStateMessage &moxaState)
 {
-        qDebug()<< "RarmSocket::OnSendMoxaWorksState " << moxaState.state;
+        qDebug()<< "RS: SendMoxaState " << moxaState.state;
     QByteArray moxaMessage;
     QDateTime currentDateTime(QDateTime::currentDateTime());
     moxaState.sTimeMeasurement.usecs=currentDateTime.toMSecsSinceEpoch();
@@ -202,7 +203,7 @@ void RarmSocket::OnSendMoxaWorksState(DevicesMoxaStateMessage &moxaState)
 
 void RarmSocket::OnSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState)
 {
-    qDebug()<< "RarmSocket::OnSendRarmMeteoState ";
+    qDebug()<< "RS: SendMeteoState ";
     QByteArray meteoMessage;
 
     QDateTime currentDateTime(QDateTime::currentDateTime());
@@ -222,7 +223,7 @@ void RarmSocket::OnSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState)
 
 void RarmSocket::OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState)
 {
-    qDebug()<< "RarmSocket::OnSendRarmUPCBState ";
+    qDebug()<< "RS: SendUkitState ";
     QByteArray ustirovMessage;
 
     QDateTime currentDateTime(QDateTime::currentDateTime());
@@ -237,16 +238,6 @@ void RarmSocket::OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState)
     out << qint16(sizeof (DevicesAdjustingKitMessage) + 1);
     out << quint8(DEVICES_ADJUSTING_KIT_GET_STATE);//id сообщения которое я отправляю
     out.writeRawData(reinterpret_cast<const char *>(&upcbState), sizeof(DevicesAdjustingKitMessage));
-//    out << currentTimeVal.usecs;
-//    out << currentTimeVal.secs;
-//    out << upcbState.Fvco;
-//    out << upcbState.DoplerFrequency;
-//    out << upcbState.Distance;
-//    out << upcbState.GAIN_TX;
-//    out << upcbState.GAIN_RX;//сначала TX потом RX
-//    out << upcbState.Attenuator;
-//    out << upcbState.WorkMode;
-//    out << upcbState.PhaseIncrement;
     SendRarmMessage(ustirovMessage);
 }
 
