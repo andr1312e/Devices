@@ -60,6 +60,7 @@ void MeteoServer::OnNewSocketConnected()
 void MeteoServer::OnReadyRead()
 {
     StopNoAnswerTimer();
+    qDebug()<< "MKS: GetMessage  ";
     m_readyReadBuffer.append(m_socketMeteo->readAll());
     if(m_readyReadBuffer.length() >= m_returnedMessageSize) // длина ответа 11 байт
     {

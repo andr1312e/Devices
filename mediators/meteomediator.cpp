@@ -90,9 +90,9 @@ void MeteoMediator::ConnectObjects()
 
 void MeteoMediator::OnMakeNewRequest()
 {
-    qDebug()<< "MM : make request to get meteo";
     if (m_meteoServer->IsMeteoConnected())
     {
+         qDebug()<< "MM : make request to get meteo";
         OnClearQueue();
         m_messagesToSendQueue->push(CreateMessage(60, 1));
         m_messagesToSendQueue->push(CreateMessage(60, 2));
@@ -101,6 +101,7 @@ void MeteoMediator::OnMakeNewRequest()
     }
     else
     {
+        qDebug()<< "MM : send rarm meteo not connected";
         Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->NoConnectionMessage());
     }
 }
@@ -113,6 +114,7 @@ void MeteoMediator::OnGetStateFromMessage(const QByteArray &message)
 
 void MeteoMediator::OnRequestTimeOut()
 {
+    qDebug()<< "MM : meteo timeout";
     OnClearQueue();
     Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->MessageTimeOut());
 }
