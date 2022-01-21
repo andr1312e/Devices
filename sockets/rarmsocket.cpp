@@ -61,7 +61,7 @@ void RarmSocket::OnConnectedToRarm()
     dataStream << quint8(255);//ид сообщения
     dataStream << quint8(DEVICE_MANAGER);// мой ид
 
-    for (quint8 item : m_messagesIdWantedFromRarm)
+    for (const quint8 item : qAsConst(m_messagesIdWantedFromRarm))
     {
         dataStream << item;
     }

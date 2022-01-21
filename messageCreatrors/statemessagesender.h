@@ -28,7 +28,7 @@ public:
 private:
     quint16 CalculateInt(double fvcoFreq) const;
     quint32 CalculateFract(double fvcoFreq) const;
-    quint8 CalculateGain(quint8 gain) const;
+    quint8 CalculateGain(double gain) const;
     quint8 CalculateAttenuator(quint16 attenuator) const;
     bool CalculateDiv(double fvcoFreq) const;
 private:

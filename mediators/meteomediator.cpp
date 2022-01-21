@@ -145,7 +145,7 @@ void MeteoMediator::OnAllDataCollected()
 
 const QByteArray MeteoMediator::CreateMessage(quint16 time_average, quint8 num_command) const
 {
-    quint8 null_int = 0;
+    const quint8 null_int = 0;
     QByteArray message;
 
     message.append(0xAA);

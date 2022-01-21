@@ -16,6 +16,8 @@ UstirovSocket::~UstirovSocket()
     OnDisconnectedFromHost();
     delete m_socket;
     delete m_messageSize;
+    delete m_checkConnectionTimer;
+    delete m_noAnswerTimer;
 }
 
 void UstirovSocket::CreateObjects()

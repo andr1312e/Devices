@@ -84,76 +84,76 @@ void MeteoServer::OnErrorOccurred(QAbstractSocket::SocketError socketError)
     m_socketMeteo->disconnectFromHost();
     switch (socketError) {
     case QAbstractSocket::ConnectionRefusedError:
-        qDebug()<< QStringLiteral("MKS - Истекло время ожидания");
+        qDebug()<< QStringLiteral("MKS - Истекло время ожидания").toUtf8();
         break;
     case QAbstractSocket::RemoteHostClosedError:
-        qDebug()<< QStringLiteral("MKS - Удаленный хост закрыл соединение");
+        qDebug()<< QStringLiteral("MKS - Удаленный хост закрыл соединение").toUtf8();
         break;
     case QAbstractSocket::SocketAccessError:
-        qDebug()<< QStringLiteral("MKS - Адрес хоста не найден");
+        qDebug()<< QStringLiteral("MKS - Адрес хоста не найден").toUtf8();
         break;
     case QAbstractSocket::SocketResourceError:
-        qDebug()<< QStringLiteral("MKS - Приложению не хватало необходимых прав");
+        qDebug()<< QStringLiteral("MKS - Приложению не хватало необходимых прав").toUtf8();
         break;
     case QAbstractSocket::SocketTimeoutError:
-        qDebug()<< QStringLiteral("MKS - Слишком много сокетов");
+        qDebug()<< QStringLiteral("MKS - Слишком много сокетов").toUtf8();
         break;
     case QAbstractSocket::DatagramTooLargeError:
-        qDebug()<< QStringLiteral("MKS - Размер дейтаграммы превышал предел операционной системы");
+        qDebug()<< QStringLiteral("MKS - Размер дейтаграммы превышал предел операционной системы").toUtf8();
         break;
     case QAbstractSocket::NetworkError:
-        qDebug()<< QStringLiteral("MKS - Произошла ошибка сети (например, сетевой кабель был случайно отключен)");
+        qDebug()<< QStringLiteral("MKS - Произошла ошибка сети (например, сетевой кабель был случайно отключен)").toUtf8();
         break;
     case QAbstractSocket::AddressInUseError:
-        qDebug()<< QStringLiteral("MKS - Слишком много сокетов");
+        qDebug()<< QStringLiteral("MKS - Слишком много сокетов").toUtf8();
         break;
     case QAbstractSocket::SocketAddressNotAvailableError:
-        qDebug()<< QStringLiteral("MKS - Адрес, уже используется в каком то соединении");
+        qDebug()<< QStringLiteral("MKS - Адрес, уже используется в каком то соединении").toUtf8();
         break;
     case QAbstractSocket::UnsupportedSocketOperationError:
-        qDebug()<< QStringLiteral("MKS - Адрес не принадлежит хосту");
+        qDebug()<< QStringLiteral("MKS - Адрес не принадлежит хосту").toUtf8();
         break;
     case QAbstractSocket::UnfinishedSocketOperationError:
-        qDebug()<< QStringLiteral("MKS - Запрошенная операция сокета не поддерживается локальной операционной системой");
+        qDebug()<< QStringLiteral("MKS - Запрошенная операция сокета не поддерживается локальной операционной системой").toUtf8();
         break;
     case QAbstractSocket::ProxyAuthenticationRequiredError:
-        qDebug()<< QStringLiteral("MKS - Подтверждение связи SSL / TLS не удалось, поэтому соединение было закрыто ");
+        qDebug()<< QStringLiteral("MKS - Подтверждение связи SSL / TLS не удалось, поэтому соединение было закрыто ").toUtf8();
         break;
     case QAbstractSocket::SslHandshakeFailedError:
-        qDebug()<< QStringLiteral("MKS - Последняя попытка операции еще не завершена");
+        qDebug()<< QStringLiteral("MKS - Последняя попытка операции еще не завершена").toUtf8();
         break;
     case QAbstractSocket::ProxyConnectionRefusedError:
-        qDebug()<< QStringLiteral("MKS - Не удалось связаться с прокси-сервером, потому что соединение с этим сервером было отказано");
+        qDebug()<< QStringLiteral("MKS - Не удалось связаться с прокси-сервером, потому что соединение с этим сервером было отказано").toUtf8();
         break;
     case QAbstractSocket::ProxyConnectionClosedError:
-        qDebug()<< QStringLiteral("MKS - Соединение с прокси-сервером было неожиданно закрыто");
+        qDebug()<< QStringLiteral("MKS - Соединение с прокси-сервером было неожиданно закрыто").toUtf8();
         break;
     case QAbstractSocket::ProxyConnectionTimeoutError:
-        qDebug()<< QStringLiteral("MKS - Время ожидания подключения к прокси-серверу истекло или прокси-сервер перестал отвечать на этапе проверки подлинности.");
+        qDebug()<< QStringLiteral("MKS - Время ожидания подключения к прокси-серверу истекло или прокси-сервер перестал отвечать на этапе проверки подлинности.").toUtf8();
         break;
     case QAbstractSocket::ProxyNotFoundError:
-        qDebug()<< QStringLiteral("MKS - Адрес прокси, заданный с помощью setProxy () (или прокси приложения), не найден.");
+        qDebug()<< QStringLiteral("MKS - Адрес прокси, заданный с помощью setProxy () (или прокси приложения), не найден.").toUtf8();
         break;
     case QAbstractSocket::ProxyProtocolError:
-        qDebug()<< QStringLiteral("MKS - Согласование соединения с прокси-сервером не удалось, потому что ответ прокси-сервера не был понят.");
+        qDebug()<< QStringLiteral("MKS - Согласование соединения с прокси-сервером не удалось, потому что ответ прокси-сервера не был понят.").toUtf8();
         break;
     case QAbstractSocket::OperationError:
-        qDebug()<< QStringLiteral("MKS - Была предпринята попытка выполнения операции, когда сокет находился в недопустимом состоянии.");
+        qDebug()<< QStringLiteral("MKS - Была предпринята попытка выполнения операции, когда сокет находился в недопустимом состоянии.").toUtf8();
         break;
     case QAbstractSocket::SslInternalError:
-        qDebug()<< QStringLiteral("MKS -  Используемая библиотека SSL сообщила о внутренней ошибке.");
+        qDebug()<< QStringLiteral("MKS -  Используемая библиотека SSL сообщила о внутренней ошибке.").toUtf8();
         break;
     case QAbstractSocket::SslInvalidUserDataError:
-        qDebug()<< QStringLiteral("MKS -  Были предоставлены неверные данные (сертификат, ключ, шифр и т. Д.), И их использование привело к ошибке в библиотеке SSL.");
+        qDebug()<< QStringLiteral("MKS -  Были предоставлены неверные данные (сертификат, ключ, шифр и т. Д.), И их использование привело к ошибке в библиотеке SSL.").toUtf8();
         break;
     case QAbstractSocket::TemporaryError:
-        qDebug()<< QStringLiteral("MKS -  Произошла временная ошибка (например, операция будет заблокирована, а сокет не блокируется).");
+        qDebug()<< QStringLiteral("MKS -  Произошла временная ошибка (например, операция будет заблокирована, а сокет не блокируется).").toUtf8();
         break;
     case QAbstractSocket::UnknownSocketError:
-        qDebug()<< QStringLiteral("MKS -  Произошла неопознанная ошибка.");
+        qDebug()<< QStringLiteral("MKS -  Произошла неопознанная ошибка.").toUtf8();
         break;
     case QAbstractSocket::HostNotFoundError:
-        qDebug()<< QStringLiteral("MKS -  Хост не найден");
+        qDebug()<< QStringLiteral("MKS -  Хост не найден").toUtf8();
         break;
     }
 }

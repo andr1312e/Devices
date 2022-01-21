@@ -164,6 +164,7 @@ void UstirovMediator::GetStateCommandsCreate()
     {
         m_messagesToSendQueue->push(m_ustirovMessageSetter->CreateSevenCommand(id));
     }
+    //3 сообщения не было с предпоследней прошивкой, узнай если с этой у Юры Жаркова
     for (int id=4; id<7; ++id)
     {
         m_messagesToSendQueue->push(m_ustirovMessageSetter->CreateSevenCommand(id));

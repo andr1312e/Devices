@@ -153,13 +153,13 @@ quint32 UstirovMessageSender::CalculateFract(double fvcoFreq) const
     return FRACT_Rx;
 }
 
-quint8 UstirovMessageSender::CalculateGain(quint8 gain) const
+quint8 UstirovMessageSender::CalculateGain(double gain) const
 {
-    if (gain>(63))
+    if (gain>(31.5))
     {
-        gain=63;
+        gain=31.5;
     }
-    quint8 GAIN_X=gain/2.0;
+    quint8 GAIN_X=gain*2.0;
     return GAIN_X;
 }
 

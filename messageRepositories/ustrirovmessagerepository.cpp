@@ -30,12 +30,12 @@ void UstrirovMessageRepository::SetDistanceToLocator(quint16 distanceToLocator)
     m_repository.DistanceToLocator=distanceToLocator;
 }
 
-void UstrirovMessageRepository::SetGainTx(quint8 gainTx)
+void UstrirovMessageRepository::SetGainTx(float gainTx)
 {
     m_repository.GAIN_TX=gainTx;
 }
 
-void UstrirovMessageRepository::SetGainRx(quint8 gainRx)
+void UstrirovMessageRepository::SetGainRx(float gainRx)
 {
     m_repository.GAIN_RX=gainRx;
 }

@@ -25,12 +25,11 @@ ENDIF()
 
 find_package(Qt5 COMPONENTS Core Network REQUIRED)
 
-project(devices LANGUAGES CXX VERSION 0.0.4)
+project(devices LANGUAGES CXX VERSION 0.0.5)
 message(STATUS "DEVICES: PCB 687263.035 and meteo\nVersions:\n program : ${CMAKE_PROJECT_VERSION};\n cmake : ${CMAKE_VERSION};\n qt-core : ${Qt5Core_VERSION}; ")
 
 set(
     SOURCE_LIST
-    enum/uenum.h
     messageCreatrors/constants.h
     messageCreatrors/statemessagegetter.h
     messageCreatrors/statemessagegetter.cpp

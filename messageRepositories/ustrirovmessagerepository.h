@@ -11,8 +11,8 @@ public:
     void SetDopler(int doplerFrequency);
     void SetDistance(quint16 distance);
     void SetDistanceToLocator(quint16 distanceToLocator);
-    void SetGainTx(quint8 gainTx);
-    void SetGainRx(quint8 gainRx);
+    void SetGainTx(float gainTx);
+    void SetGainRx(float gainRx);
     void SetAttenuator(quint8 attenuator);
     void SetWorkMode(quint8 workMode);
     void SetPhaseIncrement(quint16 phaseIncrement);

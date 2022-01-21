@@ -21,7 +21,7 @@ Q_SIGNALS:
 public:
     const QString &GetMoxaIpAdress();
 protected:
-    void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
+    virtual void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
 private:
     QStringList m_processParametrs;
     QString m_moxaIpAdress;
