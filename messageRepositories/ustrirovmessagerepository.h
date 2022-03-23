@@ -15,7 +15,6 @@ public:
     void SetGainRx(float gainRx);
     void SetAttenuator(quint8 attenuator);
     void SetWorkMode(quint8 workMode);
-    void SetPhaseIncrement(quint16 phaseIncrement);
 
     void SetNoConnectionState();
     void SetTimeOutState();

@@ -73,7 +73,7 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
         FRACT_RX=FRACT_RX*Fref*qPow(2, DIV_RX);
 
         m_messageRepository->SetFvco((quint32)FRACT_RX);
-         qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
+//         qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
         return true;
     }
     return false;
@@ -102,7 +102,7 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
             FRACT_TX=FRACT_TX/2.0;
             FRACT_TX=FRACT_TX*Fref*qPow(2, DIV_TX);
             m_messageRepository->SetDopler(qCeil(FRACT_TX-fvcoFreq));
-            qDebug()<< QStringLiteral("UMG: Get Dopler ") << m_messageRepository->GetMessage().DoplerFrequency;
+//            qDebug()<< QStringLiteral("UMG: Get Dopler ") << m_messageRepository->GetMessage().DoplerFrequency;
             return true;
         }
         return false;

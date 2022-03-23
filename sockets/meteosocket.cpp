@@ -44,23 +44,23 @@ void MeteoServer::OnNewSocketConnected()
 {
 
     QTcpSocket *socket = m_serverMeteo->nextPendingConnection();
-    qDebug()<< "MKS - new connection";
+//    qDebug()<< "MKS - new connection";
     if(socket->peerPort() == m_meteoKitPort)
     {
-        qDebug()<< "MKS - connected ";
+//        qDebug()<< "MKS - connected ";
         m_socketMeteo = socket;
         ConnectMeteoSocketObject();
     }
     else
     {
-        qDebug() << "MKS - wanted port: "<< m_meteoKitPort << " our: " << socket->peerPort();
+//        qDebug() << "MKS - wanted port: "<< m_meteoKitPort << " our: " << socket->peerPort();
     }
 }
 
 void MeteoServer::OnReadyRead()
 {
     StopNoAnswerTimer();
-    qDebug()<< "MKS: GetMessage  ";
+//    qDebug()<< "MKS: GetMessage  ";
     m_readyReadBuffer.append(m_socketMeteo->readAll());
     if(m_readyReadBuffer.length() >= m_returnedMessageSize) // длина ответа 11 байт
     {
@@ -75,16 +75,16 @@ void MeteoServer::OnDisconnectedFromHost()
 {
     Q_EMIT ToResetQueue();
     m_socketMeteo->disconnectFromHost();
-    qDebug()<< "MKS - disconnect...";
+//    qDebug()<< "MKS - disconnect...";
 }
 
 void MeteoServer::OnErrorOccurred(QAbstractSocket::SocketError socketError)
 {
-    qDebug()<< "MKS::OnErrorOccurred!!!!!";
+//    qDebug()<< "MKS::OnErrorOccurred!!!!!";
     m_socketMeteo->disconnectFromHost();
     switch (socketError) {
     case QAbstractSocket::ConnectionRefusedError:
-        qDebug()<< QStringLiteral("MKS - Истекло время ожидания").toUtf8();
+//        qDebug()<< QStringLiteral("MKS - Истекло время ожидания").toUtf8();
         break;
     case QAbstractSocket::RemoteHostClosedError:
         qDebug()<< QStringLiteral("MKS - Удаленный хост закрыл соединение").toUtf8();
@@ -160,7 +160,7 @@ void MeteoServer::OnErrorOccurred(QAbstractSocket::SocketError socketError)
 
 void MeteoServer::OnStateChanged(QAbstractSocket::SocketState state)
 {
-    qDebug()<< "MKS: state "<< state;
+//    qDebug()<< "MKS: state "<< state;
     switch (state) {
     case QAbstractSocket::UnconnectedState:
         break;
@@ -192,7 +192,7 @@ void MeteoServer::SendMessage(const QByteArray &array)
     else
     {
         Q_EMIT ToResetQueue();
-        qDebug() << "MKS: SendMessage нет подключения при попытке отправить сообщение";
+//        qDebug() << "MKS: SendMessage нет подключения при попытке отправить сообщение";
     }
 }
 

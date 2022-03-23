@@ -199,7 +199,7 @@ void UstirovSocket::OnCheckConnectionTimerTimeOut()
     if (!IsUstirovPcbConnected())
     {
         m_socket->connectToHost(m_moxaIpAdress, m_moxaPort, QIODevice::ReadWrite);
-        qDebug()<< "UKS - ip: " << m_moxaIpAdress << " port: " << m_moxaPort << " try to connect";
+//        qDebug()<< "UKS - ip: " << m_moxaIpAdress << " port: " << m_moxaPort << " try to connect";
     }
 }
 

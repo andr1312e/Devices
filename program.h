@@ -11,6 +11,7 @@
 #include "mediators/moxamediator.h"
 #include "mediators/meteomediator.h"
 #include "mediators/ustirovmediator.h"
+#include "sockets/geosocket.h"
 
 class Program : public QCoreApplication
 {
@@ -31,6 +32,7 @@ private:
     MoxaMediator *m_moxaMediator;
     MeteoMediator *m_meteoMediator;
     UstirovMediator *m_ustirovMediator;
+    GeoSocket *m_geoSocket;
 
 };
 

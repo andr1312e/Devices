@@ -32,9 +32,10 @@ private Q_SLOTS:
    void OnCheckConnection();
 
 public Q_SLOTS:
-   void OnSendMoxaWorksState(DevicesMoxaStateMessage &moxaState);
+   void OnSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);
    void OnSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState);
    void OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState);
+   void OnSendRarmGeoMessage(DevicesGeoStateMessage  &state);
 
 private:
    const QString m_rarmAdress;

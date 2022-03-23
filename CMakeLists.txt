@@ -23,10 +23,10 @@ ELSE()
 ENDIF()
 
 
-find_package(Qt5 COMPONENTS Core Network REQUIRED)
+find_package(Qt5 COMPONENTS Core Network Serialport REQUIRED)
 
-project(devices LANGUAGES CXX VERSION 0.0.5)
-message(STATUS "DEVICES: PCB 687263.035 and meteo\nVersions:\n program : ${CMAKE_PROJECT_VERSION};\n cmake : ${CMAKE_VERSION};\n qt-core : ${Qt5Core_VERSION}; ")
+project(devices LANGUAGES CXX VERSION 0.0.6)
+message(STATUS "BLOC M14XL2 DEVICES: PCB 687263.035, meteo, GNSS \nVersions:\n program : ${CMAKE_PROJECT_VERSION};\n cmake : ${CMAKE_VERSION};\n qt-core : ${Qt5Core_VERSION}; ")
 
 set(
     SOURCE_LIST
@@ -43,6 +43,8 @@ set(
     sockets/ustirovsocket.cpp
     sockets/rarmsocket.h
     sockets/rarmsocket.cpp
+    sockets/geosocket.h
+    sockets/geosocket.cpp
     mediators/meteomediator.h
     mediators/meteomediator.cpp
     mediators/ustirovmediator.h
@@ -63,4 +65,4 @@ add_executable(devices ${SOURCE_LIST})
 
 #source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${SOURCE_LIST})
 
-target_link_libraries(devices Qt5::Core Qt5::Network)
+target_link_libraries(devices Qt5::Core Qt5::Network Qt5::SerialPort)

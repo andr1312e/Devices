@@ -50,11 +50,6 @@ void UstrirovMessageRepository::SetWorkMode(quint8 workMode)
     m_repository.WorkMode=workMode;
 }
 
-void UstrirovMessageRepository::SetPhaseIncrement(quint16 phaseIncrement)
-{
-    m_repository.PhaseIncrement=phaseIncrement;
-}
-
 void UstrirovMessageRepository::SetNoConnectionState()
 {
     ResetRepository();
@@ -80,8 +75,7 @@ void UstrirovMessageRepository::ResetRepository()
     m_repository.Fvco=0;
     m_repository.GAIN_RX=0;
     m_repository.GAIN_TX=0;
-    m_repository.PhaseIncrement=0;
-    m_repository.WorkMode=0;
+    m_repository.WorkMode=false;
     m_repository.state=1;
 }
 

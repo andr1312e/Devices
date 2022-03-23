@@ -17,7 +17,7 @@ private:
     void ReadDataFromSettingsFile(const QString &settingsFileName);
     void InitObjects();
 Q_SIGNALS:
-    void ToSendMoxaWorksState(DevicesMoxaStateMessage &moxaState);
+    void ToSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);
 public:
     const QString &GetMoxaIpAdress();
 protected:

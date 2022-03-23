@@ -181,7 +181,7 @@ void RarmSocket::OnCheckConnection()
     }
 }
 
-void RarmSocket::OnSendMoxaWorksState(DevicesMoxaStateMessage &moxaState)
+void RarmSocket::OnSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState)
 {
         qDebug()<< "RS: SendMoxaState " << moxaState.state;
     QByteArray moxaMessage;
@@ -239,6 +239,26 @@ void RarmSocket::OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState)
     out << quint8(DEVICES_ADJUSTING_KIT_GET_STATE);//id сообщения которое я отправляю
     out.writeRawData(reinterpret_cast<const char *>(&upcbState), sizeof(DevicesAdjustingKitMessage));
     SendRarmMessage(ustirovMessage);
+}
+
+void RarmSocket::OnSendRarmGeoMessage(DevicesGeoStateMessage &state)
+{
+    qDebug()<< "RS: Send Geo Message ";
+    QByteArray geoMessage;
+
+    QDateTime currentDateTime(QDateTime::currentDateTime());
+    state.sTimeMeasurement.usecs=currentDateTime.toMSecsSinceEpoch();
+    state.sTimeMeasurement.secs=currentDateTime.toSecsSinceEpoch();
+
+    QDataStream out(&geoMessage, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_3);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.setFloatingPointPrecision(QDataStream::SinglePrecision);
+
+    out << qint16(sizeof (DevicesGeoStateMessage) + 1);
+    out << quint8(DEVICES_GEO_STATE_MESSAGE);//id сообщения которое я отправляю
+    out.writeRawData(reinterpret_cast<const char *>(&state), sizeof(DevicesGeoStateMessage));
+    SendRarmMessage(geoMessage);
 }
 
 void RarmSocket::SendRarmMessage(const QByteArray &message)

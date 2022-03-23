@@ -63,5 +63,5 @@ void MoxaMediator::timerEvent(QTimerEvent *event)
     {
         moxaState.state=0;
     }
-    Q_EMIT ToSendMoxaWorksState(moxaState);
+    Q_EMIT ToSendRarmMoxaWorksState(moxaState);
 }
