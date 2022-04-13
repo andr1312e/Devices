@@ -3,8 +3,8 @@
 
 MeteoMessageGetter::MeteoMessageGetter(QObject *parent)
     : QObject(parent)
+    , m_repository(QSharedPointer<MeteoMessageRepository>(new MeteoMessageRepository()))
 {
-    m_repository=QSharedPointer<MeteoMessageRepository>(new MeteoMessageRepository());
 }
 
 MeteoMessageGetter::~MeteoMessageGetter()

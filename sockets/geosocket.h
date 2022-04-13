@@ -11,7 +11,7 @@ class GeoSocket : public QObject
 {
     Q_OBJECT
 public:
-    GeoSocket(QObject *parent);
+    explicit GeoSocket(QObject *parent);
     ~GeoSocket();
 private:
     void CreateObjects();

@@ -58,7 +58,3 @@ HEADERS += \
     datamessage.h \
     program.h
 
-DISTFILES +=
-
-RESOURCES += \
-    qrc.qrc
