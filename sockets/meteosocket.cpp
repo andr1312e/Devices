@@ -196,7 +196,7 @@ void MeteoServer::SendMessage(const QByteArray &array)
     }
 }
 
-const bool MeteoServer::IsMeteoConnected() const
+bool MeteoServer::IsMeteoConnected() const
 {
     if (m_socketMeteo==Q_NULLPTR)
     {

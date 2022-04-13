@@ -30,7 +30,7 @@ private Q_SLOTS:
 public:
     void SendMessage(const QByteArray &message);
     void TryToSendLastMessageAgain();
-    const bool IsUstirovPcbConnected() const;
+    bool IsUstirovPcbConnected() const;
 private:
     void StopNoAnswerTimer();
 private:

@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>moxaSettings.ini</file>
+        <file>ustirovSettings.ini</file>
+        <file>meteoSettings.ini</file>
+    </qresource>
+</RCC>

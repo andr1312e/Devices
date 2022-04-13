@@ -21,8 +21,8 @@ public:
 
     DevicesAdjustingKitMessage &GetMessage();
 public:
-    const quint16 GetDistanceToLocator() const;
-    const quint32 GetFvco() const;
+    quint16 GetDistanceToLocator() const;
+    quint32 GetFvco() const;
 private:
     void ResetRepository();
 

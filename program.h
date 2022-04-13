@@ -33,7 +33,6 @@ private:
     MeteoMediator *m_meteoMediator;
     UstirovMediator *m_ustirovMediator;
     GeoSocket *m_geoSocket;
-
 };
 
 #endif // PROGRAM_H

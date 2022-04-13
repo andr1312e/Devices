@@ -79,12 +79,12 @@ void UstrirovMessageRepository::ResetRepository()
     m_repository.state=1;
 }
 
-const quint16 UstrirovMessageRepository::GetDistanceToLocator() const
+quint16 UstrirovMessageRepository::GetDistanceToLocator() const
 {
     return m_repository.DistanceToLocator;
 }
 
-const quint32 UstrirovMessageRepository::GetFvco() const
+quint32 UstrirovMessageRepository::GetFvco() const
 {
     return m_repository.Fvco;
 }

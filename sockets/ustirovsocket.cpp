@@ -265,7 +265,7 @@ void UstirovSocket::TryToSendLastMessageAgain()
     }
 }
 
-const bool UstirovSocket::IsUstirovPcbConnected() const
+bool UstirovSocket::IsUstirovPcbConnected() const
 {
     return m_socket->state()== QAbstractSocket::ConnectedState;
 }
