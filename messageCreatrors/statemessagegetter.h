@@ -17,7 +17,7 @@ class UstirovMessageGetter:public QObject
 {
     Q_OBJECT
 public:
-    UstirovMessageGetter(const double f, const double fref,  QSharedPointer<UstrirovMessageRepository> &messageRepository, QObject *parent);
+    explicit UstirovMessageGetter(const double f, const double fref,  UstrirovMessageRepository *messageRepository, QObject *parent);
     ~UstirovMessageGetter();
 Q_SIGNALS:
     void ToAllDataCollected();
@@ -25,7 +25,7 @@ public:
     bool FillDataIntoStructFromMessage(const QByteArray &message);
     void SetNoConnectionState();
     void SetTimeOutState();
-    DevicesAdjustingKitMessage &GetMessage();
+    const DevicesAdjustingKitMessage &GetMessage();
 private:
     bool SaveFvcoToRepository(const QByteArray &message);
     bool SaveDoplerToRepository(const QByteArray &message);
@@ -37,14 +37,14 @@ private:
     quint16 GetIntFromMessage(const QByteArray &message) const;
     quint32 GetFractFromMessage(const QByteArray &message) const;
     bool GetDivFromMessage(const QByteArray &message) const;
-    quint16 GetDistanceFromMessage(const QByteArray &message) const;
+    quint32 GetDistanceFromMessage(const QByteArray &message) const;
 private:
     const quint8 m_indexInByteArrayOfGettingMessageId;
     const double f;
     const double c=299792458.0;
     const double Fref;
     const quint8 m_countOfWorkModes;
-    const QSharedPointer<UstrirovMessageRepository> m_messageRepository;
+    UstrirovMessageRepository * const m_messageRepository;
 
 };
 

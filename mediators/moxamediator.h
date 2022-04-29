@@ -6,6 +6,7 @@
 #include <QProcess>
 
 #include "datamessage.h"
+#include "mediators/logger.h"
 
 class MoxaMediator : public QObject
 {
@@ -19,7 +20,8 @@ private:
 Q_SIGNALS:
     void ToSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);
 public:
-    const QString &GetMoxaIpAdress();
+    const QString &GetMoxaIpAdress() const;
+    bool IsMoxaConnected() const;
 protected:
     virtual void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
 private:

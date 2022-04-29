@@ -6,16 +6,15 @@
 #include <QTimer>
 #include <QDataStream>
 #include <QDebug>
-#include <iterator>
 
+#include "mediators/logger.h"
 #include "datamessage.h"
 
 class RarmSocket : public QObject
 {
    Q_OBJECT
-
 public:
-   RarmSocket(const QString &rarmAdress, quint16 port, QObject *parent);
+   explicit RarmSocket(const Logger *logger, const QString &rarmAdress, quint16 port, QObject *parent);
    ~RarmSocket();
 private:
    void CreateObjects();
@@ -33,30 +32,34 @@ private Q_SLOTS:
 
 public Q_SLOTS:
    void OnSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);
-   void OnSendRarmMeteoState(DevicesMeteoKitGetMessage &meteoState);
-   void OnSendRarmUPCBState(DevicesAdjustingKitMessage &upcbState);
-   void OnSendRarmGeoMessage(DevicesGeoStateMessage  &state);
-
-private:
-   const QString m_rarmAdress;
-   const quint16 m_port;
-
-   QTcpSocket *m_pTcpSocketToRarm;
-
-   QByteArray gettingMessageArray;
-
-   QTimer *m_timeToReConnectToRarm;
-
-   QVarLengthArray<quint8, 1> m_messagesIdWantedFromRarm;
-
+   void OnSendRarmMeteoState(const DevicesMeteoKitGetMessage &meteoState);
+   void OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState);
+   void OnSendRarmGeoMessage(const DevicesGeoStateMessage  &state);
 
 private:
    void ChangeReadyReadConnection(bool state);
    void StopRarmConnect();
    void ReconnectToRarm();
-   bool IsRarmConnected();
-
    void SendRarmMessage(const QByteArray &message);
+public:
+   bool IsRarmConnected() const;
+   std::string GetRarmError() const;
+   quint16 GetRarmPort() const;
+   std::string GetRarmAdress() const;
+
+
+private:
+   const QString m_rarmAdress;
+   const quint16 m_port;
+   const std::string m_logFileName;
+
+private:
+   const Logger * const m_logger;
+   QTcpSocket *m_pTcpSocketToRarm;
+   QByteArray gettingMessageArray;
+   QTimer *m_timeToReConnectToRarm;
+   QVarLengthArray<quint8, 1> m_messagesIdWantedFromRarm;
+
 };
 
 #endif // SERVER_INCOMINGDATAPARSER_H

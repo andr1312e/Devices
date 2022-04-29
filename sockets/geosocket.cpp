@@ -29,7 +29,7 @@ void GeoSocket::InitObjects()
     const QList<QSerialPortInfo> serialPortInfoList(QSerialPortInfo::availablePorts());
     for (const QSerialPortInfo &serialPortInfo: serialPortInfoList)
     {
-        qDebug() << serialPortInfo.portName();
+        qDebug() << "GEOСокетПорты: "<< serialPortInfo.portName();
     }
     m_connectionPort->setPortName(serialPortInfoList.back().portName());
     startTimer(4000, Qt::VeryCoarseTimer);
@@ -37,7 +37,6 @@ void GeoSocket::InitObjects()
 
 void GeoSocket::ConnectObjects()
 {
-//    connect(m_connectionPort, &QSerialPort::errorOccurred, this,  &GeoSocket::OnClose);
     connect(m_connectionPort, &QSerialPort::readyRead, this, &GeoSocket::OnReadyRead);
 }
 
@@ -45,7 +44,24 @@ void GeoSocket::OnReadyRead()
 {
     const QByteArray data(m_connectionPort->readAll());
     const int indexOfHeader=data.indexOf("$GNGGA");
-    if(indexOfHeader!=-1)
+    if(-1==indexOfHeader)
+    {
+        if(m_dataNotFull)
+        {
+            int indexOfAsterisk=data.indexOf('*', indexOfHeader);
+            if(indexOfAsterisk!=-1)
+            {
+                m_collectedData.append(data.left(indexOfHeader+1));
+                ParseMessage();
+            }
+            else
+            {
+                m_collectedData.clear();
+            }
+        }
+
+    }
+    else
     {
         const int indexOfAsterisk=data.indexOf('*', indexOfHeader);
         if(-1==indexOfAsterisk)
@@ -61,43 +77,44 @@ void GeoSocket::OnReadyRead()
             ParseMessage();
         }
     }
-    else
-    {
-
-        if(m_dataNotFull)
-        {
-            int indexOfAsterisk=data.indexOf('*', indexOfHeader);
-            if(indexOfAsterisk!=-1)
-            {
-                m_collectedData.append(data.left(indexOfHeader+1));
-                ParseMessage();
-            }
-            else
-            {
-                m_collectedData.clear();
-            }
-        }
-    }
 }
 
 void GeoSocket::OnClose()
 {
     if(m_connectionPort->isOpen())
+    {
         m_connectionPort->close();
+    }
+}
+
+bool GeoSocket::IsGeoSocketConnected() const
+{
+    return 1==m_geoState.state;
+}
+
+std::string GeoSocket::GetError() const
+{
+    return m_connectionPort->errorString().toStdString() + " Имя сокета: "+ m_connectionPort->portName().toStdString();
+}
+
+std::string GeoSocket::GetGeoData() const
+{
+    return "\n       Широта: "+std::to_string(m_geoState.latitude)+
+            "\n       долгота: " + std::to_string(m_geoState.longtitude)+
+            "\n       высота: "+ std::to_string(m_geoState.height);
 }
 
 void GeoSocket::timerEvent(QTimerEvent *event)
 {
+    Q_UNUSED(event)
     if (m_connectionPort->isOpen())
     {
         if(m_geoState.state)
         {
-            qDebug()<< "GS : Reset state";
             m_geoState.state=false;
         }
         else
         {
-            qDebug()<< "GS : No data";
             Q_EMIT ToSendRarmGeoState(m_geoState);
         }
     }
@@ -105,29 +122,26 @@ void GeoSocket::timerEvent(QTimerEvent *event)
     {
         if(m_connectionPort->open(QIODevice::ReadOnly))
         {
-            qDebug()<< "GS : Opened socket";
             m_geoState.state=false;
         }
         else
         {
-            qDebug()<< "GS : Can't open socket "<< m_connectionPort->errorString();
             ResetState();
             Q_EMIT ToSendRarmGeoState(m_geoState);
         }
     }
-
 }
 
 void GeoSocket::ParseMessage()
 {
     if(m_collectedData.startsWith("$GNGGA") && m_collectedData.endsWith('*') && m_collectedData.count()==70)
     {
-        qDebug()<< m_collectedData;
+        //        qDebug()<< m_collectedData;
         m_geoState.latitude=ParceLatitde();
         m_geoState.longtitude=ParceLongtitude();
         m_geoState.height=ParceHeight();
         m_geoState.state=true;
-        qDebug()<< "GS : Send message";
+        //        qDebug()<< "GS : Send message";
         Q_EMIT ToSendRarmGeoState(m_geoState);
     }
 }
@@ -148,9 +162,9 @@ float GeoSocket::ParceLatitde()
     const char minutesFractFourth=m_collectedData.at(25);
     const char minutesFractFive=m_collectedData.at(26);
     const float minutes=(minutesDecimalFirst-48.0)*10.0f+(minutesDecimalSecond-48.0)
-                          +(minutesFractFirst-48.0)/10.0f+(minutesFractSecond-48.0)/100.0f
-                          +(minutesFractThird-48.0)/1000.0f+(minutesFractFourth-48.0)/10000.0f+
-                          (minutesFractFive-48.0)/100000.0f;
+            +(minutesFractFirst-48.0)/10.0f+(minutesFractSecond-48.0)/100.0f
+            +(minutesFractThird-48.0)/1000.0f+(minutesFractFourth-48.0)/10000.0f+
+            (minutesFractFive-48.0)/100000.0f;
     //    qDebug()<< "ParceLatitde " << graduses << "   " << minutes;
     const char latDirection=m_collectedData.at(28);
     const int directionValue= latDirection=='N' ? 1 : -1;
@@ -173,9 +187,9 @@ float GeoSocket::ParceLongtitude()
     const char minutesFractFourth=m_collectedData.at(39);
     const char minutesFractFive=m_collectedData.at(40);
     const float minutes=(minutesDecimalFirst-48.0)*10.0f+(minutesDecimalSecond-48.0)
-                          +(minutesFractFirst-48.0)/10.0f+(minutesFractSecond-48.0)/100.0f
-                          +(minutesFractThird-48.0)/1000.0f+(minutesFractFourth-48.0)/10000.0f+
-                          (minutesFractFive-48.0)/100000.0f;
+            +(minutesFractFirst-48.0)/10.0f+(minutesFractSecond-48.0)/100.0f
+            +(minutesFractThird-48.0)/1000.0f+(minutesFractFourth-48.0)/10000.0f+
+            (minutesFractFive-48.0)/100000.0f;
     //    qDebug()<< "ParceLongtitude " << graduses << "   " << minutes;
     const char direction=m_collectedData.at(42);
     const int directionValue= direction=='E' ? 1 : -1;
@@ -185,8 +199,8 @@ float GeoSocket::ParceLongtitude()
 
 float GeoSocket::ParceHeight()
 {
-    QByteArray arr=m_collectedData.mid(54, 5);
-    float height=arr.toDouble();
+    const QByteArray arr=m_collectedData.mid(54, 5);
+    const float height=arr.toDouble();
     const char typeOfHeight=m_collectedData.at(60);
     if(typeOfHeight=='M')
     {

@@ -1,9 +1,10 @@
 #include "ustirovsocket.h"
 
-UstirovSocket::UstirovSocket(const QString &moxaIpAdress, const quint16 moxaPort, QObject *parent)
+UstirovSocket::UstirovSocket(const Logger *logger, const QString &moxaIpAdress, const quint16 moxaPort, QObject *parent)
     : QObject(parent)
     , m_moxaIpAdress(moxaIpAdress)
     , m_moxaPort(moxaPort)
+    , m_logger(logger)
     , m_messagesIdToGetState(0x07)
 {
     CreateObjects();
@@ -43,7 +44,6 @@ void UstirovSocket::ConnectObjects()
     connect(m_socket, &QTcpSocket::connected, this, &UstirovSocket::OnHostConnected);
     connect(m_socket, &QTcpSocket::readyRead, this, &UstirovSocket::OnReadyRead);
     connect(m_socket, &QTcpSocket::disconnected, this, &UstirovSocket::OnDisconnectedFromHost);
-    connect(m_socket, &QTcpSocket::stateChanged, this, &UstirovSocket::OnScoketStateChanged);
     connect(m_checkConnectionTimer, &QTimer::timeout, this, &UstirovSocket::OnCheckConnectionTimerTimeOut);
     connect(m_noAnswerTimer, &QTimer::timeout, this, &UstirovSocket::ToRequestTimeOut);
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
@@ -57,17 +57,16 @@ void UstirovSocket::OnReadyRead()
 {
     StopNoAnswerTimer();
     m_readyReadBuffer.append(m_socket->readAll());
-    qDebug()<< "UKS: GetMessage " << m_readyReadBuffer.toHex();
+    m_logger->Appends("US Получили сообщение "+m_readyReadBuffer.toHex().toStdString());
     if (m_messagesIdToGetState==m_readyReadBuffer.front())
     {
-        if (m_readyReadBuffer.count()>2)
+        if (m_readyReadBuffer.count()>3)
         {
-            quint8 messageId=m_readyReadBuffer.at(1);
+            const quint8 messageId=m_readyReadBuffer.at(1);
             if (messageId>0 && messageId<m_messageSize->count())
             {
                 if (m_readyReadBuffer.count()==m_messageSize->at(messageId))
                 {
-                    qDebug()<< "UKS: Get message with state: " << m_readyReadBuffer.toHex();
                     Q_EMIT ToGetStateFromMessage(m_readyReadBuffer);
                     m_readyReadBuffer.clear();
                 }
@@ -87,14 +86,14 @@ void UstirovSocket::OnReadyRead()
     }
     else
     {
-        if (m_readyReadBuffer.count()==2)
+        if (3==m_readyReadBuffer.count())
         {
             m_readyReadBuffer.clear();
-            Q_EMIT ToSendingNext();
+            Q_EMIT ToWantNextMessage();
         }
         else
         {
-            if(m_readyReadBuffer.count()>2)
+            if(m_readyReadBuffer.count()>3)
             {
                 m_readyReadBuffer.clear();
             }
@@ -104,140 +103,36 @@ void UstirovSocket::OnReadyRead()
 
 void UstirovSocket::OnHostConnected()
 {
-    qDebug()<< "UKS - connected ...";
+    m_logger->Appends("US - подключен ...");
 }
 
 void UstirovSocket::OnDisconnectedFromHost()
 {
     Q_EMIT ToResetQueue();
     m_socket->disconnectFromHost();
-    qDebug()<< "UKS - Disconnected...";
+    m_logger->Appends("US - отключен...");
 }
 
-void UstirovSocket::OnErrorOccurred(QAbstractSocket::SocketError socketError)
+void UstirovSocket::OnErrorOccurred()
 {
-    Q_EMIT ToResetQueue();
-    switch (socketError)
-    {
-    case QAbstractSocket::ConnectionRefusedError:
-        qDebug()<<QStringLiteral("UKS - ConnectionRefusedError");
-        break;
-    case QAbstractSocket::RemoteHostClosedError:
-        qDebug()<<QStringLiteral("UKS - RemoteHostClosedError");
-        break;
-    case QAbstractSocket::SocketAccessError:
-        qDebug()<<QStringLiteral("UKS - SocketAccessError");
-        break;
-    case QAbstractSocket::SocketResourceError:
-        qDebug()<<QStringLiteral("UKS - SocketResourceError");
-        break;
-    case QAbstractSocket::SocketTimeoutError:
-        qDebug()<<QStringLiteral("UKS - SocketTimeoutError");
-        break;
-    case QAbstractSocket::DatagramTooLargeError:
-        qDebug()<<QStringLiteral("UKS - DatagramTooLargeError");
-        break;
-    case QAbstractSocket::NetworkError:
-        qDebug()<<QStringLiteral("UKS - NetworkError");
-        break;
-    case QAbstractSocket::AddressInUseError:
-        qDebug()<<QStringLiteral("UKS - AddressInUseError");
-        break;
-    case QAbstractSocket::SocketAddressNotAvailableError:
-        qDebug()<<QStringLiteral("UKS - SocketAddressNotAvailableError");
-        break;
-    case QAbstractSocket::UnsupportedSocketOperationError:
-        qDebug()<<QStringLiteral("UKS - UnsupportedSocketOperationError");
-        break;
-    case QAbstractSocket::UnfinishedSocketOperationError:
-        qDebug()<<QStringLiteral("UKS - UnfinishedSocketOperationError");
-        break;
-    case QAbstractSocket::ProxyAuthenticationRequiredError:
-        qDebug()<<QStringLiteral("UKS - ProxyAuthenticationRequiredError");
-        break;
-    case QAbstractSocket::SslHandshakeFailedError:
-        qDebug()<<QStringLiteral("UKS - SslHandshakeFailedError");
-        break;
-    case QAbstractSocket::ProxyConnectionRefusedError:
-        qDebug()<<QStringLiteral("UKS - ProxyConnectionRefusedError");
-        break;
-    case QAbstractSocket::ProxyConnectionClosedError:
-        qDebug()<<QStringLiteral("UKS - ProxyConnectionClosedError");
-        break;
-    case QAbstractSocket::ProxyConnectionTimeoutError:
-        qDebug()<<QStringLiteral("UKS - ProxyConnectionTimeoutError");
-        break;
-    case QAbstractSocket::ProxyNotFoundError:
-        qDebug()<<QStringLiteral("UKS - ProxyNotFoundError");
-        break;
-    case QAbstractSocket::ProxyProtocolError:
-        qDebug()<<QStringLiteral("UKS - ProxyProtocolError");
-        break;
-    case QAbstractSocket::OperationError:
-        qDebug()<<QStringLiteral("UKS - OperationError");
-        break;
-    case QAbstractSocket::SslInternalError:
-        qDebug()<<QStringLiteral("UKS - SslInternalError");
-        break;
-    case QAbstractSocket::SslInvalidUserDataError:
-        qDebug()<<QStringLiteral("UKS - SslInvalidUserDataError");
-        break;
-    case QAbstractSocket::TemporaryError:
-        qDebug()<<QStringLiteral("UKS - TemporaryError");
-        break;
-    case QAbstractSocket::UnknownSocketError:
-        qDebug()<<QStringLiteral("UKS - UnknownSocketError");
-        break;
-    case QAbstractSocket::HostNotFoundError:
-        qDebug()<<QStringLiteral("UKS - HostNotFoundError");
-        break;
-    }
+    m_logger->Appends("Ошибка "+ m_socket->errorString().toStdString());
 }
 
 void UstirovSocket::OnCheckConnectionTimerTimeOut()
 {
-    if (!IsUstirovPcbConnected())
+    if (!IsUstirovConnected())
     {
         m_socket->connectToHost(m_moxaIpAdress, m_moxaPort, QIODevice::ReadWrite);
-//        qDebug()<< "UKS - ip: " << m_moxaIpAdress << " port: " << m_moxaPort << " try to connect";
-    }
-}
-
-void UstirovSocket::OnScoketStateChanged(QAbstractSocket::SocketState socketState)
-{
-    switch (socketState)
-    {
-    case QAbstractSocket::UnconnectedState:
-        qDebug()<< QStringLiteral("UKS - UnconnectedState The socket is not connected.");
-        break;
-    case QAbstractSocket::HostLookupState:
-        qDebug()<< QStringLiteral("US - HostLookupState The socket is performing a host name lookup.");
-        break;
-    case QAbstractSocket::ConnectingState:
-        qDebug()<< QStringLiteral("UKS - ConnectingState The socket has started establishing a connection.");
-        break;
-    case QAbstractSocket::ConnectedState:
-        qDebug()<< QStringLiteral("UKS - ConnectedState A connection is established.");
-        break;
-    case QAbstractSocket::BoundState:
-        qDebug()<< QStringLiteral("UKS - BoundState The socket is bound to an address and port.");
-        break;
-    case QAbstractSocket::ListeningState:
-        qDebug()<< QStringLiteral("UKS - ListeningState The socket is about to close (data may still be waiting to be written).");
-        break;
-    case QAbstractSocket::ClosingState:
-        qDebug()<< QStringLiteral("UKS - ClosingState For internal use only.");
-        break;
-
+        m_logger->Appends("US: ип: " +m_moxaIpAdress.toStdString() + " порт: " + std::to_string(m_moxaPort) + " пробуем подключится");
     }
 }
 
 void UstirovSocket::SendMessage(const QByteArray &message)
 {
     m_lastMessage=message;
-    if (IsUstirovPcbConnected())
+    if (IsUstirovConnected())
     {
-        qDebug()<< "UKS: send message " << message.toHex();
+        m_logger->Appends("US: отправили сообщение " + message.toHex().toStdString());
         m_socket->write(message);
         m_socket->flush();
         m_noAnswerTimer->start();
@@ -246,13 +141,13 @@ void UstirovSocket::SendMessage(const QByteArray &message)
     else
     {
         Q_EMIT ToResetQueue();
-        qDebug()<< "UKS: message doesn't send, socket don't connected " << message.toHex();
+        m_logger->Appends("US: пытались отправить сообщение но сокет не подключен");
     }
 }
 
 void UstirovSocket::TryToSendLastMessageAgain()
 {
-    if(IsUstirovPcbConnected() && !m_lastMessage.isEmpty())
+    if(IsUstirovConnected() && !m_lastMessage.isEmpty())
     {
         m_socket->write(m_lastMessage);
         m_socket->flush();
@@ -261,13 +156,18 @@ void UstirovSocket::TryToSendLastMessageAgain()
     else
     {
         Q_EMIT ToResetQueue();
-        qDebug()<< "UKS: message doesn't send, , socket don't connected " << m_lastMessage.toHex();
+        m_logger->Appends("US: пытались отправить сообщение снова но сокет не подключен");
     }
 }
 
-bool UstirovSocket::IsUstirovPcbConnected() const
+bool UstirovSocket::IsUstirovConnected() const
 {
-    return m_socket->state()== QAbstractSocket::ConnectedState;
+    return QAbstractSocket::ConnectedState==m_socket->state();
+}
+
+QString UstirovSocket::GetLastUstirovErrorMessage() const
+{
+    return m_socket->errorString();
 }
 
 void UstirovSocket::StopNoAnswerTimer()

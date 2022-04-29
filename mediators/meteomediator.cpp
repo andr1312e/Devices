@@ -1,7 +1,8 @@
 #include "mediators/meteomediator.h"
 
-MeteoMediator::MeteoMediator(const QString &settingsFileName, QObject *parent)
+MeteoMediator::MeteoMediator(const Logger *logger, const QString &settingsFileName, QObject *parent)
     : QObject(parent)
+    , m_logger(logger)
 {
     ReadDataFromSettingsFile(settingsFileName);
     CreateObjects();
@@ -13,7 +14,7 @@ MeteoMediator::~MeteoMediator()
 {
     delete m_meteoServer;
     delete m_messagesToSendQueue;
-    delete m_meteoMessageGetter;
+    delete m_meteoMessageParser;
     delete m_makeNewRequestTimer;
 }
 
@@ -66,10 +67,10 @@ void MeteoMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
 
 void MeteoMediator::CreateObjects()
 {
-    m_meteoServer=new MeteoServer(m_moxaPort, m_meteoPort, this);
-    m_meteoMessageGetter=new MeteoMessageGetter(this);
-    m_messagesToSendQueue=new std::queue<QByteArray>();
+    m_meteoServer=new MeteoServer(m_logger, m_moxaPort, m_meteoPort, this);
+    m_meteoMessageParser=new MeteoMessageGetter(this);
     m_makeNewRequestTimer=new QTimer(this);
+    m_messagesToSendQueue=new QQueue<QByteArray>();
 }
 
 void MeteoMediator::InitObjects()
@@ -82,65 +83,99 @@ void MeteoMediator::InitObjects()
 void MeteoMediator::ConnectObjects()
 {
     connect(m_meteoServer, &MeteoServer::ToGetStateFromMessage, this, &MeteoMediator::OnGetStateFromMessage);
-    connect(m_meteoServer, &MeteoServer::ToResetQueue, this, &MeteoMediator::OnClearQueue);
     connect(m_meteoServer, &MeteoServer::ToRequestTimeOut, this, &MeteoMediator::OnRequestTimeOut);
     connect(m_makeNewRequestTimer, &QTimer::timeout, this, &MeteoMediator::OnMakeNewRequest);
-    connect(m_meteoMessageGetter, &MeteoMessageGetter::ToAllDataCollected, this, &MeteoMediator::OnAllDataCollected);
+    connect(m_meteoMessageParser, &MeteoMessageGetter::ToAllDataCollected, this, &MeteoMediator::OnAllDataCollected);
 }
 
 void MeteoMediator::OnMakeNewRequest()
 {
     if (m_meteoServer->IsMeteoConnected())
     {
-//         qDebug()<< "MM : make request to get meteo";
-        OnClearQueue();
-        m_messagesToSendQueue->push(CreateMessage(60, 1));
-        m_messagesToSendQueue->push(CreateMessage(60, 2));
-        m_messagesToSendQueue->push(CreateMessage(60, 3));
+        m_logger->Appends("MM: Запрашиваем метео");
+        m_messagesToSendQueue->clear();
+        m_messagesToSendQueue->enqueue(CreateMessage(60, 1));
+        m_messagesToSendQueue->enqueue(CreateMessage(60, 2));
+        m_messagesToSendQueue->enqueue(CreateMessage(60, 3));
         SendingNextMessageInQueue();
     }
     else
     {
-//        qDebug()<< "MM : send rarm meteo not connected";
-        Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->NoConnectionMessage());
+        m_logger->Appends("MM: Запрос, хотя метео не подключен");
+        Q_EMIT ToSendRarmMeteoState(m_meteoMessageParser->NoConnectionMessage());
     }
 }
 
 void MeteoMediator::OnGetStateFromMessage(const QByteArray &message)
 {
-    m_meteoMessageGetter->ParseMessage(message);
+    m_meteoMessageParser->ParseMessage(message);
     SendingNextMessageInQueue();
 }
 
 void MeteoMediator::OnRequestTimeOut()
 {
-//    qDebug()<< "MM : meteo timeout";
-    OnClearQueue();
-    Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->MessageTimeOut());
-}
-
-
-void MeteoMediator::OnClearQueue()
-{
-    while(!m_messagesToSendQueue->empty())
-    {
-        m_messagesToSendQueue->pop();
-    }
+    m_logger->Appends("MM: Метео таймаут");
+    m_messagesToSendQueue->clear();
+    Q_EMIT ToSendRarmMeteoState(m_meteoMessageParser->MessageTimeOut());
 }
 
 void MeteoMediator::SendingNextMessageInQueue()
 {
     if(!m_messagesToSendQueue->empty())
     {
-        m_meteoServer->SendMessage(m_messagesToSendQueue->front());
-        m_messagesToSendQueue->pop();
+        m_meteoServer->SendMessage(m_messagesToSendQueue->dequeue());
     }
 }
 
 void MeteoMediator::OnAllDataCollected()
 {
-//    qDebug()<< "MM : send meteo to rarm";
-    Q_EMIT ToSendRarmMeteoState(m_meteoMessageGetter->GetMessage());
+    m_logger->Appends("MM: Метео высылаем в рарм");
+    Q_EMIT ToSendRarmMeteoState(m_meteoMessageParser->GetMessage());
+}
+
+bool MeteoMediator::IsMeteoConnected() const
+{
+    return m_meteoServer->IsMeteoConnected();
+}
+
+quint16 MeteoMediator::GetMeteoPort() const
+{
+    return m_meteoServer->GetMeteoPort();
+}
+
+std::string MeteoMediator::GetMeteoData() const
+{
+    const DevicesMeteoKitGetMessage &message=m_meteoMessageParser->GetMessage();
+    if(0==message.state)
+    {
+        return "\n       Нет связи";
+    }
+    else
+    {
+        if(5==message.state)
+        {
+            return "\n       Давление: "+ std::to_string(message.pressure) +
+                    "\n       Температура: "+ std::to_string(message.temperature) +
+                    "\n       Влажность: " + std::to_string(message.wet)+
+                    "\n       Для последнего сообщения вышело время ожидания(тайм аут)";
+        }
+        else
+        {
+            return "\n       Давление: "+ std::to_string(message.pressure) +
+                    "\n       Температура: "+ std::to_string(message.temperature) +
+                    "\n       Влажность: " + std::to_string(message.wet);
+        }
+    }
+}
+
+std::string MeteoMediator::GetMeteoError() const
+{
+    return m_meteoServer->GetMeteoError();
+}
+
+std::string MeteoMediator::GetLastMessageTime() const
+{
+    return m_meteoMessageParser->GetLastMessageTime();
 }
 
 const QByteArray MeteoMediator::CreateMessage(quint16 time_average, quint8 num_command) const

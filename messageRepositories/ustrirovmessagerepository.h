@@ -1,16 +1,19 @@
 #ifndef MESSAGEREPOSITORIES_USTRIROVMESSAGEREPOSITORY_H
 #define MESSAGEREPOSITORIES_USTRIROVMESSAGEREPOSITORY_H
+#include <QDateTime>
+
 #include "datamessage.h"
 
 class UstrirovMessageRepository
 {
 public:
-    UstrirovMessageRepository();
+    explicit UstrirovMessageRepository();
     ~UstrirovMessageRepository();
+public:
     void SetFvco(quint32 fvco);
     void SetDopler(int doplerFrequency);
-    void SetDistance(quint16 distance);
-    void SetDistanceToLocator(quint16 distanceToLocator);
+    void SetDistance(quint32 distance);
+    void SetDistanceToLocator(quint32 distanceToLocator);
     void SetGainTx(float gainTx);
     void SetGainRx(float gainRx);
     void SetAttenuator(quint8 attenuator);
@@ -19,7 +22,7 @@ public:
     void SetNoConnectionState();
     void SetTimeOutState();
 
-    DevicesAdjustingKitMessage &GetMessage();
+    const DevicesAdjustingKitMessage &GetMessage();
 public:
     quint16 GetDistanceToLocator() const;
     quint32 GetFvco() const;

@@ -1,11 +1,13 @@
 #ifndef MESSAGEREPOSITORIES_METEOMESSAGEREPOSITORY_H
 #define MESSAGEREPOSITORIES_METEOMESSAGEREPOSITORY_H
+#include <QDateTime>
+
 #include "datamessage.h"
 
 class MeteoMessageRepository
 {
 public:
-    MeteoMessageRepository();
+    explicit MeteoMessageRepository();
     ~MeteoMessageRepository();
 public:
     void SetPressure(float pressure);
@@ -18,10 +20,13 @@ public:
     void SetWrongData();
     void SetGoodState();
     void SetTimeoutState();
-    DevicesMeteoKitGetMessage &GetMessage();
+    const DevicesMeteoKitGetMessage &GetMessage();
     void ResetRepository();
+public:
+    std::string GetLastMessageTime() const;
 private:
     DevicesMeteoKitGetMessage m_repository;
+    QDateTime m_lastMessageDateTime;
 };
 
 #endif // MESSAGEREPOSITORIES_METEOMESSAGEREPOSITORY_H

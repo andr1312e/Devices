@@ -3,13 +3,14 @@
 
 MeteoMessageGetter::MeteoMessageGetter(QObject *parent)
     : QObject(parent)
-    , m_repository(QSharedPointer<MeteoMessageRepository>(new MeteoMessageRepository()))
+    , m_repository(new MeteoMessageRepository())
 {
+
 }
 
 MeteoMessageGetter::~MeteoMessageGetter()
 {
-
+    delete m_repository;
 }
 
 void MeteoMessageGetter::ParseMessage(const QByteArray &message)
@@ -31,20 +32,20 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
         {
             m_repository->ResetRepository();
             m_repository->SetPressure(variable);
-//            qDebug()<< "MMG : get Pressure " << variable;
+//            qDebug()<< "Метео : Давление " << variable;
             break;
         }
         case METEO_TEMPERATURE:
         {
             m_repository->SetTemperature(variable);
-//            qDebug()<< "MMG : get Temperature " << variable;
+//            qDebug()<< "Метео : Температура " << variable;
             break;
         }
         case METEO_WET:
         {
             m_repository->SetWet(variable);
             m_repository->SetGoodState();
-//            qDebug()<< "MMG : get Wet " << variable;
+//            qDebug()<< "Метео : влажность " << variable;
             break;
         }
         default:
@@ -57,19 +58,24 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
     }
 }
 
- DevicesMeteoKitGetMessage &MeteoMessageGetter::MessageTimeOut()
+const DevicesMeteoKitGetMessage &MeteoMessageGetter::MessageTimeOut()
 {
     m_repository->SetTimeoutState();
     return m_repository->GetMessage();
 }
 
-DevicesMeteoKitGetMessage &MeteoMessageGetter::NoConnectionMessage()
+const DevicesMeteoKitGetMessage &MeteoMessageGetter::NoConnectionMessage()
 {
     m_repository->SetNoConnectionState();
     return m_repository->GetMessage();
 }
 
-DevicesMeteoKitGetMessage &MeteoMessageGetter::GetMessage() const
+const DevicesMeteoKitGetMessage &MeteoMessageGetter::GetMessage() const
 {
     return m_repository->GetMessage();
+}
+
+const std::string MeteoMessageGetter::GetLastMessageTime() const
+{
+    return m_repository->GetLastMessageTime();
 }

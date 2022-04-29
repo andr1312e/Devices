@@ -1,9 +1,8 @@
 #include "statemessagesender.h"
 
-UstirovMessageSender::UstirovMessageSender(const double f, const double fref, QSharedPointer<UstrirovMessageRepository> &messageRepository)
+UstirovMessageSender::UstirovMessageSender(const double f, const double fref)
     : m_f(f)
     , m_fref(fref)
-    , m_messageRepository(messageRepository)
 {
 
 }
@@ -25,7 +24,7 @@ const QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 {
     quint8 id=m_messagesIds.at(1);
     qint16 intRx=CalculateInt(fvcoFreq);//МГЦ
-    qint32 fractRx=CalculateFract(fvcoFreq);//МГЦ
+    qint32 fractRx=CalculateFractNew(fvcoFreq);//МГЦ
     bool divRx=CalculateDiv(fvcoFreq);
 
 
@@ -49,7 +48,7 @@ const QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, doub
 {
     double resultFreq=fvcoFreq+doplerFreq;
     qint16 intTx=CalculateInt(resultFreq);
-    qint32 fractTx=CalculateFract(resultFreq);
+    qint32 fractTx=CalculateFractNew(resultFreq);
     bool divTx=CalculateDiv(resultFreq);
 
 
@@ -69,10 +68,11 @@ const QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, doub
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateThirdCommand(double distance) const
+const QByteArray UstirovMessageSender::CreateThirdCommand(double distance, double distanceToLocator) const
 {
     double secondVal=m_f/m_c;
-    quint16 DISTANCE=distance*secondVal+1.0;
+    double newDistance=qAbs(distance-distanceToLocator);
+    quint16 DISTANCE=newDistance*secondVal+1.0;
 
     QByteArray command;
     QDataStream streamMain(&command, QIODevice::WriteOnly);
@@ -103,14 +103,14 @@ const QByteArray UstirovMessageSender::CreateFiveCommand(double attenuator) cons
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateSixCommand(double workMode, double noiseValue) const
+const QByteArray UstirovMessageSender::CreateSixCommand(double workMode) const
 {
     QByteArray command;
     command.append(m_messagesIds.at(6));
     command.append(quint8(workMode));
     if (workMode>2)
     {
-        quint32 sinusVal=(quint32)noiseValue;
+        quint32 sinusVal=0;
         quint8 first=(sinusVal >> (8*0)) & 0xff;
         quint8 second=(sinusVal >> (8*1)) & 0xff;
         quint8 third=(sinusVal >> (8*2)) & 0xff;
@@ -141,10 +141,23 @@ quint16 UstirovMessageSender::CalculateInt(double fvcoFreq) const
     return INT_Rx;
 }
 
-quint32 UstirovMessageSender::CalculateFract(double fvcoFreq) const
+quint32 UstirovMessageSender::CalculateFractNew(double fvcoFreq) const
 {
     bool DIV_Rx=CalculateDiv(fvcoFreq);
-    quint32 FRACT_Rx=(pow(2,20));
+    double FRACT_Rx=(pow(2,20));
+    fvcoFreq=fvcoFreq-3000000.0;
+    double FirstValue=2.0*fvcoFreq;
+    double FirstValueDiv=m_fref*pow(2, DIV_Rx);
+    FirstValue=FirstValue/FirstValueDiv;
+    double SecondValue=(qint32)FirstValue;
+    FRACT_Rx=FRACT_Rx*(FirstValue-SecondValue);
+    return FRACT_Rx;
+}
+
+quint32 UstirovMessageSender::CalculateFractOld(double fvcoFreq) const
+{
+    bool DIV_Rx=CalculateDiv(fvcoFreq);
+    double FRACT_Rx=(pow(2,20));
     double FirstValue=2.0*fvcoFreq;
     double FirstValueDiv=m_fref*pow(2, DIV_Rx);
     FirstValue=FirstValue/FirstValueDiv;

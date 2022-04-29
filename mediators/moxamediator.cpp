@@ -17,7 +17,7 @@ void MoxaMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
     QSettings settings(settingsFileName, QSettings::IniFormat, this);
     if (settings.contains(QStringLiteral("moxaIpAdress")))
     {
-        m_moxaIpAdress=settings.value(QStringLiteral("moxaIpAdress"), "192.168.127.254").toString();//UstirovMediator::ReadDataFromSettingsFile
+        m_moxaIpAdress=settings.value(QStringLiteral("moxaIpAdress"), "192.168.127.254").toString();
     }
     else
     {
@@ -44,17 +44,23 @@ void MoxaMediator::InitObjects()
     m_processParametrs << QStringLiteral("-c 1");
 #endif
     m_processParametrs.append(m_moxaIpAdress);
-    this->startTimer(m_moxaCheckMiliseconds, Qt::VeryCoarseTimer);
+    startTimer(m_moxaCheckMiliseconds, Qt::VeryCoarseTimer);
 }
 
-const QString &MoxaMediator::GetMoxaIpAdress()
+const QString &MoxaMediator::GetMoxaIpAdress() const
 {
     return m_moxaIpAdress;
 }
 
+bool MoxaMediator::IsMoxaConnected() const
+{
+    return 1==moxaState.state;
+}
+
 void MoxaMediator::timerEvent(QTimerEvent *event)
 {
-    int result=m_process.execute(QStringLiteral("ping"), m_processParametrs);
+    Q_UNUSED(event)
+    const int result=m_process.execute(QStringLiteral("ping"), m_processParametrs);
     if (0==result)
     {
         moxaState.state=1;

@@ -5,11 +5,13 @@
 #include <QTcpSocket>
 #include <QTimer>
 
+#include "mediators/logger.h"
+
 class UstirovSocket : public QObject
 {
     Q_OBJECT
 public:
-    explicit UstirovSocket(const QString &moxaIpAdress, const quint16 moxaPort, QObject *parent);
+    explicit UstirovSocket(const Logger *logger, const QString &moxaIpAdress, const quint16 moxaPort, QObject *parent);
     ~UstirovSocket();
 private:
     void CreateObjects();
@@ -17,20 +19,21 @@ private:
     void ConnectObjects();
 Q_SIGNALS:
     void ToRequestTimeOut();
-    void ToSendingNext();
+    void ToWantNextMessage();
     void ToResetQueue();
     void ToGetStateFromMessage(const QByteArray &message);
 private Q_SLOTS:
     void OnReadyRead();
     void OnHostConnected();
     void OnDisconnectedFromHost();
-    void OnErrorOccurred(QAbstractSocket::SocketError socketError);
+    void OnErrorOccurred();
     void OnCheckConnectionTimerTimeOut();
-    void OnScoketStateChanged(QAbstractSocket::SocketState socketState);
 public:
     void SendMessage(const QByteArray &message);
     void TryToSendLastMessageAgain();
-    bool IsUstirovPcbConnected() const;
+public:
+    bool IsUstirovConnected() const;
+    QString GetLastUstirovErrorMessage() const;
 private:
     void StopNoAnswerTimer();
 private:
@@ -41,6 +44,7 @@ private:
     QTimer *m_checkConnectionTimer;
     QTimer *m_noAnswerTimer;
 private:
+    const Logger * const m_logger;
     QByteArray m_lastMessage;
     QByteArray m_readyReadBuffer;
     const QVarLengthArray<quint8, 7> *m_messageSize;

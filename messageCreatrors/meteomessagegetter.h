@@ -22,11 +22,13 @@ Q_SIGNALS:
     void ToAllDataCollected();
 public:
     void ParseMessage(const QByteArray &message);
-    DevicesMeteoKitGetMessage &MessageTimeOut();
-    DevicesMeteoKitGetMessage &NoConnectionMessage();
-    DevicesMeteoKitGetMessage &GetMessage() const;
+    const DevicesMeteoKitGetMessage &MessageTimeOut();
+    const DevicesMeteoKitGetMessage &NoConnectionMessage();
+    const DevicesMeteoKitGetMessage &GetMessage() const;
+    const std::string GetLastMessageTime() const;
 private:
-    QSharedPointer<MeteoMessageRepository> m_repository;
+    MeteoMessageRepository * const m_repository;
+
 
 };
 

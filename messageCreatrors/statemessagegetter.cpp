@@ -1,7 +1,7 @@
 #include "statemessagegetter.h"
 
 
-UstirovMessageGetter::UstirovMessageGetter(const double f, const double fref, QSharedPointer<UstrirovMessageRepository> &messageRepository, QObject *parent)
+UstirovMessageGetter::UstirovMessageGetter(const double f, const double fref, UstrirovMessageRepository *messageRepository, QObject *parent)
     : QObject(parent)
     , m_indexInByteArrayOfGettingMessageId(1)
     , f(f)
@@ -49,7 +49,7 @@ void UstirovMessageGetter::SetTimeOutState()
     m_messageRepository->SetTimeOutState();
 }
 
-DevicesAdjustingKitMessage &UstirovMessageGetter::GetMessage()
+const DevicesAdjustingKitMessage &UstirovMessageGetter::GetMessage()
 {
     return m_messageRepository->GetMessage();
 }
@@ -58,8 +58,6 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
 {
     if(8==message.count())
     {
-
-
         const quint16 INT_RX=GetIntFromMessage(message);
         double FRACT_RX=(double)GetFractFromMessage(message);
         const bool DIV_RX=GetDivFromMessage(message);
@@ -73,7 +71,7 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
         FRACT_RX=FRACT_RX*Fref*qPow(2, DIV_RX);
 
         m_messageRepository->SetFvco((quint32)FRACT_RX);
-//         qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
+//        qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
         return true;
     }
     return false;
@@ -84,8 +82,8 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
     const quint64 fvcoFreq=m_messageRepository->GetFvco();
     if(0==fvcoFreq)
     {
-           m_messageRepository->SetDopler(0);
-           qFatal("fvco is null but cant be null");
+        m_messageRepository->SetDopler(0);
+        qFatal("fvco is null but cant be null");
     }
     else
     {
@@ -194,7 +192,7 @@ bool UstirovMessageGetter::GetDivFromMessage(const QByteArray &message) const
     return DIV;
 }
 
-quint16 UstirovMessageGetter::GetDistanceFromMessage(const QByteArray &message) const
+quint32 UstirovMessageGetter::GetDistanceFromMessage(const QByteArray &message) const
 {
     QByteArray distanceArray;
     distanceArray.append(message.at(2));

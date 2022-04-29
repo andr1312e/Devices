@@ -1,5 +1,7 @@
 #include "messageRepositories/ustrirovmessagerepository.h"
 
+
+
 UstrirovMessageRepository::UstrirovMessageRepository()
 {
     ResetRepository();
@@ -20,12 +22,12 @@ void UstrirovMessageRepository::SetDopler(int doplerFrequency)
     m_repository.DoplerFrequency=doplerFrequency;
 }
 
-void UstrirovMessageRepository::SetDistance(quint16 distance)
+void UstrirovMessageRepository::SetDistance(quint32 distance)
 {
     m_repository.Distance=distance;
 }
 
-void UstrirovMessageRepository::SetDistanceToLocator(quint16 distanceToLocator)
+void UstrirovMessageRepository::SetDistanceToLocator(quint32 distanceToLocator)
 {
     m_repository.DistanceToLocator=distanceToLocator;
 }
@@ -62,8 +64,11 @@ void UstrirovMessageRepository::SetTimeOutState()
     m_repository.state=2;
 }
 
-DevicesAdjustingKitMessage &UstrirovMessageRepository::GetMessage()
+const DevicesAdjustingKitMessage &UstrirovMessageRepository::GetMessage()
 {
+    const QDateTime currentDateTime(QDateTime::currentDateTime());
+    m_repository.sTimeMeasurement.usecs=currentDateTime.toMSecsSinceEpoch();
+    m_repository.sTimeMeasurement.secs=currentDateTime.toSecsSinceEpoch();
     return m_repository;
 }
 
