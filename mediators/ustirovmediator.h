@@ -41,6 +41,7 @@ public:
     int GetMessagesCount() const;
     QLinkedList<QByteArray> *GetMessageList() const;
 private:
+    void RestartCommandsCreate();
     void SetStateCommandsCreate(const DevicesAdjustingKitMessage &state);
     void GetStateCommandsCreate();
     void SendToRarmMessageWithNoConnectionInfo();

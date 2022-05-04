@@ -45,6 +45,7 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
         {
             m_repository->SetWet(variable);
             m_repository->SetGoodState();
+            Q_EMIT ToAllDataCollected();
 //            qDebug()<< "Метео : влажность " << variable;
             break;
         }

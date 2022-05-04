@@ -17,6 +17,7 @@ class UstirovMessageSender
 public:
     explicit UstirovMessageSender(const double f, const double fref);
     ~UstirovMessageSender();
+    const QByteArray CreateRestartCommand() const;
     const QByteArray CreateZeroCommand() const;
     const QByteArray CreateFirstCommand(double fvcoFreq) const;
     const QByteArray CreateSecondCommand(double fvcoFreq, double doplerFreq) const;
@@ -33,10 +34,10 @@ private:
     quint8 CalculateAttenuator(quint16 attenuator) const;
     bool CalculateDiv(double fvcoFreq) const;
 private:
-    const double m_c=299792458.0;
+    const double m_c = 299792458.0;
     const double m_f;
     const double m_fref;
-    const QVarLengthArray<quint8, 8> m_messagesIds={0,1,2,3,4,5,6,7};
+    const QVarLengthArray<quint8, 8> m_messagesIds = {0, 1, 2, 3, 4, 5, 6, 7};
 };
 
 #endif // MESSAGECREATORS_STATEMESSAGESENDER_H

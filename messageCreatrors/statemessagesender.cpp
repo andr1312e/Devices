@@ -12,6 +12,11 @@ UstirovMessageSender::~UstirovMessageSender()
 
 }
 
+const QByteArray UstirovMessageSender::CreateRestartCommand() const
+{
+    return QByteArray("\x0d\x5a");
+}
+
 const QByteArray UstirovMessageSender::CreateZeroCommand() const
 {
     QByteArray command;
@@ -22,10 +27,10 @@ const QByteArray UstirovMessageSender::CreateZeroCommand() const
 
 const QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 {
-    quint8 id=m_messagesIds.at(1);
-    qint16 intRx=CalculateInt(fvcoFreq);//МГЦ
-    qint32 fractRx=CalculateFractNew(fvcoFreq);//МГЦ
-    bool divRx=CalculateDiv(fvcoFreq);
+    quint8 id = m_messagesIds.at(1);
+    qint16 intRx = CalculateInt(fvcoFreq); //МГЦ
+    qint32 fractRx = CalculateFractNew(fvcoFreq); //МГЦ
+    bool divRx = CalculateDiv(fvcoFreq);
 
 
     QByteArray lastThreeBytes;
@@ -46,10 +51,10 @@ const QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 
 const QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, double doplerFreq) const
 {
-    double resultFreq=fvcoFreq+doplerFreq;
-    qint16 intTx=CalculateInt(resultFreq);
-    qint32 fractTx=CalculateFractNew(resultFreq);
-    bool divTx=CalculateDiv(resultFreq);
+    double resultFreq = fvcoFreq + doplerFreq;
+    qint16 intTx = CalculateInt(resultFreq);
+    qint32 fractTx = CalculateFractNew(resultFreq);
+    bool divTx = CalculateDiv(resultFreq);
 
 
     QByteArray lastThreeBytes;
@@ -70,21 +75,21 @@ const QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, doub
 
 const QByteArray UstirovMessageSender::CreateThirdCommand(double distance, double distanceToLocator) const
 {
-    double secondVal=m_f/m_c;
-    double newDistance=qAbs(distance-distanceToLocator);
-    quint16 DISTANCE=newDistance*secondVal+1.0;
+    double secondVal = m_f / m_c;
+    double newDistance = qAbs(distance - distanceToLocator);
+    quint16 DISTANCE = newDistance * secondVal + 1.0;
 
     QByteArray command;
     QDataStream streamMain(&command, QIODevice::WriteOnly);
-    streamMain<<m_messagesIds.at(3);
-    streamMain<<DISTANCE;
+    streamMain << m_messagesIds.at(3);
+    streamMain << DISTANCE;
     return command;
 }
 
 const QByteArray UstirovMessageSender::CreateFourthCommand(double gainTX, double gainRX) const
 {
-    quint8 GAIN_TX=CalculateGain(gainTX);
-    quint8 GAIN_RX=CalculateGain(gainRX);
+    quint8 GAIN_TX = CalculateGain(gainTX);
+    quint8 GAIN_RX = CalculateGain(gainRX);
 
     QByteArray command;
     command.append(m_messagesIds.at(4));
@@ -95,7 +100,7 @@ const QByteArray UstirovMessageSender::CreateFourthCommand(double gainTX, double
 
 const QByteArray UstirovMessageSender::CreateFiveCommand(double attenuator) const
 {
-    quint8 attenuatorInt=CalculateAttenuator(attenuator);
+    quint8 attenuatorInt = CalculateAttenuator(attenuator);
 
     QByteArray command;
     command.append(m_messagesIds.at(5));
@@ -108,12 +113,12 @@ const QByteArray UstirovMessageSender::CreateSixCommand(double workMode) const
     QByteArray command;
     command.append(m_messagesIds.at(6));
     command.append(quint8(workMode));
-    if (workMode>2)
+    if (workMode > 2)
     {
-        quint32 sinusVal=0;
-        quint8 first=(sinusVal >> (8*0)) & 0xff;
-        quint8 second=(sinusVal >> (8*1)) & 0xff;
-        quint8 third=(sinusVal >> (8*2)) & 0xff;
+        quint32 sinusVal = 0;
+        quint8 first = (sinusVal >> (8 * 0)) & 0xff;
+        quint8 second = (sinusVal >> (8 * 1)) & 0xff;
+        quint8 third = (sinusVal >> (8 * 2)) & 0xff;
         command.append(third);
         command.append(second);
         command.append(first);
@@ -131,48 +136,48 @@ const QByteArray UstirovMessageSender::CreateSevenCommand(quint8 messageId) cons
 
 quint16 UstirovMessageSender::CalculateInt(double fvcoFreq) const
 {
-    bool DIV_Rx=CalculateDiv(fvcoFreq);
-    double INT_RxDouble=fvcoFreq-3000000.0;
-    INT_RxDouble=INT_RxDouble*2.0;
-    INT_RxDouble=INT_RxDouble/pow(2,DIV_Rx);
-    INT_RxDouble=(INT_RxDouble/m_fref);
-    quint16 INT_Rx=(quint16)(INT_RxDouble);
-    INT_Rx-=4;
+    bool DIV_Rx = CalculateDiv(fvcoFreq);
+    double INT_RxDouble = fvcoFreq - 3000000.0;
+    INT_RxDouble = INT_RxDouble * 2.0;
+    INT_RxDouble = INT_RxDouble / pow(2, DIV_Rx);
+    INT_RxDouble = (INT_RxDouble / m_fref);
+    quint16 INT_Rx = (quint16)(INT_RxDouble);
+    INT_Rx -= 4;
     return INT_Rx;
 }
 
 quint32 UstirovMessageSender::CalculateFractNew(double fvcoFreq) const
 {
-    bool DIV_Rx=CalculateDiv(fvcoFreq);
-    double FRACT_Rx=(pow(2,20));
-    fvcoFreq=fvcoFreq-3000000.0;
-    double FirstValue=2.0*fvcoFreq;
-    double FirstValueDiv=m_fref*pow(2, DIV_Rx);
-    FirstValue=FirstValue/FirstValueDiv;
-    double SecondValue=(qint32)FirstValue;
-    FRACT_Rx=FRACT_Rx*(FirstValue-SecondValue);
+    bool DIV_Rx = CalculateDiv(fvcoFreq);
+    double FRACT_Rx = (pow(2, 20));
+    fvcoFreq = fvcoFreq - 3000000.0;
+    double FirstValue = 2.0 * fvcoFreq;
+    double FirstValueDiv = m_fref * pow(2, DIV_Rx);
+    FirstValue = FirstValue / FirstValueDiv;
+    double SecondValue = (qint32)FirstValue;
+    FRACT_Rx = FRACT_Rx * (FirstValue - SecondValue);
     return FRACT_Rx;
 }
 
 quint32 UstirovMessageSender::CalculateFractOld(double fvcoFreq) const
 {
-    bool DIV_Rx=CalculateDiv(fvcoFreq);
-    double FRACT_Rx=(pow(2,20));
-    double FirstValue=2.0*fvcoFreq;
-    double FirstValueDiv=m_fref*pow(2, DIV_Rx);
-    FirstValue=FirstValue/FirstValueDiv;
-    double SecondValue=(qint32)FirstValue;
-    FRACT_Rx=FRACT_Rx*(FirstValue-SecondValue);
+    bool DIV_Rx = CalculateDiv(fvcoFreq);
+    double FRACT_Rx = (pow(2, 20));
+    double FirstValue = 2.0 * fvcoFreq;
+    double FirstValueDiv = m_fref * pow(2, DIV_Rx);
+    FirstValue = FirstValue / FirstValueDiv;
+    double SecondValue = (qint32)FirstValue;
+    FRACT_Rx = FRACT_Rx * (FirstValue - SecondValue);
     return FRACT_Rx;
 }
 
 quint8 UstirovMessageSender::CalculateGain(double gain) const
 {
-    if (gain>(31.5))
+    if (gain > (31.5))
     {
-        gain=31.5;
+        gain = 31.5;
     }
-    quint8 GAIN_X=gain*2.0;
+    quint8 GAIN_X = gain * 2.0;
     return GAIN_X;
 }
 
@@ -180,7 +185,7 @@ quint8 UstirovMessageSender::CalculateAttenuator(quint16 attenuator) const
 {
     if (atteniatorTable.contains(attenuator))
     {
-        quint8 atteniatorValue=atteniatorTable[attenuator];
+        quint8 atteniatorValue = atteniatorTable[attenuator];
         return atteniatorValue;
     }
     else
@@ -191,7 +196,7 @@ quint8 UstirovMessageSender::CalculateAttenuator(quint16 attenuator) const
 
 bool UstirovMessageSender::CalculateDiv(double fvcoFreq) const
 {
-    if (fvcoFreq>2750000000)
+    if (fvcoFreq > 2750000000)
     {
         return 1;
     }

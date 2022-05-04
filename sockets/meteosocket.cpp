@@ -11,6 +11,7 @@ MeteoServer::MeteoServer(const Logger *logger, const quint16 moxaPort, const qui
     CreateObjects();
     InitObjects();
     ConnectObjects();
+    m_serverMeteo->listen(QHostAddress::Any, m_moxaPort);
 }
 
 MeteoServer::~MeteoServer()
@@ -28,7 +29,6 @@ void MeteoServer::CreateObjects()
 
 void MeteoServer::InitObjects()
 {
-    m_serverMeteo->listen(QHostAddress::Any, m_moxaPort);
     m_noAnswerTimer->setInterval(std::chrono::seconds(2));
     m_noAnswerTimer->setTimerType(Qt::VeryCoarseTimer);
     m_noAnswerTimer->setSingleShot(true);

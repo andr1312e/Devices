@@ -33,6 +33,7 @@ void RarmSocket::InitObjects()
 {
     m_timeToReConnectToRarm->setInterval(std::chrono::seconds(2));
     m_timeToReConnectToRarm->setTimerType(Qt::VeryCoarseTimer);
+    m_timeToReConnectToRarm->start();
     m_messagesIdWantedFromRarm =  {
         DEVICES_ADJUSTING_KIT_SET_STATE//id 151 Отправка состояний в юстировочный комлект
     };
