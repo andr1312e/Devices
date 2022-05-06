@@ -1,7 +1,8 @@
 #include "statemessagesender.h"
 
-UstirovMessageSender::UstirovMessageSender(const double f, const double fref)
-    : m_f(f)
+UstirovMessageSender::UstirovMessageSender(const Logger * logger, const double f, const double fref)
+    : m_logger(logger)
+    , m_f(f)
     , m_fref(fref)
 {
 
@@ -12,12 +13,12 @@ UstirovMessageSender::~UstirovMessageSender()
 
 }
 
-const QByteArray UstirovMessageSender::CreateRestartCommand() const
+QByteArray UstirovMessageSender::CreateRestartCommand() const
 {
     return QByteArray("\x0d\x5a");
 }
 
-const QByteArray UstirovMessageSender::CreateZeroCommand() const
+QByteArray UstirovMessageSender::CreateZeroCommand() const
 {
     QByteArray command;
     command.append(m_messagesIds.at(0));
@@ -25,11 +26,11 @@ const QByteArray UstirovMessageSender::CreateZeroCommand() const
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
+QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 {
     quint8 id = m_messagesIds.at(1);
     qint16 intRx = CalculateInt(fvcoFreq); //МГЦ
-    qint32 fractRx = CalculateFractNew(fvcoFreq); //МГЦ
+    qint32 fractRx = CalculateFractOld(fvcoFreq); //МГЦ
     bool divRx = CalculateDiv(fvcoFreq);
 
 
@@ -49,7 +50,7 @@ const QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, double doplerFreq) const
+QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, double doplerFreq) const
 {
     double resultFreq = fvcoFreq + doplerFreq;
     qint16 intTx = CalculateInt(resultFreq);
@@ -73,12 +74,14 @@ const QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, doub
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateThirdCommand(double distance, double distanceToLocator) const
+QByteArray UstirovMessageSender::CreateThirdCommand(double distance, double distanceToLocator) const
 {
-    double secondVal = m_f / m_c;
-    double newDistance = qAbs(distance - distanceToLocator);
+    const double secondVal = m_f / m_c;
+    m_logger->Appends("!!!!!Дистанция f/c= " + std::to_string(secondVal));
+    const double newDistance = qAbs(distance - distanceToLocator);
+    m_logger->Appends("!!!!!Дистанция - дист до локатора " + std::to_string(newDistance));
     quint16 DISTANCE = newDistance * secondVal + 1.0;
-
+    m_logger->Appends("!!!!!Дистанция - в сообщение пишем " + std::to_string(DISTANCE));
     QByteArray command;
     QDataStream streamMain(&command, QIODevice::WriteOnly);
     streamMain << m_messagesIds.at(3);
@@ -86,10 +89,10 @@ const QByteArray UstirovMessageSender::CreateThirdCommand(double distance, doubl
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateFourthCommand(double gainTX, double gainRX) const
+QByteArray UstirovMessageSender::CreateFourthCommand(double gainTX, double gainRX) const
 {
-    quint8 GAIN_TX = CalculateGain(gainTX);
-    quint8 GAIN_RX = CalculateGain(gainRX);
+    const quint8 GAIN_TX = CalculateGain(gainTX);
+    const quint8 GAIN_RX = CalculateGain(gainRX);
 
     QByteArray command;
     command.append(m_messagesIds.at(4));
@@ -98,7 +101,7 @@ const QByteArray UstirovMessageSender::CreateFourthCommand(double gainTX, double
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateFiveCommand(double attenuator) const
+QByteArray UstirovMessageSender::CreateFiveCommand(double attenuator) const
 {
     quint8 attenuatorInt = CalculateAttenuator(attenuator);
 
@@ -108,7 +111,7 @@ const QByteArray UstirovMessageSender::CreateFiveCommand(double attenuator) cons
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateSixCommand(double workMode) const
+QByteArray UstirovMessageSender::CreateSixCommand(double workMode) const
 {
     QByteArray command;
     command.append(m_messagesIds.at(6));
@@ -126,7 +129,7 @@ const QByteArray UstirovMessageSender::CreateSixCommand(double workMode) const
     return command;
 }
 
-const QByteArray UstirovMessageSender::CreateSevenCommand(quint8 messageId) const
+QByteArray UstirovMessageSender::CreateSevenCommand(quint8 messageId) const
 {
     QByteArray command;
     command.append(m_messagesIds.at(7));
@@ -185,7 +188,7 @@ quint8 UstirovMessageSender::CalculateAttenuator(quint16 attenuator) const
 {
     if (atteniatorTable.contains(attenuator))
     {
-        quint8 atteniatorValue = atteniatorTable[attenuator];
+        quint8 atteniatorValue = atteniatorTable.last();
         return atteniatorValue;
     }
     else

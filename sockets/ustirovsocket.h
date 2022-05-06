@@ -29,7 +29,7 @@ private Q_SLOTS:
     void OnErrorOccurred();
     void OnCheckConnectionTimerTimeOut();
 public:
-    void SendMessage(const QByteArray &message);
+    void SendMessage(const QByteArray &message, bool isRestart);
     void TryToSendLastMessageAgain();
 public:
     bool IsUstirovConnected() const;

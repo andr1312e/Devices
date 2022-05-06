@@ -30,7 +30,6 @@ public Q_SLOTS:
 private Q_SLOTS:
     void OnGetStateFromMessage(const QByteArray &message);
     void OnRequestTimeOut();
-    void OnWantedNextMessage();
     void OnResetQueue();
     void OnAllDataCollected();
     void OnTimeToSendMessage();
@@ -50,6 +49,7 @@ private:
     quint16 m_ustirovPort;
     double f;
     double fref;
+    bool m_isRestartMode;
 private:
     QTimer *m_sendNextMessageTimer;
 private:

@@ -39,7 +39,7 @@ private:
     bool m_hasAnswer;
 private:
     DevicesGeoStateMessage  m_geoState;
-    QSerialPort *m_connectionPort;
+    QSerialPort *m_connectionPort=Q_NULLPTR;
     QByteArray m_collectedData;
 };
 

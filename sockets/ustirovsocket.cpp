@@ -127,21 +127,31 @@ void UstirovSocket::OnCheckConnectionTimerTimeOut()
     }
 }
 
-void UstirovSocket::SendMessage(const QByteArray &message)
+void UstirovSocket::SendMessage(const QByteArray &message, bool isRestart)
 {
-    m_lastMessage=message;
-    if (IsUstirovConnected())
+    if(isRestart)
     {
+        m_lastMessage.clear();
         m_logger->Appends("US: отправили сообщение " + message.toHex().toStdString());
         m_socket->write(message);
         m_socket->flush();
-        m_noAnswerTimer->start();
-
     }
     else
     {
-        Q_EMIT ToResetQueue();
-        m_logger->Appends("US: пытались отправить сообщение но сокет не подключен");
+        m_lastMessage=message;
+        if (IsUstirovConnected())
+        {
+            m_logger->Appends("US: отправили сообщение " + message.toHex().toStdString());
+            m_socket->write(message);
+            m_socket->flush();
+            m_noAnswerTimer->start();
+
+        }
+        else
+        {
+            Q_EMIT ToResetQueue();
+            m_logger->Appends("US: пытались отправить сообщение но сокет не подключен");
+        }
     }
 }
 

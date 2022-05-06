@@ -109,9 +109,9 @@ void ConsoleMediator::PrintUkitState()
         message+="\n    Порт юк: " + std::to_string(m_ustirov->GetUstirovPort());
         message+="\n    Сообщений в очереди: "+std::to_string(m_ustirov->GetMessagesCount());
         const QLinkedList<QByteArray> *const messagesList=m_ustirov->GetMessageList();
-        for (QLinkedList<QByteArray>::const_iterator it=messagesList->cbegin(); it!=messagesList->cend(); ++it)
+        for (const QByteArray &currentMessage: messagesList)
         {
-            message+="\n          Сообщение: "+it->toHex().toStdString();
+            message+="\n          Сообщение: "+currentMessage.toHex().toStdString();
         }
         message+="\n    Данные:";
     }

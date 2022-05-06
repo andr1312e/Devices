@@ -70,7 +70,7 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
         FRACT_RX=FRACT_RX/2.0;
         FRACT_RX=FRACT_RX*Fref*qPow(2, DIV_RX);
 
-        m_messageRepository->SetFvco((quint32)FRACT_RX);
+        m_messageRepository->SetFvco((quint32)FRACT_RX+3000000.0);//поправка на 3
 //        qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
         return true;
     }

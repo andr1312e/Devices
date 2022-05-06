@@ -9,23 +9,23 @@
 #include <cmath>
 
 #include "constants.h"
-
+#include "mediators/logger.h"
 #include "messageRepositories/ustrirovmessagerepository.h"
 
 class UstirovMessageSender
 {
 public:
-    explicit UstirovMessageSender(const double f, const double fref);
+    explicit UstirovMessageSender(const Logger * logger, const double f, const double fref);
     ~UstirovMessageSender();
-    const QByteArray CreateRestartCommand() const;
-    const QByteArray CreateZeroCommand() const;
-    const QByteArray CreateFirstCommand(double fvcoFreq) const;
-    const QByteArray CreateSecondCommand(double fvcoFreq, double doplerFreq) const;
-    const QByteArray CreateThirdCommand(double distance, double distanceToLocator) const;
-    const QByteArray CreateFourthCommand(double gainTX, double gainRX) const;
-    const QByteArray CreateFiveCommand(double attenuator) const;
-    const QByteArray CreateSixCommand(double workMode) const;
-    const QByteArray CreateSevenCommand(quint8 messageId) const;
+    QByteArray CreateRestartCommand() const;
+    QByteArray CreateZeroCommand() const;
+    QByteArray CreateFirstCommand(double fvcoFreq) const;
+    QByteArray CreateSecondCommand(double fvcoFreq, double doplerFreq) const;
+    QByteArray CreateThirdCommand(double distance, double distanceToLocator) const;
+    QByteArray CreateFourthCommand(double gainTX, double gainRX) const;
+    QByteArray CreateFiveCommand(double attenuator) const;
+    QByteArray CreateSixCommand(double workMode) const;
+    QByteArray CreateSevenCommand(quint8 messageId) const;
 private:
     quint16 CalculateInt(double fvcoFreq) const;
     quint32 CalculateFractNew(double fvcoFreq) const;
@@ -34,6 +34,7 @@ private:
     quint8 CalculateAttenuator(quint16 attenuator) const;
     bool CalculateDiv(double fvcoFreq) const;
 private:
+    const Logger *const m_logger;
     const double m_c = 299792458.0;
     const double m_f;
     const double m_fref;
