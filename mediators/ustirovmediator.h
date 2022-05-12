@@ -2,7 +2,6 @@
 #define MEDIATORS_USTIROVMEDIATOR_H
 
 #include <QObject>
-#include <QLinkedList>
 #include <QSettings>
 
 #include "messageCreatrors/statemessagesender.h"
@@ -32,13 +31,13 @@ private Q_SLOTS:
     void OnRequestTimeOut();
     void OnResetQueue();
     void OnAllDataCollected();
-    void OnTimeToSendMessage();
+    void OnSendMessage();
 public:
     quint16 GetUstirovPort() const;
     bool IsUstirovConnected() const;
     QString GetLastUstirovErrorMessage() const;
     int GetMessagesCount() const;
-    QLinkedList<QByteArray> *GetMessageList() const;
+    QVector<QByteArray> *GetMessageList() const;
 private:
     void RestartCommandsCreate();
     void SetStateCommandsCreate(const DevicesAdjustingKitMessage &state);
@@ -51,14 +50,12 @@ private:
     double fref;
     bool m_isRestartMode;
 private:
-    QTimer *m_sendNextMessageTimer;
-private:
     const Logger *m_logger;
     UstirovSocket *m_ustirovSocket;
     UstirovMessageSender *m_ustirovMessageSetter;
     UstirovMessageGetter *m_ustirovMessageGetter;
     UstrirovMessageRepository *m_ustirovMessageRepository;
-    QLinkedList<QByteArray> *m_messagesToSendList;
+    QVector<QByteArray> *m_messagesToSendList;
 };
 
 #endif // MEDIATORS_USTIROVMEDIATOR_H

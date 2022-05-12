@@ -15,7 +15,7 @@
 class UstirovMessageSender
 {
 public:
-    explicit UstirovMessageSender(const Logger * logger, const double f, const double fref);
+    explicit UstirovMessageSender(const Logger *logger, const double f, const double fref);
     ~UstirovMessageSender();
     QByteArray CreateRestartCommand() const;
     QByteArray CreateZeroCommand() const;

@@ -2,7 +2,8 @@
 
 Devices::Devices()
     : QObject(Q_NULLPTR)
-    , m_rarmAdress(QStringLiteral("127.0.0.1"))
+    , m_rarmAdress(QStringLiteral("192.168.115.195"))
+//    , m_rarmAdress(QStringLiteral("127.0.0.1"))
     , m_rarmPort(4242)
 {
     CreateObjects();
@@ -26,17 +27,17 @@ Devices::~Devices()
 void Devices::CreateObjects()
 {
 #ifdef QT_DEBUG
-    m_logger=new Logger(QCoreApplication::applicationDirPath().toStdString()+"/logDevices.txt");
+    m_logger = new Logger(QCoreApplication::applicationDirPath().toStdString() + "/logDevices.txt");
 #else
-    m_logger=new Logger(QDir::homePath().toStdString()+"/logDevices.txt");
+    m_logger = new Logger(QDir::homePath().toStdString() + "/logDevices.txt");
 #endif
-    m_rarmSocket=new RarmSocket(m_logger, m_rarmAdress, m_rarmPort, this);
-    m_moxaMediator=new MoxaMediator(QStringLiteral("moxaSettings.ini"), this);
-    m_meteoMediator=new MeteoMediator(m_logger, QStringLiteral("meteoSettings.ini"), this);
-    m_ustirovMediator=new UstirovMediator(m_logger, m_moxaMediator->GetMoxaIpAdress(), QStringLiteral("ustirovSettings.ini"), this);
-    m_geoSocket=new GeoSocket(this);
-    m_consoleMediator=new ConsoleMediator(m_logger->GetLogFileName(), m_rarmSocket, m_moxaMediator, m_ustirovMediator, m_meteoMediator, m_geoSocket, Q_NULLPTR);
-    m_consoleThread=new QThread(Q_NULLPTR);
+    m_rarmSocket = new RarmSocket(m_logger, m_rarmAdress, m_rarmPort, this);
+    m_moxaMediator = new MoxaMediator(QStringLiteral("moxaSettings.ini"), this);
+    m_meteoMediator = new MeteoMediator(m_logger, QStringLiteral("meteoSettings.ini"), this);
+    m_ustirovMediator = new UstirovMediator(m_logger, m_moxaMediator->GetMoxaIpAdress(), QStringLiteral("ustirovSettings.ini"), this);
+    m_geoSocket = new GeoSocket(this);
+    m_consoleMediator = new ConsoleMediator(m_logger->GetLogFileName(), m_rarmSocket, m_moxaMediator, m_ustirovMediator, m_meteoMediator, m_geoSocket, Q_NULLPTR);
+    m_consoleThread = new QThread(Q_NULLPTR);
 }
 
 void Devices::PrepareObjects()

@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QSerialPort>
 #include <QTimer>
 
 #include "mediators/logger.h"
@@ -37,14 +38,16 @@ public:
 private:
     void StopNoAnswerTimer();
 private:
-    QTcpSocket *m_socket;
+    QSerialPort *m_socket;
+    bool state = false;
+//    QTcpSocket *m_socket;
     const QString m_moxaIpAdress;
     const quint16 m_moxaPort;
 private:
     QTimer *m_checkConnectionTimer;
     QTimer *m_noAnswerTimer;
 private:
-    const Logger * const m_logger;
+    const Logger *const m_logger;
     QByteArray m_lastMessage;
     QByteArray m_readyReadBuffer;
     const QVarLengthArray<quint8, 7> *m_messageSize;

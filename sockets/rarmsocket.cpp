@@ -34,7 +34,8 @@ void RarmSocket::InitObjects()
     m_timeToReConnectToRarm->setInterval(std::chrono::seconds(2));
     m_timeToReConnectToRarm->setTimerType(Qt::VeryCoarseTimer);
     m_timeToReConnectToRarm->start();
-    m_messagesIdWantedFromRarm =  {
+    m_messagesIdWantedFromRarm =
+    {
         DEVICES_ADJUSTING_KIT_SET_STATE//id 151 Отправка состояний в юстировочный комлект
     };
     m_pTcpSocketToRarm->connectToHost(m_rarmAdress, m_port, QIODevice::ReadWrite);
@@ -99,7 +100,8 @@ void RarmSocket::OnReadyRead()
         switch (messageId)
         {
         case DEVICES_ADJUSTING_KIT_SET_STATE:
-        { //160 Отправка данных в модуль обмена с периферийными устройствами(юстировочный комплект
+        {
+            //160 Отправка данных в модуль обмена с периферийными устройствами(юстировочный комплект
             if (sizeof (DevicesAdjustingKitMessage) == (messageSize - 1))
             {
                 DevicesAdjustingKitMessage setStateMessage;
@@ -117,8 +119,9 @@ void RarmSocket::OnReadyRead()
         }
         default:
         {
-            m_logger->Appends("RS: Ид не обрабатываем "+std::to_string(messageId));
-            if ((messageSize - 1) > (gettingMessageArray.size() - in.device()->pos())) {
+            m_logger->Appends("RS: Ид не обрабатываем " + std::to_string(messageId));
+            if ((messageSize - 1) > (gettingMessageArray.size() - in.device()->pos()))
+            {
                 gettingMessageArray.clear();
                 m_logger->Appends("RS: Чистим буфер");
                 return;
@@ -126,7 +129,7 @@ void RarmSocket::OnReadyRead()
             else
             {
                 in.skipRawData(messageSize - 1);
-                m_logger->Appends("RS: Пропускаем "+std::to_string(messageSize) + " байт");
+                m_logger->Appends("RS: Пропускаем " + std::to_string(messageSize) + " байт");
             }
             break;
         }
@@ -185,8 +188,8 @@ void RarmSocket::OnSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState)
     m_logger->Appends("RS: Отправляем состояние мохи. Cвязь:" + std::to_string(moxaState.state));
     QByteArray moxaMessage;
     QDateTime currentDateTime(QDateTime::currentDateTime());
-    moxaState.sTimeMeasurement.usecs=currentDateTime.toMSecsSinceEpoch();
-    moxaState.sTimeMeasurement.secs=currentDateTime.toSecsSinceEpoch();
+    moxaState.sTimeMeasurement.usecs = currentDateTime.toMSecsSinceEpoch();
+    moxaState.sTimeMeasurement.secs = currentDateTime.toSecsSinceEpoch();
 
     QDataStream out(&moxaMessage, QIODevice::WriteOnly);
     out.setVersion(QDataStream::Qt_5_3);
@@ -202,7 +205,7 @@ void RarmSocket::OnSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState)
 
 void RarmSocket::OnSendRarmMeteoState(const DevicesMeteoKitGetMessage &meteoState)
 {
-    m_logger->Appends("RS: Отправляем метео. Состояние: "+std::to_string(meteoState.state));
+    m_logger->Appends("RS: Отправляем метео. Состояние: " + std::to_string(meteoState.state));
     QByteArray meteoMessage;
 
 
@@ -279,7 +282,7 @@ void RarmSocket::ReconnectToRarm()
 
 bool RarmSocket::IsRarmConnected() const
 {
-    return QTcpSocket::ConnectedState==m_pTcpSocketToRarm->state();
+    return QTcpSocket::ConnectedState == m_pTcpSocketToRarm->state();
 }
 
 std::string RarmSocket::GetRarmError() const

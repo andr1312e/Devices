@@ -19,7 +19,7 @@ UstirovMessageGetter::~UstirovMessageGetter()
 
 bool UstirovMessageGetter::FillDataIntoStructFromMessage(const QByteArray &message)
 {
-    const quint8 sendedMessageId=message.at(m_indexInByteArrayOfGettingMessageId);
+    const quint8 sendedMessageId = message.at(m_indexInByteArrayOfGettingMessageId);
     switch (sendedMessageId)
     {
     case 1:
@@ -56,21 +56,21 @@ const DevicesAdjustingKitMessage &UstirovMessageGetter::GetMessage()
 
 bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
 {
-    if(8==message.count())
+    if (8 == message.count())
     {
-        const quint16 INT_RX=GetIntFromMessage(message);
-        double FRACT_RX=(double)GetFractFromMessage(message);
-        const bool DIV_RX=GetDivFromMessage(message);
+        const quint16 INT_RX = GetIntFromMessage(message);
+        double FRACT_RX = (double)GetFractFromMessage(message);
+        const bool DIV_RX = GetDivFromMessage(message);
 
         //Значение сидит только здесь, первую парсить не нужно
 
-        double pow=qPow(2, 20);
-        FRACT_RX=FRACT_RX/pow;
-        FRACT_RX=FRACT_RX+INT_RX+4.0;
-        FRACT_RX=FRACT_RX/2.0;
-        FRACT_RX=FRACT_RX*Fref*qPow(2, DIV_RX);
+        double pow = qPow(2, 20);
+        FRACT_RX = FRACT_RX / pow;
+        FRACT_RX = FRACT_RX + INT_RX + 4.0;
+        FRACT_RX = FRACT_RX / 2.0;
+        FRACT_RX = FRACT_RX * Fref * qPow(2, DIV_RX);
 
-        m_messageRepository->SetFvco((quint32)FRACT_RX+3000000.0);//поправка на 3
+        m_messageRepository->SetFvco((quint32)FRACT_RX + 3000000.0); //поправка на 3
 //        qDebug()<< QStringLiteral("UMG: Get Work Point ") << m_messageRepository->GetFvco();
         return true;
     }
@@ -79,27 +79,27 @@ bool UstirovMessageGetter::SaveFvcoToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
 {
-    const quint64 fvcoFreq=m_messageRepository->GetFvco();
-    if(0==fvcoFreq)
+    const quint64 fvcoFreq = m_messageRepository->GetFvco();
+    if (0 == fvcoFreq)
     {
         m_messageRepository->SetDopler(0);
         qFatal("fvco is null but cant be null");
     }
     else
     {
-        if(8==message.count())
+        if (8 == message.count())
         {
-            const quint16 INT_TX=GetIntFromMessage(message);
-            double FRACT_TX=(double)GetFractFromMessage(message);
-            const bool DIV_TX=GetDivFromMessage(message);
+            const quint16 INT_TX = GetIntFromMessage(message);
+            double FRACT_TX = (double)GetFractFromMessage(message);
+            const bool DIV_TX = GetDivFromMessage(message);
 
             //Значение сидит только здесь, первую INT_RX парсить не нужно
-            const double pow=qPow(2, 20);
-            FRACT_TX=FRACT_TX/pow;
-            FRACT_TX=FRACT_TX+INT_TX+4.0;
-            FRACT_TX=FRACT_TX/2.0;
-            FRACT_TX=FRACT_TX*Fref*qPow(2, DIV_TX);
-            m_messageRepository->SetDopler(qCeil(FRACT_TX-fvcoFreq));
+            const double pow = qPow(2, 20);
+            FRACT_TX = FRACT_TX / pow;
+            FRACT_TX = FRACT_TX + INT_TX + 4.0;
+            FRACT_TX = FRACT_TX / 2.0;
+            FRACT_TX = FRACT_TX * Fref * qPow(2, DIV_TX);
+            m_messageRepository->SetDopler(qCeil(FRACT_TX - fvcoFreq));
 //            qDebug()<< QStringLiteral("UMG: Get Dopler ") << m_messageRepository->GetMessage().DoplerFrequency;
             return true;
         }
@@ -109,11 +109,11 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveDistanceToRepository(const QByteArray &message)
 {
-    if(4==message.count())
+    if (4 == message.count())
     {
-        double messageDistance=(double)GetDistanceFromMessage(message);
-        messageDistance=messageDistance/f*c;
-        messageDistance=messageDistance+m_messageRepository->GetDistanceToLocator();
+        double messageDistance = (double)GetDistanceFromMessage(message);
+        messageDistance = messageDistance / 2.0 * c / f;
+        messageDistance = messageDistance + m_messageRepository->GetDistanceToLocator();
         m_messageRepository->SetDistance(qCeil(messageDistance));
         return true;
     }
@@ -123,10 +123,10 @@ bool UstirovMessageGetter::SaveDistanceToRepository(const QByteArray &message)
 bool UstirovMessageGetter::SaveGainsToRepository(const QByteArray &message)
 {
 
-    if (4==message.count())
+    if (4 == message.count())
     {
-        float GAIN_TX=message.at(2)/2.0;
-        float GAIN_RX=message.at(3)/2.0;
+        float GAIN_TX = message.at(2) / 2.0;
+        float GAIN_RX = message.at(3) / 2.0;
         m_messageRepository->SetGainRx(GAIN_RX);
         m_messageRepository->SetGainTx(GAIN_TX);
         return true;
@@ -136,10 +136,11 @@ bool UstirovMessageGetter::SaveGainsToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveAttenuatorToRepository(const QByteArray &message)
 {
-    if (3==message.count())
+    if (3 == message.count())
     {
-        quint8 Attenuator_RX=quint8(message.at(2));
-        m_messageRepository->SetAttenuator(Attenuator_RX);
+        quint8 Attenuator_RX = quint8(message.at(2));
+        quint8 realValue = atteniatorTable.key(Attenuator_RX);
+        m_messageRepository->SetAttenuator(realValue);
         return true;
     }
     return false;
@@ -147,12 +148,13 @@ bool UstirovMessageGetter::SaveAttenuatorToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveWorkModeToRepository(const QByteArray &message)
 {
-    if (3==message.count())
+    if (3 == message.count())
     {
-        quint8 WorkModeIndex=quint8(message.at(2));
-        if(WorkModeIndex<m_countOfWorkModes)
+        quint8 WorkModeIndex = quint8(message.at(2));
+        if (WorkModeIndex < m_countOfWorkModes)
         {
             m_messageRepository->SetWorkMode(WorkModeIndex);
+            m_messageRepository->SetWorkState();
             Q_EMIT ToAllDataCollected();
             return true;
         }
@@ -188,7 +190,7 @@ quint32 UstirovMessageGetter::GetFractFromMessage(const QByteArray &message) con
 
 bool UstirovMessageGetter::GetDivFromMessage(const QByteArray &message) const
 {
-    const bool DIV=message.at(7);
+    const bool DIV = message.at(7);
     return DIV;
 }
 
@@ -199,6 +201,6 @@ quint32 UstirovMessageGetter::GetDistanceFromMessage(const QByteArray &message) 
     distanceArray.append(message.at(3));
     QDataStream IntDataStream(distanceArray);
     quint16 distance;
-    IntDataStream >>distance;
+    IntDataStream >> distance;
     return distance;
 }

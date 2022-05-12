@@ -1,6 +1,6 @@
 #include "statemessagesender.h"
 
-UstirovMessageSender::UstirovMessageSender(const Logger * logger, const double f, const double fref)
+UstirovMessageSender::UstirovMessageSender(const Logger *logger, const double f, const double fref)
     : m_logger(logger)
     , m_f(f)
     , m_fref(fref)
@@ -30,7 +30,7 @@ QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 {
     quint8 id = m_messagesIds.at(1);
     qint16 intRx = CalculateInt(fvcoFreq); //МГЦ
-    qint32 fractRx = CalculateFractOld(fvcoFreq); //МГЦ
+    qint32 fractRx = CalculateFractNew(fvcoFreq); //МГЦ
     bool divRx = CalculateDiv(fvcoFreq);
 
 
@@ -54,7 +54,7 @@ QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, double dop
 {
     double resultFreq = fvcoFreq + doplerFreq;
     qint16 intTx = CalculateInt(resultFreq);
-    qint32 fractTx = CalculateFractNew(resultFreq);
+    qint32 fractTx = CalculateFractOld(resultFreq);
     bool divTx = CalculateDiv(resultFreq);
 
 
@@ -76,12 +76,13 @@ QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, double dop
 
 QByteArray UstirovMessageSender::CreateThirdCommand(double distance, double distanceToLocator) const
 {
+    distance -= 26, 9434889941;
     const double secondVal = m_f / m_c;
-    m_logger->Appends("!!!!!Дистанция f/c= " + std::to_string(secondVal));
-    const double newDistance = qAbs(distance - distanceToLocator);
-    m_logger->Appends("!!!!!Дистанция - дист до локатора " + std::to_string(newDistance));
-    quint16 DISTANCE = newDistance * secondVal + 1.0;
-    m_logger->Appends("!!!!!Дистанция - в сообщение пишем " + std::to_string(DISTANCE));
+//    m_logger->Appends("!!!!!Дистанция f/c= " + std::to_string(secondVal));
+    const double newDistance = 2.0 * qAbs(distance - distanceToLocator) * secondVal + 1.0;
+//    m_logger->Appends("!!!!!Дистанция - дист до локатора " + std::to_string(newDistance));
+    quint16 DISTANCE = newDistance;
+//    m_logger->Appends("!!!!!Дистанция - в сообщение пишем " + std::to_string(DISTANCE));
     QByteArray command;
     QDataStream streamMain(&command, QIODevice::WriteOnly);
     streamMain << m_messagesIds.at(3);
@@ -119,9 +120,9 @@ QByteArray UstirovMessageSender::CreateSixCommand(double workMode) const
     if (workMode > 2)
     {
         quint32 sinusVal = 0;
-        quint8 first = (sinusVal >> (8 * 0)) & 0xff;
-        quint8 second = (sinusVal >> (8 * 1)) & 0xff;
-        quint8 third = (sinusVal >> (8 * 2)) & 0xff;
+        const quint8 first = (sinusVal >> (8 * 0)) & 0xff;
+        const quint8 second = (sinusVal >> (8 * 1)) & 0xff;
+        const quint8 third = (sinusVal >> (8 * 2)) & 0xff;
         command.append(third);
         command.append(second);
         command.append(first);
@@ -151,7 +152,7 @@ quint16 UstirovMessageSender::CalculateInt(double fvcoFreq) const
 
 quint32 UstirovMessageSender::CalculateFractNew(double fvcoFreq) const
 {
-    bool DIV_Rx = CalculateDiv(fvcoFreq);
+    const bool DIV_Rx = CalculateDiv(fvcoFreq);
     double FRACT_Rx = (pow(2, 20));
     fvcoFreq = fvcoFreq - 3000000.0;
     double FirstValue = 2.0 * fvcoFreq;
@@ -188,7 +189,7 @@ quint8 UstirovMessageSender::CalculateAttenuator(quint16 attenuator) const
 {
     if (atteniatorTable.contains(attenuator))
     {
-        quint8 atteniatorValue = atteniatorTable.last();
+        quint8 atteniatorValue = atteniatorTable[attenuator];
         return atteniatorValue;
     }
     else

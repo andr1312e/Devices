@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
     SingleInstanceMaker guard(QStringLiteral("DEVICES"));
-    if(guard.CanRunApp())
+    if (guard.CanRunApp())
     {
         QCoreApplication applicaton(argc, argv);
         Devices devices;
@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     }
     else
     {
-        qDebug()<< "Невозможно выделить память. Проверьте системый монитор на наличие процесса devices";
+        qDebug() << "Невозможно выделить память. Проверьте системый монитор на наличие процесса devices";
         return -1;
     }
 }
