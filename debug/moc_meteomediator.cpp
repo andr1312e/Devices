@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'meteomediator.h'
 **
-** Created by: The Qt Meta Object Compiler version 68 (Qt 6.3.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,8 +12,8 @@
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'meteomediator.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 68
-#error "This file was generated using the moc from 6.3.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 67
+#error "This file was generated using the moc from 5.15.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -22,23 +22,26 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MeteoMediator_t {
-    const uint offsetsAndSize[20];
+    QByteArrayData data[10];
     char stringdata0[156];
 };
-#define QT_MOC_LITERAL(ofs, len) \
-    uint(offsetof(qt_meta_stringdata_MeteoMediator_t, stringdata0) + ofs), len 
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_MeteoMediator_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
 static const qt_meta_stringdata_MeteoMediator_t qt_meta_stringdata_MeteoMediator = {
     {
-QT_MOC_LITERAL(0, 13), // "MeteoMediator"
-QT_MOC_LITERAL(14, 20), // "ToSendRarmMeteoState"
-QT_MOC_LITERAL(35, 0), // ""
-QT_MOC_LITERAL(36, 25), // "DevicesMeteoKitGetMessage"
-QT_MOC_LITERAL(62, 10), // "meteoState"
-QT_MOC_LITERAL(73, 16), // "OnMakeNewRequest"
-QT_MOC_LITERAL(90, 21), // "OnGetStateFromMessage"
-QT_MOC_LITERAL(112, 7), // "message"
-QT_MOC_LITERAL(120, 16), // "OnRequestTimeOut"
-QT_MOC_LITERAL(137, 18) // "OnAllDataCollected"
+QT_MOC_LITERAL(0, 0, 13), // "MeteoMediator"
+QT_MOC_LITERAL(1, 14, 20), // "ToSendRarmMeteoState"
+QT_MOC_LITERAL(2, 35, 0), // ""
+QT_MOC_LITERAL(3, 36, 25), // "DevicesMeteoKitGetMessage"
+QT_MOC_LITERAL(4, 62, 10), // "meteoState"
+QT_MOC_LITERAL(5, 73, 16), // "OnMakeNewRequest"
+QT_MOC_LITERAL(6, 90, 21), // "OnGetStateFromMessage"
+QT_MOC_LITERAL(7, 112, 7), // "message"
+QT_MOC_LITERAL(8, 120, 16), // "OnRequestTimeOut"
+QT_MOC_LITERAL(9, 137, 18) // "OnAllDataCollected"
 
     },
     "MeteoMediator\0ToSendRarmMeteoState\0\0"
@@ -51,7 +54,7 @@ QT_MOC_LITERAL(137, 18) // "OnAllDataCollected"
 static const uint qt_meta_data_MeteoMediator[] = {
 
  // content:
-      10,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        5,   14, // methods
@@ -61,14 +64,14 @@ static const uint qt_meta_data_MeteoMediator[] = {
        0,       // flags
        1,       // signalCount
 
- // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   44,    2, 0x06,    1 /* Public */,
+ // signals: name, argc, parameters, tag, flags
+       1,    1,   39,    2, 0x06 /* Public */,
 
- // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       5,    0,   47,    2, 0x08,    3 /* Private */,
-       6,    1,   48,    2, 0x08,    4 /* Private */,
-       8,    0,   51,    2, 0x08,    6 /* Private */,
-       9,    0,   52,    2, 0x08,    7 /* Private */,
+ // slots: name, argc, parameters, tag, flags
+       5,    0,   42,    2, 0x08 /* Private */,
+       6,    1,   43,    2, 0x08 /* Private */,
+       8,    0,   46,    2, 0x08 /* Private */,
+       9,    0,   47,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -86,11 +89,11 @@ void MeteoMediator::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         auto *_t = static_cast<MeteoMediator *>(_o);
-        (void)_t;
+        Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->ToSendRarmMeteoState((*reinterpret_cast< std::add_pointer_t<DevicesMeteoKitGetMessage>>(_a[1]))); break;
+        case 0: _t->ToSendRarmMeteoState((*reinterpret_cast< const DevicesMeteoKitGetMessage(*)>(_a[1]))); break;
         case 1: _t->OnMakeNewRequest(); break;
-        case 2: _t->OnGetStateFromMessage((*reinterpret_cast< std::add_pointer_t<QByteArray>>(_a[1]))); break;
+        case 2: _t->OnGetStateFromMessage((*reinterpret_cast< const QByteArray(*)>(_a[1]))); break;
         case 3: _t->OnRequestTimeOut(); break;
         case 4: _t->OnAllDataCollected(); break;
         default: ;
@@ -107,18 +110,12 @@ void MeteoMediator::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
     }
 }
 
-const QMetaObject MeteoMediator::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject MeteoMediator::staticMetaObject = { {
     QMetaObject::SuperData::link<QObject::staticMetaObject>(),
-    qt_meta_stringdata_MeteoMediator.offsetsAndSize,
+    qt_meta_stringdata_MeteoMediator.data,
     qt_meta_data_MeteoMediator,
     qt_static_metacall,
     nullptr,
-qt_incomplete_metaTypeArray<qt_meta_stringdata_MeteoMediator_t
-, QtPrivate::TypeAndForceComplete<MeteoMediator, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const DevicesMeteoKitGetMessage &, std::false_type>
-, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const QByteArray &, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
-
-
->,
     nullptr
 } };
 
@@ -147,7 +144,7 @@ int MeteoMediator::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 5;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 5)
-            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+            *reinterpret_cast<int*>(_a[0]) = -1;
         _id -= 5;
     }
     return _id;

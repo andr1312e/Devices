@@ -28,10 +28,10 @@ QByteArray UstirovMessageSender::CreateZeroCommand() const
 
 QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 {
-    quint8 id = m_messagesIds.at(1);
-    qint16 intRx = CalculateInt(fvcoFreq); //МГЦ
-    qint32 fractRx = CalculateFractNew(fvcoFreq); //МГЦ
-    bool divRx = CalculateDiv(fvcoFreq);
+    const quint8 id = m_messagesIds.at(1);
+    const qint16 intRx = CalculateInt(fvcoFreq); //МГЦ
+    const qint32 fractRx = CalculateFractNew(fvcoFreq); //МГЦ
+    const bool divRx = CalculateDiv(fvcoFreq);
 
 
     QByteArray lastThreeBytes;
@@ -52,10 +52,10 @@ QByteArray UstirovMessageSender::CreateFirstCommand(double fvcoFreq) const
 
 QByteArray UstirovMessageSender::CreateSecondCommand(double fvcoFreq, double doplerFreq) const
 {
-    double resultFreq = fvcoFreq + doplerFreq;
-    qint16 intTx = CalculateInt(resultFreq);
-    qint32 fractTx = CalculateFractOld(resultFreq);
-    bool divTx = CalculateDiv(resultFreq);
+    const double resultFreq = fvcoFreq + doplerFreq;
+    const qint16 intTx = CalculateInt(resultFreq);
+    const qint32 fractTx = CalculateFractNew(resultFreq);
+    const bool divTx = CalculateDiv(resultFreq);
 
 
     QByteArray lastThreeBytes;

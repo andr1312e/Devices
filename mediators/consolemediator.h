@@ -31,17 +31,17 @@ private:
     void PrintMeteoState();
     void PrintGeoState();
 private:
-    const std::string m_logFilePath;
+    const std::string m_logFileMessagePath;
 private:
     const RarmSocket *const m_rarmSocket;
     const MoxaMediator *const m_moxa;
-    const UstirovMediator * const m_ustirov;
-    const MeteoMediator * const m_meteo;
-    const GeoSocket * const m_geo;
+    const UstirovMediator *const m_ustirov;
+    const MeteoMediator *const m_meteo;
+    const GeoSocket *const m_geo;
 private:
-    int m_updateIterval=500;
+    int m_updateIterval = 500;
     std::string m_progress;
-    int m_iteration=0;
+    int m_iteration = 0;
 };
 
 #endif // CONSOLEMEDIATOR_H

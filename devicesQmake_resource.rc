@@ -9,9 +9,9 @@ VS_VERSION_INFO VERSIONINFO
 #else
 	FILEFLAGS 0x0L
 #endif
-	FILEOS VOS_NT_WINDOWS32
+	FILEOS VOS__WINDOWS32
 	FILETYPE VFT_DLL
-	FILESUBTYPE VFT2_UNKNOWN
+	FILESUBTYPE 0x0L
 	BEGIN
 		BLOCK "StringFileInfo"
 		BEGIN
@@ -24,9 +24,6 @@ VS_VERSION_INFO VERSIONINFO
 				VALUE "OriginalFilename", "devicesQmake.exe\0"
 				VALUE "ProductName", "devicesQmake\0"
 				VALUE "ProductVersion", "4.0.0.0\0"
-				VALUE "InternalName", "\0"
-				VALUE "Comments", "\0"
-				VALUE "LegalTrademarks", "\0"
 			END
 		END
 		BLOCK "VarFileInfo"

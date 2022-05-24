@@ -15,6 +15,7 @@ DEFINES +=                 \
 
 SOURCES += \
         main.cpp \
+    messageRepositories/moxamessagerepository.cpp \
     sockets/geosocket.cpp \
     sockets/meteosocket.cpp \
     sockets/rarmsocket.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
     mediators/consolemediator.cpp
 
 HEADERS += \
+    messageRepositories/moxamessagerepository.h \
     sockets/geosocket.h \
     sockets/meteosocket.h \
     sockets/rarmsocket.h \

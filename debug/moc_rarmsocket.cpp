@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'rarmsocket.h'
 **
-** Created by: The Qt Meta Object Compiler version 68 (Qt 6.3.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,8 +12,8 @@
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'rarmsocket.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 68
-#error "This file was generated using the moc from 6.3.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 67
+#error "This file was generated using the moc from 5.15.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -22,36 +22,39 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_RarmSocket_t {
-    const uint offsetsAndSize[46];
+    QByteArrayData data[23];
     char stringdata0[395];
 };
-#define QT_MOC_LITERAL(ofs, len) \
-    uint(offsetof(qt_meta_stringdata_RarmSocket_t, stringdata0) + ofs), len 
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_RarmSocket_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
 static const qt_meta_stringdata_RarmSocket_t qt_meta_stringdata_RarmSocket = {
     {
-QT_MOC_LITERAL(0, 10), // "RarmSocket"
-QT_MOC_LITERAL(11, 17), // "ToSetUstirovState"
-QT_MOC_LITERAL(29, 0), // ""
-QT_MOC_LITERAL(30, 26), // "DevicesAdjustingKitMessage"
-QT_MOC_LITERAL(57, 5), // "state"
-QT_MOC_LITERAL(63, 17), // "ToGetUstirovState"
-QT_MOC_LITERAL(81, 17), // "OnConnectedToRarm"
-QT_MOC_LITERAL(99, 11), // "OnReadyRead"
-QT_MOC_LITERAL(111, 17), // "OnConnectionError"
-QT_MOC_LITERAL(129, 28), // "QAbstractSocket::SocketError"
-QT_MOC_LITERAL(158, 11), // "socketError"
-QT_MOC_LITERAL(170, 14), // "OnDisconnected"
-QT_MOC_LITERAL(185, 17), // "OnCheckConnection"
-QT_MOC_LITERAL(203, 24), // "OnSendRarmMoxaWorksState"
-QT_MOC_LITERAL(228, 24), // "DevicesMoxaStateMessage&"
-QT_MOC_LITERAL(253, 9), // "moxaState"
-QT_MOC_LITERAL(263, 20), // "OnSendRarmMeteoState"
-QT_MOC_LITERAL(284, 25), // "DevicesMeteoKitGetMessage"
-QT_MOC_LITERAL(310, 10), // "meteoState"
-QT_MOC_LITERAL(321, 19), // "OnSendRarmUPCBState"
-QT_MOC_LITERAL(341, 9), // "upcbState"
-QT_MOC_LITERAL(351, 20), // "OnSendRarmGeoMessage"
-QT_MOC_LITERAL(372, 22) // "DevicesGeoStateMessage"
+QT_MOC_LITERAL(0, 0, 10), // "RarmSocket"
+QT_MOC_LITERAL(1, 11, 17), // "ToSetUstirovState"
+QT_MOC_LITERAL(2, 29, 0), // ""
+QT_MOC_LITERAL(3, 30, 26), // "DevicesAdjustingKitMessage"
+QT_MOC_LITERAL(4, 57, 5), // "state"
+QT_MOC_LITERAL(5, 63, 17), // "ToGetUstirovState"
+QT_MOC_LITERAL(6, 81, 17), // "OnConnectedToRarm"
+QT_MOC_LITERAL(7, 99, 11), // "OnReadyRead"
+QT_MOC_LITERAL(8, 111, 17), // "OnConnectionError"
+QT_MOC_LITERAL(9, 129, 28), // "QAbstractSocket::SocketError"
+QT_MOC_LITERAL(10, 158, 11), // "socketError"
+QT_MOC_LITERAL(11, 170, 14), // "OnDisconnected"
+QT_MOC_LITERAL(12, 185, 17), // "OnCheckConnection"
+QT_MOC_LITERAL(13, 203, 24), // "OnSendRarmMoxaWorksState"
+QT_MOC_LITERAL(14, 228, 24), // "DevicesMoxaStateMessage&"
+QT_MOC_LITERAL(15, 253, 9), // "moxaState"
+QT_MOC_LITERAL(16, 263, 20), // "OnSendRarmMeteoState"
+QT_MOC_LITERAL(17, 284, 25), // "DevicesMeteoKitGetMessage"
+QT_MOC_LITERAL(18, 310, 10), // "meteoState"
+QT_MOC_LITERAL(19, 321, 19), // "OnSendRarmUPCBState"
+QT_MOC_LITERAL(20, 341, 9), // "upcbState"
+QT_MOC_LITERAL(21, 351, 20), // "OnSendRarmGeoMessage"
+QT_MOC_LITERAL(22, 372, 22) // "DevicesGeoStateMessage"
 
     },
     "RarmSocket\0ToSetUstirovState\0\0"
@@ -71,7 +74,7 @@ QT_MOC_LITERAL(372, 22) // "DevicesGeoStateMessage"
 static const uint qt_meta_data_RarmSocket[] = {
 
  // content:
-      10,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
       11,   14, // methods
@@ -81,20 +84,20 @@ static const uint qt_meta_data_RarmSocket[] = {
        0,       // flags
        2,       // signalCount
 
- // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   80,    2, 0x06,    1 /* Public */,
-       5,    0,   83,    2, 0x06,    3 /* Public */,
+ // signals: name, argc, parameters, tag, flags
+       1,    1,   69,    2, 0x06 /* Public */,
+       5,    0,   72,    2, 0x06 /* Public */,
 
- // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       6,    0,   84,    2, 0x08,    4 /* Private */,
-       7,    0,   85,    2, 0x08,    5 /* Private */,
-       8,    1,   86,    2, 0x08,    6 /* Private */,
-      11,    0,   89,    2, 0x08,    8 /* Private */,
-      12,    0,   90,    2, 0x08,    9 /* Private */,
-      13,    1,   91,    2, 0x0a,   10 /* Public */,
-      16,    1,   94,    2, 0x0a,   12 /* Public */,
-      19,    1,   97,    2, 0x0a,   14 /* Public */,
-      21,    1,  100,    2, 0x0a,   16 /* Public */,
+ // slots: name, argc, parameters, tag, flags
+       6,    0,   73,    2, 0x08 /* Private */,
+       7,    0,   74,    2, 0x08 /* Private */,
+       8,    1,   75,    2, 0x08 /* Private */,
+      11,    0,   78,    2, 0x08 /* Private */,
+      12,    0,   79,    2, 0x08 /* Private */,
+      13,    1,   80,    2, 0x0a /* Public */,
+      16,    1,   83,    2, 0x0a /* Public */,
+      19,    1,   86,    2, 0x0a /* Public */,
+      21,    1,   89,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -118,29 +121,29 @@ void RarmSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         auto *_t = static_cast<RarmSocket *>(_o);
-        (void)_t;
+        Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->ToSetUstirovState((*reinterpret_cast< std::add_pointer_t<DevicesAdjustingKitMessage>>(_a[1]))); break;
+        case 0: _t->ToSetUstirovState((*reinterpret_cast< const DevicesAdjustingKitMessage(*)>(_a[1]))); break;
         case 1: _t->ToGetUstirovState(); break;
         case 2: _t->OnConnectedToRarm(); break;
         case 3: _t->OnReadyRead(); break;
-        case 4: _t->OnConnectionError((*reinterpret_cast< std::add_pointer_t<QAbstractSocket::SocketError>>(_a[1]))); break;
+        case 4: _t->OnConnectionError((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         case 5: _t->OnDisconnected(); break;
         case 6: _t->OnCheckConnection(); break;
-        case 7: _t->OnSendRarmMoxaWorksState((*reinterpret_cast< std::add_pointer_t<DevicesMoxaStateMessage&>>(_a[1]))); break;
-        case 8: _t->OnSendRarmMeteoState((*reinterpret_cast< std::add_pointer_t<DevicesMeteoKitGetMessage>>(_a[1]))); break;
-        case 9: _t->OnSendRarmUPCBState((*reinterpret_cast< std::add_pointer_t<DevicesAdjustingKitMessage>>(_a[1]))); break;
-        case 10: _t->OnSendRarmGeoMessage((*reinterpret_cast< std::add_pointer_t<DevicesGeoStateMessage>>(_a[1]))); break;
+        case 7: _t->OnSendRarmMoxaWorksState((*reinterpret_cast< DevicesMoxaStateMessage(*)>(_a[1]))); break;
+        case 8: _t->OnSendRarmMeteoState((*reinterpret_cast< const DevicesMeteoKitGetMessage(*)>(_a[1]))); break;
+        case 9: _t->OnSendRarmUPCBState((*reinterpret_cast< const DevicesAdjustingKitMessage(*)>(_a[1]))); break;
+        case 10: _t->OnSendRarmGeoMessage((*reinterpret_cast< const DevicesGeoStateMessage(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         switch (_id) {
-        default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+        default: *reinterpret_cast<int*>(_a[0]) = -1; break;
         case 4:
             switch (*reinterpret_cast<int*>(_a[1])) {
-            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+            default: *reinterpret_cast<int*>(_a[0]) = -1; break;
             case 0:
-                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< QAbstractSocket::SocketError >(); break;
+                *reinterpret_cast<int*>(_a[0]) = qRegisterMetaType< QAbstractSocket::SocketError >(); break;
             }
             break;
         }
@@ -163,18 +166,12 @@ void RarmSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     }
 }
 
-const QMetaObject RarmSocket::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject RarmSocket::staticMetaObject = { {
     QMetaObject::SuperData::link<QObject::staticMetaObject>(),
-    qt_meta_stringdata_RarmSocket.offsetsAndSize,
+    qt_meta_stringdata_RarmSocket.data,
     qt_meta_data_RarmSocket,
     qt_static_metacall,
     nullptr,
-qt_incomplete_metaTypeArray<qt_meta_stringdata_RarmSocket_t
-, QtPrivate::TypeAndForceComplete<RarmSocket, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const DevicesAdjustingKitMessage &, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
-, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<QAbstractSocket::SocketError, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<DevicesMoxaStateMessage &, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const DevicesMeteoKitGetMessage &, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const DevicesAdjustingKitMessage &, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const DevicesGeoStateMessage &, std::false_type>
-
-
->,
     nullptr
 } };
 

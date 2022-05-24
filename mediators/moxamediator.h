@@ -5,7 +5,7 @@
 #include <QSettings>
 #include <QProcess>
 
-#include "datamessage.h"
+#include "messageRepositories/moxamessagerepository.h"
 #include "mediators/logger.h"
 
 class MoxaMediator : public QObject
@@ -17,8 +17,11 @@ public:
 private:
     void ReadDataFromSettingsFile(const QString &settingsFileName);
     void InitObjects();
+    void ConnectObjects();
 Q_SIGNALS:
     void ToSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);
+public Q_SLOTS:
+    void OnRegisterPCBState();
 public:
     const QString &GetMoxaIpAdress() const;
     bool IsMoxaConnected() const;
@@ -29,7 +32,7 @@ private:
     QString m_moxaIpAdress;
     quint16 m_moxaCheckMiliseconds;
     QProcess m_process;
-    DevicesMoxaStateMessage moxaState;
+    MoxaMessageRepository *const m_messageRepository;
 };
 
 #endif // MOXAMEDIATOR_H

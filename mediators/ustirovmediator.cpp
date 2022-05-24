@@ -5,19 +5,21 @@ UstirovMediator::UstirovMediator(const Logger *logger, const QString &moxaIpAdre
     , m_moxaIpAdress(moxaIpAdress)
     , m_isRestartMode(false)
     , m_logger(logger)
+    , m_pingTimer(new QTimer(this))
 {
     ReadDataFromSettingsFile(settingsFileName);
     CreateObjects();
+    StartPingTimer();
     ConnectObjects();
 }
 
 UstirovMediator::~UstirovMediator()
 {
+    delete m_pingTimer;
     delete m_ustirovSocket;
     delete m_ustirovMessageSetter;
     delete m_ustirovMessageGetter;
     delete m_ustirovMessageRepository;
-    delete m_messagesToSendList;
 }
 
 void UstirovMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
@@ -61,7 +63,6 @@ void UstirovMediator::CreateObjects()
     m_ustirovMessageRepository = new UstrirovMessageRepository();
     m_ustirovMessageSetter = new UstirovMessageSender(m_logger, f, fref);
     m_ustirovMessageGetter = new UstirovMessageGetter(f, fref, m_ustirovMessageRepository, this);
-    m_messagesToSendList = new QVector<QByteArray>();
 }
 
 void UstirovMediator::ConnectObjects()
@@ -71,11 +72,18 @@ void UstirovMediator::ConnectObjects()
     connect(m_ustirovSocket, &UstirovSocket::ToRequestTimeOut, this, &UstirovMediator::OnRequestTimeOut);
     connect(m_ustirovSocket, &UstirovSocket::ToWantNextMessage, this, &UstirovMediator::OnSendMessage);
     connect(m_ustirovMessageGetter, &UstirovMessageGetter::ToAllDataCollected, this, &UstirovMediator::OnAllDataCollected);
+    connect(m_pingTimer, &QTimer::timeout, this, &UstirovMediator::OnSendPing);
+}
+
+void UstirovMediator::StartPingTimer()
+{
+    m_pingTimer->setTimerType(Qt::VeryCoarseTimer);
+    m_pingTimer->start(3500);
 }
 
 void UstirovMediator::OnResetQueue()
 {
-    m_messagesToSendList->clear();
+    m_messagesToSendList.clear();
 }
 
 void UstirovMediator::OnAllDataCollected()
@@ -87,13 +95,30 @@ void UstirovMediator::OnAllDataCollected()
 
 void UstirovMediator::OnSendMessage()
 {
-    if (!m_messagesToSendList->isEmpty())
+    if (m_pingTimer->isActive())
     {
-        m_logger->Appends("UM: Высылаем сообщение " + m_messagesToSendList->front().toHex().toStdString());
-        const QByteArray &frontMessage = m_messagesToSendList->front();
-        m_ustirovSocket->SendMessage(frontMessage, m_isRestartMode);
-        m_messagesToSendList->removeFirst();
+        Q_EMIT ToSendPcbWork();
     }
+    else
+    {
+
+        if (m_messagesToSendList.isEmpty())
+        {
+            m_pingTimer->start();
+        }
+        else
+        {
+            m_logger->Appends("UM: Высылаем сообщение " + m_messagesToSendList.front().toHex().toStdString());
+            const QByteArray &frontMessage = m_messagesToSendList.front();
+            m_ustirovSocket->SendMessage(frontMessage, m_isRestartMode);
+            m_messagesToSendList.removeFirst();
+        }
+    }
+}
+
+void UstirovMediator::OnSendPing()
+{
+    m_ustirovSocket->SendMessage(m_ustirovMessageSetter->CreateZeroCommand(), false);
 }
 
 quint16 UstirovMediator::GetUstirovPort() const
@@ -113,17 +138,17 @@ QString UstirovMediator::GetLastUstirovErrorMessage() const
 
 int UstirovMediator::GetMessagesCount() const
 {
-    return m_messagesToSendList->count();
+    return m_messagesToSendList.count();
 }
 
-QVector<QByteArray> *UstirovMediator::GetMessageList() const
+QList<QByteArray> UstirovMediator::GetMessageList() const
 {
     return m_messagesToSendList;
 }
 
 void UstirovMediator::RestartCommandsCreate()
 {
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateRestartCommand());
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateRestartCommand());
 }
 
 void UstirovMediator::OnGetStateFromMessage(const QByteArray &message)
@@ -148,30 +173,30 @@ void UstirovMediator::OnRequestTimeOut()
 
 void UstirovMediator::OnSetDataToUstirov(const DevicesAdjustingKitMessage &state)
 {
+    m_pingTimer->stop();
     if (m_ustirovSocket->IsUstirovConnected())
     {
         if (3 == state.state)
         {
             m_logger->Appends("UM: Перезагружаем устройство");
-            m_messagesToSendList->clear();
+            m_messagesToSendList.clear();
             m_isRestartMode = true;
             RestartCommandsCreate();
             OnSendMessage();
         }
         else if (4 == state.state)
         {
-//            m_logger->Appends("UM: Считываем данные");
-//            m_isRestartMode = false;
-//            m_messagesToSendList->clear();
-//            GetStateCommandsCreate();
-//            OnTimeToSendMessage();
+            m_logger->Appends("UM: Считываем данные");
+            m_isRestartMode = false;
+            m_messagesToSendList.clear();
+            GetStateCommandsCreate();
         }
         else
         {
             m_logger->Appends("UM: Пишем данные в юстировочный");
             m_isRestartMode = false;
             m_ustirovMessageRepository->SetDistanceToLocator(state.DistanceToLocator);
-            m_messagesToSendList->clear();
+            m_messagesToSendList.clear();
             SetStateCommandsCreate(state);
             GetStateCommandsCreate();
             OnSendMessage();
@@ -190,7 +215,7 @@ void UstirovMediator::OnGetDataFromUstirov()
     m_logger->Appends("UM: Берем данные из юстировочного");
     if (m_ustirovSocket->IsUstirovConnected())
     {
-        m_messagesToSendList->clear();
+        m_messagesToSendList.clear();
         GetStateCommandsCreate();
         OnSendMessage();
     }
@@ -202,25 +227,24 @@ void UstirovMediator::OnGetDataFromUstirov()
 
 void UstirovMediator::SetStateCommandsCreate(const DevicesAdjustingKitMessage &state)
 {
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateSixCommand(0.0));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateSixCommand(0.0));
     if (m_ustirovMessageRepository->GetFvco() != state.Fvco)
     {
-        m_messagesToSendList->append(m_ustirovMessageSetter->CreateFirstCommand(state.Fvco));
+        m_messagesToSendList.append(m_ustirovMessageSetter->CreateFirstCommand(state.Fvco));
     }
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateSecondCommand(state.Fvco, state.DoplerFrequency));
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateThirdCommand(state.Distance, state.DistanceToLocator));
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateFourthCommand(state.GAIN_TX, state.GAIN_RX));
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateFiveCommand(state.Attenuator));
-    m_messagesToSendList->append(m_ustirovMessageSetter->CreateSixCommand(state.WorkMode));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateSecondCommand(state.Fvco, state.DoplerFrequency));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateThirdCommand(state.Distance, state.DistanceToLocator));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateFourthCommand(state.GAIN_TX, state.GAIN_RX));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateFiveCommand(state.Attenuator));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateSixCommand(state.WorkMode));
 }
 
 void UstirovMediator::GetStateCommandsCreate()
 {
     for (int id = 1; id < 7; ++id)
     {
-        m_messagesToSendList->append(m_ustirovMessageSetter->CreateSevenCommand(id));
+        m_messagesToSendList.append(m_ustirovMessageSetter->CreateSevenCommand(id));
     }
-    //3 сообщения не было с предпоследней прошивкой, узнай если с этой у Юр
 }
 
 void UstirovMediator::SendToRarmMessageWithNoConnectionInfo()

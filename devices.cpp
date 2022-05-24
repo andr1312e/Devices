@@ -2,14 +2,14 @@
 
 Devices::Devices()
     : QObject(Q_NULLPTR)
-    , m_rarmAdress(QStringLiteral("192.168.115.195"))
-//    , m_rarmAdress(QStringLiteral("127.0.0.1"))
+    , m_rarmAdress(QLatin1String("192.168.115.195"))
+//    , m_rarmAdress(QLatin1String("127.0.0.1"))
     , m_rarmPort(4242)
 {
     CreateObjects();
     PrepareObjects();
     ConnectObjects();
-    m_consoleThread->start();
+    StartObjects();
 }
 
 Devices::~Devices()
@@ -50,8 +50,14 @@ void Devices::ConnectObjects()
     connect(m_moxaMediator, &MoxaMediator::ToSendRarmMoxaWorksState, m_rarmSocket,  &RarmSocket::OnSendRarmMoxaWorksState);
     connect(m_meteoMediator, &MeteoMediator::ToSendRarmMeteoState, m_rarmSocket, &RarmSocket::OnSendRarmMeteoState);
     connect(m_ustirovMediator, &UstirovMediator::ToSendRarmUstirovState, m_rarmSocket, &RarmSocket::OnSendRarmUPCBState);
+    connect(m_ustirovMediator, &UstirovMediator::ToSendPcbWork, m_moxaMediator, &MoxaMediator::OnRegisterPCBState);
     connect(m_geoSocket, &GeoSocket::ToSendRarmGeoState, m_rarmSocket, &RarmSocket::OnSendRarmGeoMessage);
     connect(m_rarmSocket, &RarmSocket::ToSetUstirovState, m_ustirovMediator, &UstirovMediator::OnSetDataToUstirov);
     connect(m_rarmSocket, &RarmSocket::ToGetUstirovState, m_ustirovMediator, &UstirovMediator::OnGetDataFromUstirov);
     connect(m_consoleThread, &QThread::started, m_consoleMediator, &ConsoleMediator::OnStartLog);
+}
+
+void Devices::StartObjects()
+{
+    m_consoleThread->start();
 }

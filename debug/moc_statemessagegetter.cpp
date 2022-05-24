@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'statemessagegetter.h'
 **
-** Created by: The Qt Meta Object Compiler version 68 (Qt 6.3.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,8 +12,8 @@
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'statemessagegetter.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 68
-#error "This file was generated using the moc from 6.3.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 67
+#error "This file was generated using the moc from 5.15.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -22,16 +22,19 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_UstirovMessageGetter_t {
-    const uint offsetsAndSize[6];
+    QByteArrayData data[3];
     char stringdata0[41];
 };
-#define QT_MOC_LITERAL(ofs, len) \
-    uint(offsetof(qt_meta_stringdata_UstirovMessageGetter_t, stringdata0) + ofs), len 
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_UstirovMessageGetter_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
 static const qt_meta_stringdata_UstirovMessageGetter_t qt_meta_stringdata_UstirovMessageGetter = {
     {
-QT_MOC_LITERAL(0, 20), // "UstirovMessageGetter"
-QT_MOC_LITERAL(21, 18), // "ToAllDataCollected"
-QT_MOC_LITERAL(40, 0) // ""
+QT_MOC_LITERAL(0, 0, 20), // "UstirovMessageGetter"
+QT_MOC_LITERAL(1, 21, 18), // "ToAllDataCollected"
+QT_MOC_LITERAL(2, 40, 0) // ""
 
     },
     "UstirovMessageGetter\0ToAllDataCollected\0"
@@ -42,7 +45,7 @@ QT_MOC_LITERAL(40, 0) // ""
 static const uint qt_meta_data_UstirovMessageGetter[] = {
 
  // content:
-      10,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -52,8 +55,8 @@ static const uint qt_meta_data_UstirovMessageGetter[] = {
        0,       // flags
        1,       // signalCount
 
- // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   20,    2, 0x06,    1 /* Public */,
+ // signals: name, argc, parameters, tag, flags
+       1,    0,   19,    2, 0x06 /* Public */,
 
  // signals: parameters
     QMetaType::Void,
@@ -65,7 +68,7 @@ void UstirovMessageGetter::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         auto *_t = static_cast<UstirovMessageGetter *>(_o);
-        (void)_t;
+        Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->ToAllDataCollected(); break;
         default: ;
@@ -80,21 +83,15 @@ void UstirovMessageGetter::qt_static_metacall(QObject *_o, QMetaObject::Call _c,
             }
         }
     }
-    (void)_a;
+    Q_UNUSED(_a);
 }
 
-const QMetaObject UstirovMessageGetter::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject UstirovMessageGetter::staticMetaObject = { {
     QMetaObject::SuperData::link<QObject::staticMetaObject>(),
-    qt_meta_stringdata_UstirovMessageGetter.offsetsAndSize,
+    qt_meta_stringdata_UstirovMessageGetter.data,
     qt_meta_data_UstirovMessageGetter,
     qt_static_metacall,
     nullptr,
-qt_incomplete_metaTypeArray<qt_meta_stringdata_UstirovMessageGetter_t
-, QtPrivate::TypeAndForceComplete<UstirovMessageGetter, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
-
-
-
->,
     nullptr
 } };
 
@@ -123,7 +120,7 @@ int UstirovMessageGetter::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 1;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 1)
-            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+            *reinterpret_cast<int*>(_a[0]) = -1;
         _id -= 1;
     }
     return _id;

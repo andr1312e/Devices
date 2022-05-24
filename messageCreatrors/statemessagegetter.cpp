@@ -99,6 +99,7 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
             FRACT_TX = FRACT_TX + INT_TX + 4.0;
             FRACT_TX = FRACT_TX / 2.0;
             FRACT_TX = FRACT_TX * Fref * qPow(2, DIV_TX);
+            FRACT_TX = FRACT_TX + 3000000;
             m_messageRepository->SetDopler(qCeil(FRACT_TX - fvcoFreq));
 //            qDebug()<< QStringLiteral("UMG: Get Dopler ") << m_messageRepository->GetMessage().DoplerFrequency;
             return true;

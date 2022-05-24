@@ -64,9 +64,9 @@ void UstirovSocket::ConnectObjects()
 
 void UstirovSocket::OnReadyRead()
 {
+//    qDebug()<< m_readyReadBuffer
     StopNoAnswerTimer();
     m_readyReadBuffer.append(m_socket->readAll());
-    const std::string str = m_readyReadBuffer.toHex().toStdString();
     m_logger->Appends("US Получили сообщение " + m_readyReadBuffer.toHex().toStdString());
     if (m_messagesIdToGetState == m_readyReadBuffer.front())
     {
@@ -88,10 +88,6 @@ void UstirovSocket::OnReadyRead()
                     }
                 }
             }
-        }
-        else
-        {
-            m_readyReadBuffer.clear();
         }
     }
     else

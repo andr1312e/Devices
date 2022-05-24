@@ -21,8 +21,10 @@ private:
     void ReadDataFromSettingsFile(const QString &settingsFileName);
     void CreateObjects();
     void ConnectObjects();
+    void StartPingTimer();
 Q_SIGNALS:
     void ToSendRarmUstirovState(const DevicesAdjustingKitMessage &upcbState);
+    void ToSendPcbWork();
 public Q_SLOTS:
     void OnSetDataToUstirov(const DevicesAdjustingKitMessage &state);
     void OnGetDataFromUstirov();
@@ -32,12 +34,13 @@ private Q_SLOTS:
     void OnResetQueue();
     void OnAllDataCollected();
     void OnSendMessage();
+    void OnSendPing();
 public:
     quint16 GetUstirovPort() const;
     bool IsUstirovConnected() const;
     QString GetLastUstirovErrorMessage() const;
     int GetMessagesCount() const;
-    QVector<QByteArray> *GetMessageList() const;
+    QList<QByteArray> GetMessageList() const;
 private:
     void RestartCommandsCreate();
     void SetStateCommandsCreate(const DevicesAdjustingKitMessage &state);
@@ -51,11 +54,12 @@ private:
     bool m_isRestartMode;
 private:
     const Logger *m_logger;
+    QTimer *const m_pingTimer;
     UstirovSocket *m_ustirovSocket;
     UstirovMessageSender *m_ustirovMessageSetter;
     UstirovMessageGetter *m_ustirovMessageGetter;
     UstrirovMessageRepository *m_ustirovMessageRepository;
-    QVector<QByteArray> *m_messagesToSendList;
+    QList<QByteArray> m_messagesToSendList;
 };
 
 #endif // MEDIATORS_USTIROVMEDIATOR_H

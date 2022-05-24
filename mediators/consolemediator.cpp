@@ -7,7 +7,7 @@
 
 ConsoleMediator::ConsoleMediator(const std::string &logFilePath, RarmSocket *rarmSocket, MoxaMediator *moxa, UstirovMediator *ustirov, MeteoMediator *meteo, GeoSocket *geo, QObject *parent)
     : QObject(parent)
-    , m_logFilePath(logFilePath)
+    , m_logFileMessagePath("Путь файлам логов: " + logFilePath)
     , m_rarmSocket(rarmSocket)
     , m_moxa(moxa)
     , m_ustirov(ustirov)
@@ -54,8 +54,7 @@ void ConsoleMediator::ClearConsole()
 
 void ConsoleMediator::ToPrintLogFilePath()
 {
-    std::string message = "Путь файлам логов: " + m_logFilePath;
-    std::cout << message << std::endl;
+    std::cout << m_logFileMessagePath << std::endl;
 }
 
 void ConsoleMediator::PrintProcess()
@@ -113,10 +112,10 @@ void ConsoleMediator::PrintUkitState()
         message += "\033[32mV\033[0m "; //Зеленая галка
         message += "\n    Порт юк: " + std::to_string(m_ustirov->GetUstirovPort());
         message += "\n    Сообщений в очереди: " + std::to_string(m_ustirov->GetMessagesCount());
-        const QVector<QByteArray> *const messagesList = m_ustirov->GetMessageList();
-        for (auto iter = messagesList->cbegin(); iter != messagesList->cend(); ++iter)
+        const QList<QByteArray> messagesList = m_ustirov->GetMessageList();
+        for (const QByteArray &currentMessage : messagesList)
         {
-            message += "\n          Сообщение: " + iter->toHex().toStdString();
+            message += "\n          Сообщение: " + currentMessage.toHex().toStdString();
         }
         message += "\n    Данные:";
     }

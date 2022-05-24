@@ -25,11 +25,12 @@ private:
     void CreateObjects();
     void PrepareObjects();
     void ConnectObjects();
+    void StartObjects();
 private:
     const QString m_rarmAdress;
     const quint16 m_rarmPort;
 private:
-    const Logger * m_logger;
+    const Logger *m_logger;
     RarmSocket *m_rarmSocket;
     MoxaMediator *m_moxaMediator;
     MeteoMediator *m_meteoMediator;

@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'moxamediator.h'
 **
-** Created by: The Qt Meta Object Compiler version 68 (Qt 6.3.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,8 +12,8 @@
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'moxamediator.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 68
-#error "This file was generated using the moc from 6.3.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 67
+#error "This file was generated using the moc from 5.15.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -22,43 +22,54 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MoxaMediator_t {
-    const uint offsetsAndSize[10];
-    char stringdata0[74];
+    QByteArrayData data[6];
+    char stringdata0[93];
 };
-#define QT_MOC_LITERAL(ofs, len) \
-    uint(offsetof(qt_meta_stringdata_MoxaMediator_t, stringdata0) + ofs), len 
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_MoxaMediator_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
 static const qt_meta_stringdata_MoxaMediator_t qt_meta_stringdata_MoxaMediator = {
     {
-QT_MOC_LITERAL(0, 12), // "MoxaMediator"
-QT_MOC_LITERAL(13, 24), // "ToSendRarmMoxaWorksState"
-QT_MOC_LITERAL(38, 0), // ""
-QT_MOC_LITERAL(39, 24), // "DevicesMoxaStateMessage&"
-QT_MOC_LITERAL(64, 9) // "moxaState"
+QT_MOC_LITERAL(0, 0, 12), // "MoxaMediator"
+QT_MOC_LITERAL(1, 13, 24), // "ToSendRarmMoxaWorksState"
+QT_MOC_LITERAL(2, 38, 0), // ""
+QT_MOC_LITERAL(3, 39, 24), // "DevicesMoxaStateMessage&"
+QT_MOC_LITERAL(4, 64, 9), // "moxaState"
+QT_MOC_LITERAL(5, 74, 18) // "OnRegisterPCBState"
 
     },
     "MoxaMediator\0ToSendRarmMoxaWorksState\0"
-    "\0DevicesMoxaStateMessage&\0moxaState"
+    "\0DevicesMoxaStateMessage&\0moxaState\0"
+    "OnRegisterPCBState"
 };
 #undef QT_MOC_LITERAL
 
 static const uint qt_meta_data_MoxaMediator[] = {
 
  // content:
-      10,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   14, // methods
+       2,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
        1,       // signalCount
 
- // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    1,   20,    2, 0x06,    1 /* Public */,
+ // signals: name, argc, parameters, tag, flags
+       1,    1,   24,    2, 0x06 /* Public */,
+
+ // slots: name, argc, parameters, tag, flags
+       5,    0,   27,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
+
+ // slots: parameters
+    QMetaType::Void,
 
        0        // eod
 };
@@ -67,9 +78,10 @@ void MoxaMediator::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         auto *_t = static_cast<MoxaMediator *>(_o);
-        (void)_t;
+        Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->ToSendRarmMoxaWorksState((*reinterpret_cast< std::add_pointer_t<DevicesMoxaStateMessage&>>(_a[1]))); break;
+        case 0: _t->ToSendRarmMoxaWorksState((*reinterpret_cast< DevicesMoxaStateMessage(*)>(_a[1]))); break;
+        case 1: _t->OnRegisterPCBState(); break;
         default: ;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
@@ -84,18 +96,12 @@ void MoxaMediator::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     }
 }
 
-const QMetaObject MoxaMediator::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject MoxaMediator::staticMetaObject = { {
     QMetaObject::SuperData::link<QObject::staticMetaObject>(),
-    qt_meta_stringdata_MoxaMediator.offsetsAndSize,
+    qt_meta_stringdata_MoxaMediator.data,
     qt_meta_data_MoxaMediator,
     qt_static_metacall,
     nullptr,
-qt_incomplete_metaTypeArray<qt_meta_stringdata_MoxaMediator_t
-, QtPrivate::TypeAndForceComplete<MoxaMediator, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<DevicesMoxaStateMessage &, std::false_type>
-
-
-
->,
     nullptr
 } };
 
@@ -119,13 +125,13 @@ int MoxaMediator::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
-            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        if (_id < 2)
+            *reinterpret_cast<int*>(_a[0]) = -1;
+        _id -= 2;
     }
     return _id;
 }

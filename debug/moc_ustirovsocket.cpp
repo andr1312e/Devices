@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'ustirovsocket.h'
 **
-** Created by: The Qt Meta Object Compiler version 68 (Qt 6.3.0)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.15.2)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,8 +12,8 @@
 #include <QtCore/qmetatype.h>
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'ustirovsocket.h' doesn't include <QObject>."
-#elif Q_MOC_OUTPUT_REVISION != 68
-#error "This file was generated using the moc from 6.3.0. It"
+#elif Q_MOC_OUTPUT_REVISION != 67
+#error "This file was generated using the moc from 5.15.2. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
@@ -22,25 +22,28 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_UstirovSocket_t {
-    const uint offsetsAndSize[24];
+    QByteArrayData data[12];
     char stringdata0[190];
 };
-#define QT_MOC_LITERAL(ofs, len) \
-    uint(offsetof(qt_meta_stringdata_UstirovSocket_t, stringdata0) + ofs), len 
+#define QT_MOC_LITERAL(idx, ofs, len) \
+    Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
+    qptrdiff(offsetof(qt_meta_stringdata_UstirovSocket_t, stringdata0) + ofs \
+        - idx * sizeof(QByteArrayData)) \
+    )
 static const qt_meta_stringdata_UstirovSocket_t qt_meta_stringdata_UstirovSocket = {
     {
-QT_MOC_LITERAL(0, 13), // "UstirovSocket"
-QT_MOC_LITERAL(14, 16), // "ToRequestTimeOut"
-QT_MOC_LITERAL(31, 0), // ""
-QT_MOC_LITERAL(32, 17), // "ToWantNextMessage"
-QT_MOC_LITERAL(50, 12), // "ToResetQueue"
-QT_MOC_LITERAL(63, 21), // "ToGetStateFromMessage"
-QT_MOC_LITERAL(85, 7), // "message"
-QT_MOC_LITERAL(93, 11), // "OnReadyRead"
-QT_MOC_LITERAL(105, 15), // "OnHostConnected"
-QT_MOC_LITERAL(121, 22), // "OnDisconnectedFromHost"
-QT_MOC_LITERAL(144, 15), // "OnErrorOccurred"
-QT_MOC_LITERAL(160, 29) // "OnCheckConnectionTimerTimeOut"
+QT_MOC_LITERAL(0, 0, 13), // "UstirovSocket"
+QT_MOC_LITERAL(1, 14, 16), // "ToRequestTimeOut"
+QT_MOC_LITERAL(2, 31, 0), // ""
+QT_MOC_LITERAL(3, 32, 17), // "ToWantNextMessage"
+QT_MOC_LITERAL(4, 50, 12), // "ToResetQueue"
+QT_MOC_LITERAL(5, 63, 21), // "ToGetStateFromMessage"
+QT_MOC_LITERAL(6, 85, 7), // "message"
+QT_MOC_LITERAL(7, 93, 11), // "OnReadyRead"
+QT_MOC_LITERAL(8, 105, 15), // "OnHostConnected"
+QT_MOC_LITERAL(9, 121, 22), // "OnDisconnectedFromHost"
+QT_MOC_LITERAL(10, 144, 15), // "OnErrorOccurred"
+QT_MOC_LITERAL(11, 160, 29) // "OnCheckConnectionTimerTimeOut"
 
     },
     "UstirovSocket\0ToRequestTimeOut\0\0"
@@ -54,7 +57,7 @@ QT_MOC_LITERAL(160, 29) // "OnCheckConnectionTimerTimeOut"
 static const uint qt_meta_data_UstirovSocket[] = {
 
  // content:
-      10,       // revision
+       8,       // revision
        0,       // classname
        0,    0, // classinfo
        9,   14, // methods
@@ -64,18 +67,18 @@ static const uint qt_meta_data_UstirovSocket[] = {
        0,       // flags
        4,       // signalCount
 
- // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   68,    2, 0x06,    1 /* Public */,
-       3,    0,   69,    2, 0x06,    2 /* Public */,
-       4,    0,   70,    2, 0x06,    3 /* Public */,
-       5,    1,   71,    2, 0x06,    4 /* Public */,
+ // signals: name, argc, parameters, tag, flags
+       1,    0,   59,    2, 0x06 /* Public */,
+       3,    0,   60,    2, 0x06 /* Public */,
+       4,    0,   61,    2, 0x06 /* Public */,
+       5,    1,   62,    2, 0x06 /* Public */,
 
- // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       7,    0,   74,    2, 0x08,    6 /* Private */,
-       8,    0,   75,    2, 0x08,    7 /* Private */,
-       9,    0,   76,    2, 0x08,    8 /* Private */,
-      10,    0,   77,    2, 0x08,    9 /* Private */,
-      11,    0,   78,    2, 0x08,   10 /* Private */,
+ // slots: name, argc, parameters, tag, flags
+       7,    0,   65,    2, 0x08 /* Private */,
+       8,    0,   66,    2, 0x08 /* Private */,
+       9,    0,   67,    2, 0x08 /* Private */,
+      10,    0,   68,    2, 0x08 /* Private */,
+      11,    0,   69,    2, 0x08 /* Private */,
 
  // signals: parameters
     QMetaType::Void,
@@ -97,12 +100,12 @@ void UstirovSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
 {
     if (_c == QMetaObject::InvokeMetaMethod) {
         auto *_t = static_cast<UstirovSocket *>(_o);
-        (void)_t;
+        Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->ToRequestTimeOut(); break;
         case 1: _t->ToWantNextMessage(); break;
         case 2: _t->ToResetQueue(); break;
-        case 3: _t->ToGetStateFromMessage((*reinterpret_cast< std::add_pointer_t<QByteArray>>(_a[1]))); break;
+        case 3: _t->ToGetStateFromMessage((*reinterpret_cast< const QByteArray(*)>(_a[1]))); break;
         case 4: _t->OnReadyRead(); break;
         case 5: _t->OnHostConnected(); break;
         case 6: _t->OnDisconnectedFromHost(); break;
@@ -143,18 +146,12 @@ void UstirovSocket::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
     }
 }
 
-const QMetaObject UstirovSocket::staticMetaObject = { {
+QT_INIT_METAOBJECT const QMetaObject UstirovSocket::staticMetaObject = { {
     QMetaObject::SuperData::link<QObject::staticMetaObject>(),
-    qt_meta_stringdata_UstirovSocket.offsetsAndSize,
+    qt_meta_stringdata_UstirovSocket.data,
     qt_meta_data_UstirovSocket,
     qt_static_metacall,
     nullptr,
-qt_incomplete_metaTypeArray<qt_meta_stringdata_UstirovSocket_t
-, QtPrivate::TypeAndForceComplete<UstirovSocket, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<const QByteArray &, std::false_type>
-, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
-
-
->,
     nullptr
 } };
 
@@ -183,7 +180,7 @@ int UstirovSocket::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 9;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 9)
-            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+            *reinterpret_cast<int*>(_a[0]) = -1;
         _id -= 9;
     }
     return _id;
