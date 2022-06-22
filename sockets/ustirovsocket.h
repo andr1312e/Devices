@@ -38,9 +38,9 @@ public:
 private:
     void StopNoAnswerTimer();
 private:
-    QSerialPort *m_socket;
+//    QSerialPort *m_socket;
     bool state = false;
-//    QTcpSocket *m_socket;
+    QTcpSocket *m_socket;
     const QString m_moxaIpAdress;
     const quint16 m_moxaPort;
 private:

@@ -1,6 +1,6 @@
 QT += network serialport
 QT -= gui
-VERSION = 4
+VERSION = 5
 
 CONFIG += c++11 console no_lflags_merge rtti_off warn_on c++latest strict_c++ precompile_header utf8_source
 CONFIG -= app_bundle cmdline qml_debug no_include_pwd

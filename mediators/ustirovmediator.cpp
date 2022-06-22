@@ -41,7 +41,7 @@ void UstirovMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
     }
     else
     {
-        f = 32650000.0;
+        f = 30250000.0;
         mediatorSettings.setValue(QStringLiteral("f"), f);
     }
     if (mediatorSettings.contains(QStringLiteral("fref")))

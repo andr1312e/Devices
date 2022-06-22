@@ -25,13 +25,13 @@ UstirovSocket::~UstirovSocket()
 
 void UstirovSocket::CreateObjects()
 {
-    m_socket = new QSerialPort(this);
-    m_socket->setParity(QSerialPort::EvenParity);
-    m_socket->setFlowControl(QSerialPort::NoFlowControl);
-    m_socket->setBaudRate(QSerialPort::Baud115200);
-    m_socket->setStopBits(QSerialPort::OneStop);
+//    m_socket = new QSerialPort(this);
+//    m_socket->setParity(QSerialPort::EvenParity);
+//    m_socket->setFlowControl(QSerialPort::NoFlowControl);
+//    m_socket->setBaudRate(QSerialPort::Baud115200);
+//    m_socket->setStopBits(QSerialPort::OneStop);
 
-//    m_socket=new QTcpSocket(this);
+    m_socket=new QTcpSocket(this);
     m_messageSize = new QVarLengthArray<quint8, 7>({0, 8, 8, 4, 4, 3, 3});
     m_checkConnectionTimer = new QTimer(this);
     m_noAnswerTimer = new QTimer(this);
@@ -49,17 +49,12 @@ void UstirovSocket::InitObjects()
 
 void UstirovSocket::ConnectObjects()
 {
-    connect(m_socket, &QSerialPort::readyRead, this, &UstirovSocket::OnReadyRead);
-//    connect(m_socket, &QTcpSocket::connected, this, &UstirovSocket::OnHostConnected);
-//    connect(m_socket, &QTcpSocket::readyRead, this, &UstirovSocket::OnReadyRead);
-//    connect(m_socket, &QTcpSocket::disconnected, this, &UstirovSocket::OnDisconnectedFromHost);
+//    connect(m_socket, &QSerialPort::readyRead, this, &UstirovSocket::OnReadyRead);
+    connect(m_socket, &QTcpSocket::connected, this, &UstirovSocket::OnHostConnected);
+    connect(m_socket, &QTcpSocket::readyRead, this, &UstirovSocket::OnReadyRead);
+    connect(m_socket, &QTcpSocket::disconnected, this, &UstirovSocket::OnDisconnectedFromHost);
     connect(m_checkConnectionTimer, &QTimer::timeout, this, &UstirovSocket::OnCheckConnectionTimerTimeOut);
     connect(m_noAnswerTimer, &QTimer::timeout, this, &UstirovSocket::ToRequestTimeOut);
-#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
-    connect(m_socket, QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error), this, &UstirovSocket::OnErrorOccurred);
-#else
-//    connect(m_socket, &QTcpSocket::errorOccurred, this, &UstirovSocket::OnErrorOccurred);
-#endif
 }
 
 void UstirovSocket::OnReadyRead()
@@ -128,22 +123,22 @@ void UstirovSocket::OnCheckConnectionTimerTimeOut()
 {
     if (!IsUstirovConnected())
     {
-        const QList<QSerialPortInfo> list = QSerialPortInfo::availablePorts();
-//        for (int i = 0; i < list.count(); ++i)
+//        const QList<QSerialPortInfo> list = QSerialPortInfo::availablePorts();
+////        for (int i = 0; i < list.count(); ++i)
+////        {
+//        qDebug() << "   " << list.front().portName() << " " << list.front().manufacturer();
+////        }
+//        m_socket->setPort(list.front());
+//        if (m_socket->open(QIODevice::ReadWrite))
 //        {
-        qDebug() << "   " << list.front().portName() << " " << list.front().manufacturer();
+//            state = true;
+////            QByteArray command;
+////            command.append('0');
+////            command.append('0');
+////            m_socket->write(command);
+////            m_socket->flush();
 //        }
-        m_socket->setPort(list.front());
-        if (m_socket->open(QIODevice::ReadWrite))
-        {
-            state = true;
-//            QByteArray command;
-//            command.append('0');
-//            command.append('0');
-//            m_socket->write(command);
-//            m_socket->flush();
-        }
-//        m_socket->connectToHost(m_moxaIpAdress, m_moxaPort, QIODevice::ReadWrite);
+        m_socket->connectToHost(m_moxaIpAdress, m_moxaPort, QIODevice::ReadWrite);
         m_logger->Appends("US: ип: " + m_moxaIpAdress.toStdString() + " порт: " + std::to_string(m_moxaPort) + " пробуем подключится");
     }
 }

@@ -2,8 +2,8 @@
 
 Devices::Devices()
     : QObject(Q_NULLPTR)
-    , m_rarmAdress(QLatin1String("192.168.115.195"))
-//    , m_rarmAdress(QLatin1String("127.0.0.1"))
+//    , m_rarmAdress(QLatin1String("192.168.115.195"))
+    , m_rarmAdress(QLatin1String("127.0.0.1"))
     , m_rarmPort(4242)
 {
     CreateObjects();

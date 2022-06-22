@@ -3,7 +3,10 @@
 #include <QVector>
 #include <iterator>
 #include <QProcess>
-#include <Windows.h>
+
+#if _WIN32
+     #include <Windows.h>
+#endif
 
 ConsoleMediator::ConsoleMediator(const std::string &logFilePath, RarmSocket *rarmSocket, MoxaMediator *moxa, UstirovMediator *ustirov, MeteoMediator *meteo, GeoSocket *geo, QObject *parent)
     : QObject(parent)
@@ -16,8 +19,10 @@ ConsoleMediator::ConsoleMediator(const std::string &logFilePath, RarmSocket *rar
     , m_progress("Обновление раз в " + std::to_string(m_updateIterval) + "млс... ")
 {
     setlocale(LC_ALL, "Russian"); //Функция setlocale() с аргументами
+#if _WIN32
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
+#endif
 }
 
 ConsoleMediator::~ConsoleMediator()

@@ -17,26 +17,27 @@ MoxaMediator::~MoxaMediator()
 
 void MoxaMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
 {
-    QSettings settings(settingsFileName, QSettings::IniFormat, this);
-    if (settings.contains(QStringLiteral("moxaIpAdress")))
+    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
+    if (mediatorSettings.contains(QStringLiteral("moxaIpAdress")))
     {
-        m_moxaIpAdress = settings.value(QStringLiteral("moxaIpAdress"), "192.168.127.254").toString();
+        m_moxaIpAdress = mediatorSettings.value(QStringLiteral("moxaIpAdress"), "192.168.111.254").toString();
     }
     else
     {
-        m_moxaIpAdress = QStringLiteral("192.168.127.254");
-        settings.setValue(QStringLiteral("moxaIpAdress"), m_moxaIpAdress);
+        m_moxaIpAdress = QStringLiteral("192.168.111.254");
+        mediatorSettings.setValue(QStringLiteral("moxaIpAdress"), m_moxaIpAdress);
     }
 
-    if (settings.contains(QStringLiteral("moxaCheckMiliseconds")))
+    if (mediatorSettings.contains(QStringLiteral("moxaCheckMiliseconds")))
     {
-        m_moxaCheckMiliseconds = settings.value(QStringLiteral("moxaCheckMiliseconds"), 10000).toUInt();
+        m_moxaCheckMiliseconds = mediatorSettings.value(QStringLiteral("moxaCheckMiliseconds"), 10000).toUInt();
     }
     else
     {
         m_moxaCheckMiliseconds = 10000;
-        settings.setValue(QStringLiteral("moxaCheckMiliseconds"), m_moxaCheckMiliseconds);
+        mediatorSettings.setValue(QStringLiteral("moxaCheckMiliseconds"), m_moxaCheckMiliseconds);
     }
+    mediatorSettings.sync();
 }
 
 void MoxaMediator::InitObjects()

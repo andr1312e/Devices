@@ -20,49 +20,49 @@ MeteoMediator::~MeteoMediator()
 
 void MeteoMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
 {
-    QSettings settings(settingsFileName, QSettings::IniFormat, this);
-    if (settings.contains(QStringLiteral("meteoRequestInterval")))
+    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
+    if (mediatorSettings.contains(QStringLiteral("meteoRequestInterval")))
     {
-        m_meteoRequestInterval=settings.value(QStringLiteral("meteoRequestInterval"), 5000).toUInt();
+        m_meteoRequestInterval=mediatorSettings.value(QStringLiteral("meteoRequestInterval"), 5000).toUInt();
     }
     else
     {
         m_meteoRequestInterval=5000;
-        settings.setValue(QStringLiteral("meteoRequestInterval"), m_meteoRequestInterval);
+        mediatorSettings.setValue(QStringLiteral("meteoRequestInterval"), m_meteoRequestInterval);
     }
 
-    if (settings.contains(QStringLiteral("meteoTimeOutInterval")))
+    if (mediatorSettings.contains(QStringLiteral("meteoTimeOutInterval")))
     {
-        m_meteoTimeOutInterval=settings.value(QStringLiteral("meteoTimeOutInterval"), 500).toUInt();
+        m_meteoTimeOutInterval=mediatorSettings.value(QStringLiteral("meteoTimeOutInterval"), 500).toUInt();
     }
     else
     {
         m_meteoTimeOutInterval=500;
-        settings.setValue(QStringLiteral("meteoTimeOutInterval"), m_meteoTimeOutInterval);
+        mediatorSettings.setValue(QStringLiteral("meteoTimeOutInterval"), m_meteoTimeOutInterval);
     }
 
-    if (settings.contains(QStringLiteral("moxaPort")))
+    if (mediatorSettings.contains(QStringLiteral("moxaPort")))
     {
-        m_moxaPort=settings.value(QStringLiteral("moxaPort"), 4101).toUInt();
+        m_moxaPort=mediatorSettings.value(QStringLiteral("moxaPort"), 4101).toUInt();
     }
     else
     {
         m_moxaPort=4101;
-        settings.setValue(QStringLiteral("moxaPort"), m_moxaPort);
+        mediatorSettings.setValue(QStringLiteral("moxaPort"), m_moxaPort);
 
     }
 
-    if (settings.contains(QStringLiteral("meteoKitPort")))
+    if (mediatorSettings.contains(QStringLiteral("meteoKitPort")))
     {
-        m_meteoPort=settings.value(QStringLiteral("meteoKitPort"), 5011).toUInt();
+        m_meteoPort=mediatorSettings.value(QStringLiteral("meteoKitPort"), 5011).toUInt();
     }
     else
     {
         m_meteoPort=5011;
-        settings.setValue(QStringLiteral("meteoKitPort"), m_meteoPort);
+        mediatorSettings.setValue(QStringLiteral("meteoKitPort"), m_meteoPort);
 
     }
-    settings.sync();
+    mediatorSettings.sync();
 }
 
 void MeteoMediator::CreateObjects()
