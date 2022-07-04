@@ -32,12 +32,13 @@ void Devices::CreateObjects()
     m_logger = new Logger(QDir::homePath().toStdString() + "/devices.log");
 #endif
     m_rarmSocket = new RarmSocket(m_logger, m_rarmAdress, m_rarmPort, this);
-    m_moxaMediator = new MoxaMediator(QStringLiteral("moxaSettings.ini"), this);
-    m_meteoMediator = new MeteoMediator(m_logger, QStringLiteral("meteoSettings.ini"), this);
+    m_moxaMediator = new MoxaMediator(this);
+    m_meteoMediator = new MeteoMediator(m_logger, this);
     m_ustirovMediator = new UstirovMediator(m_logger, m_moxaMediator->GetMoxaIpAdress(), QStringLiteral("ustirovSettings.ini"), this);
     m_geoSocket = new GeoSocket(this);
     m_consoleMediator = new ConsoleMediator(m_logger->GetLogFileName(), m_rarmSocket, m_moxaMediator, m_ustirovMediator, m_meteoMediator, m_geoSocket, Q_NULLPTR);
     m_consoleThread = new QThread(Q_NULLPTR);
+    ProFile::ApplyEnviroment();
 }
 
 void Devices::PrepareObjects()

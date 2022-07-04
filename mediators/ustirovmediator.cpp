@@ -24,41 +24,62 @@ UstirovMediator::~UstirovMediator()
 
 void UstirovMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
 {
-    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
-    if (mediatorSettings.contains(QStringLiteral("ustirovport")))
+    const QString ustirovKit=ProFile::GetProFileField(QLatin1Literal("ustirovport"));
+    if(ustirovKit.isEmpty())
     {
-        m_ustirovPort = mediatorSettings.value(QStringLiteral("ustirovport"), 4004).toUInt();
+        m_ustirovPort=4004;
+        ProFile::SetProfileField(QLatin1Literal("ustirovport"), QString::number(m_ustirovPort));
     }
     else
     {
-        m_ustirovPort = 4004;
-        mediatorSettings.setValue(QStringLiteral("ustirovport"), m_ustirovPort);
+        bool isNum=false;
+        m_ustirovPort = ustirovKit.toUInt(&isNum);
+        if(!isNum)
+        {
+            m_ustirovPort=4004;
+            ProFile::SetProfileField(QLatin1Literal("ustirovport"), QString::number(m_ustirovPort));
+        }
+    }
 
-    }
-    if (mediatorSettings.contains(QStringLiteral("f")))
+
+    const QString fString=ProFile::GetProFileField(QLatin1Literal("f"));
+    if(fString.isEmpty())
     {
-        f = mediatorSettings.value(QStringLiteral("f")).toDouble();
+        f=30250000;
+        ProFile::SetProfileField(QLatin1Literal("f"), QString::number(f));
     }
     else
     {
-        f = 30250000.0;
-        mediatorSettings.setValue(QStringLiteral("f"), f);
+        bool isNum=false;
+        f = fString.toUInt(&isNum);
+        if(!isNum)
+        {
+            f=30250000;
+            ProFile::SetProfileField(QLatin1Literal("f"), QString::number(f));
+        }
     }
-    if (mediatorSettings.contains(QStringLiteral("fref")))
+
+
+    const QString frefString=ProFile::GetProFileField(QLatin1Literal("fref"));
+    if(frefString.isEmpty())
     {
-        fref = mediatorSettings.value(QStringLiteral("fref")).toDouble();
+        fref=40000000;
+        ProFile::SetProfileField(QLatin1Literal("fref"), QString::number(fref));
     }
     else
     {
-        fref = 40000000.0;
-        mediatorSettings.setValue(QStringLiteral("fref"), fref);
+        bool isNum=false;
+        fref = frefString.toUInt(&isNum);
+        if(!isNum)
+        {
+            fref=40000000;
+            ProFile::SetProfileField(QLatin1Literal("fref"), QString::number(fref));
+        }
     }
-    mediatorSettings.sync();
 }
 
 void UstirovMediator::CreateObjects()
 {
-
     m_ustirovSocket = new UstirovSocket(m_logger, m_moxaIpAdress, m_ustirovPort, this);
     m_ustirovMessageRepository = new UstrirovMessageRepository();
     m_ustirovMessageSetter = new UstirovMessageSender(m_logger, f, fref);

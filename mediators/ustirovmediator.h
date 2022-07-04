@@ -11,6 +11,8 @@
 
 #include "messageRepositories/ustrirovmessagerepository.h"
 
+#include "enviroment.h"
+
 class UstirovMediator : public QObject
 {
     Q_OBJECT

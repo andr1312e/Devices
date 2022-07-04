@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QSettings>
 #include <QQueue>
+#include <QtGlobal>
 
 #include "enviroment.h"
 #include "messageCreatrors/meteomessagegetter.h"
@@ -15,10 +16,10 @@ class MeteoMediator : public QObject
 {
     Q_OBJECT
 public:
-    explicit MeteoMediator(const Logger *logger, const QString &settingsFileName, QObject *parent);
+    explicit MeteoMediator(const Logger *logger, QObject *parent);
     ~MeteoMediator();
 private:
-    void ReadDataFromSettingsFile(const QString &settingsFileName);
+    void ReadDataFromSettingsFile();
     void CreateObjects();
     void InitObjects();
     void ConnectObjects();

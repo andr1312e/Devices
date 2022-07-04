@@ -1,10 +1,10 @@
 #include "mediators/meteomediator.h"
 
-MeteoMediator::MeteoMediator(const Logger *logger, const QString &settingsFileName, QObject *parent)
+MeteoMediator::MeteoMediator(const Logger *logger, QObject *parent)
     : QObject(parent)
     , m_logger(logger)
 {
-    ReadDataFromSettingsFile(settingsFileName);
+    ReadDataFromSettingsFile();
     CreateObjects();
     InitObjects();
     ConnectObjects();
@@ -18,107 +18,77 @@ MeteoMediator::~MeteoMediator()
     delete m_makeNewRequestTimer;
 }
 
-void MeteoMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
+void MeteoMediator::ReadDataFromSettingsFile()
 {
-    const QString meteoRequestInterval=Enviroment::GetEnviroment(QLatin1Literal("meteoRequestInterval"));
+
+    const QString meteoRequestInterval=ProFile::GetProFileField(QLatin1Literal("meteoRequestInterval"));
     if(meteoRequestInterval.isEmpty())
     {
         m_meteoRequestInterval=5000;
-        Enviroment::SetEnviroment(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
+        ProFile::SetProfileField(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
     }
     else
     {
         bool isNum=false;
-        const quint16=meteoRequestInterval.toUInt(&isNum);
-        if(isNum)
-        {
-            m_meteoRequestInterval=meteoRequestInterval;
-        }
-        else
+        m_meteoRequestInterval = meteoRequestInterval.toUInt(&isNum);
+        if(!isNum)
         {
             m_meteoRequestInterval=5000;
-            Enviroment::SetEnviroment(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
+            ProFile::SetProfileField(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
         }
     }
 
-    const QString meteoTimeOutInterval=Enviroment::GetEnviroment(QLatin1Literal("meteoTimeOutInterval"));
+    const QString meteoTimeOutInterval=ProFile::GetProFileField(QLatin1Literal("meteoTimeOutInterval"));
     if(meteoTimeOutInterval.isEmpty())
     {
         m_meteoTimeOutInterval=500;
-        Enviroment::SetEnviroment(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
+        ProFile::SetProfileField(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
     }
     else
     {
         bool isNum=false;
-        const quint16=meteoTimeOutInterval.toUInt(&isNum);
-        if(isNum)
-        {
-            m_meteoTimeOutInterval=meteoTimeOutInterval;
-        }
-        else
+        m_meteoTimeOutInterval=meteoTimeOutInterval.toUInt(&isNum);
+        if(!isNum)
         {
             m_meteoTimeOutInterval=500;
-            Enviroment::SetEnviroment(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
+            ProFile::SetProfileField(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
         }
     }
 
-    const QString moxaPort=Enviroment::GetEnviroment(QLatin1Literal("moxaPort"));
+    const QString moxaPort=ProFile::GetProFileField(QLatin1Literal("moxaPort"));
     if(moxaPort.isEmpty())
     {
         m_moxaPort=4101;
-        Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+        ProFile::SetProfileField(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
     }
     else
     {
         bool isNum=false;
-        const quint16=moxaPort.toUInt(&isNum);
-        if(isNum)
-        {
-            m_moxaPort=moxaPort;
-        }
-        else
+        m_moxaPort=moxaPort.toUInt(&isNum);
+        if(!isNum)
         {
             m_moxaPort=4101;
-            Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+            ProFile::SetProfileField(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
         }
     }
 
 
-    const QString moxaPort=Enviroment::GetEnviroment(QLatin1Literal("moxaPort"));
-    if(moxaPort.isEmpty())
-    {
-        m_moxaPort=4101;
-        Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
-    }
-    else
-    {
-        bool isNum=false;
-        const quint16=moxaPort.toUInt(&isNum);
-        if(isNum)
-        {
-            m_moxaPort=moxaPort;
-        }
-        else
-        {
-            m_moxaPort=4101;
-            Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
-        }
-    }
-
-    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
-
-
-    if (mediatorSettings.contains(QStringLiteral("meteoKitPort")))
-    {
-        m_meteoPort=mediatorSettings.value(QStringLiteral("meteoKitPort"), 5011).toUInt();
-    }
-    else
+    const QString meteoPort=ProFile::GetProFileField(QLatin1Literal("meteoKitPort"));
+    if(meteoPort.isEmpty())
     {
         m_meteoPort=5011;
-        mediatorSettings.setValue(QStringLiteral("meteoKitPort"), m_meteoPort);
-
+        ProFile::SetProfileField(QLatin1Literal("meteoKitPort"), QString::number(m_meteoPort));
     }
-    mediatorSettings.sync();
+    else
+    {
+        bool isNum=false;
+        m_meteoPort=meteoPort.toUInt(&isNum);
+        if(!isNum)
+        {
+            m_meteoPort=5011;
+            ProFile::SetProfileField(QLatin1Literal("meteoKitPort"), QString::number(m_meteoPort));
+        }
+    }
 }
 
 void MeteoMediator::CreateObjects()

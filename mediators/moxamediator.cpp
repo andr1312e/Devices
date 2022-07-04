@@ -17,34 +17,30 @@ MoxaMediator::~MoxaMediator()
 
 void MoxaMediator::ReadDataFromEnviroment()
 {
-    const QString moxaIpAdress=Enviroment::GetEnviroment(QLatin1Literal("moxaIpAdress"));
-    if(IsIpCorrect(moxaIpAdress))
+    const QString moxaIpAdress=ProFile::GetProFileField(QLatin1Literal("moxaIpAdress"));
+    if(moxaIpAdress.isEmpty())
     {
-        m_moxaIpAdress=moxaIpAdress;
+        m_moxaIpAdress=QLatin1Literal("192.168.111.254");
+        ProFile::SetProfileField(QLatin1Literal("moxaIpAdress"), m_moxaIpAdress);
     }
     else
     {
-        m_moxaIpAdress=QLatin1Literal("192.168.111.254");
-        Enviroment::SetEnviroment(QLatin1Literal("moxaIpAdress"), m_moxaIpAdress);
+        m_moxaIpAdress=moxaIpAdress;
     }
-    const QString moxaCheckMiliseconds=Enviroment::GetEnviroment(QLatin1Literal("moxaCheckMiliseconds"));
+    const QString moxaCheckMiliseconds=ProFile::GetProFileField(QLatin1Literal("moxaCheckMiliseconds"));
     if(moxaCheckMiliseconds.isEmpty())
     {
         m_moxaCheckMiliseconds=10000;
-        Enviroment::SetEnviroment(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
+        ProFile::SetProfileField(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
     }
     else
     {
         bool isNum=false;
-        const quint16=moxaCheckMiliseconds.toUInt(&isNum);
-        if(isNum)
-        {
-            m_moxaCheckMiliseconds=moxaCheckMiliseconds;
-        }
-        else
+        m_moxaCheckMiliseconds=moxaCheckMiliseconds.toUInt(&isNum);
+        if(!isNum)
         {
             m_moxaCheckMiliseconds=10000;
-            Enviroment::SetEnviroment(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
+            ProFile::SetProfileField(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
         }
     }
 }
@@ -96,32 +92,33 @@ void MoxaMediator::timerEvent(QTimerEvent *event)
 
 bool MoxaMediator::IsIpCorrect(const QString &ip) const noexcept
 {
-    const int firstPointIndex=ip.indexOf('.');
-    const int secondPointIndex=ip.indexOf('.', firstPointIndex+1);
-    const int thirdPointIndex=ip.indexOf('.', secondPointIndex+1);
-    const int fourthPointIndex=ip.indexOf('.', thirdPointIndex+1);
-    if( firstPointIndex>0 && secondPointIndex>0 && thirdPointIndex>0 && fourthPointIndex>0)
-    {
-        if(firstPointIndex!=secondPointIndex && secondPointIndex!= thirdPointIndex && firstPointIndex!= fourthPointIndex)
-        {
-            const QString firstSubString=ip.left(firstPointIndex);
-            const QString secondSubString=ip.mid(firstPointIndex, secondPointIndex-firstPointIndex);
-            const QString thirdSubString=ip.mid(secondPointIndex, thirdPointIndex-secondPointIndex);
-            const QString fourthSubString=ip.mid(fourthPointIndex);
-            bool isNum1, isNum2, isNum3, isNum4;
-            const bool isFirstCorrect=firstSubString.toUInt(isNum1) < 256;
-            const bool isSecondCorrect=secondSubString.toUInt(isNum2) < 256;
-            const bool isThirdCorrect=thirdSubString.toUInt(isNum3) < 256;
-            const bool isFourthCorrect=fourthSubString.toUInt(isNum4) < 256;
-            return isNum1 && isNum2 && isNum3 && isNum4 && isFirstCorrect && isSecondCorrect && isThirdCorrect && isFourthCorrect;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
+    return true;
+//    const int firstPointIndex=ip.indexOf('.');
+//    const int secondPointIndex=ip.indexOf('.', firstPointIndex+1);
+//    const int thirdPointIndex=ip.indexOf('.', secondPointIndex+1);
+//    const int fourthPointIndex=ip.indexOf('.', thirdPointIndex+1);
+//    if( firstPointIndex>0 && secondPointIndex>0 && thirdPointIndex>0 && fourthPointIndex>0)
+//    {
+//        if(firstPointIndex!=secondPointIndex && secondPointIndex!= thirdPointIndex && firstPointIndex!= fourthPointIndex)
+//        {
+//            const QString firstSubString=ip.left(firstPointIndex);
+//            const QString secondSubString=ip.mid(firstPointIndex, secondPointIndex-firstPointIndex);
+//            const QString thirdSubString=ip.mid(secondPointIndex, thirdPointIndex-secondPointIndex);
+//            const QString fourthSubString=ip.mid(fourthPointIndex);
+//            bool isNum1, isNum2, isNum3, isNum4;
+//            const bool isFirstCorrect=firstSubString.toUInt(isNum1) < 256;
+//            const bool isSecondCorrect=secondSubString.toUInt(isNum2) < 256;
+//            const bool isThirdCorrect=thirdSubString.toUInt(isNum3) < 256;
+//            const bool isFourthCorrect=fourthSubString.toUInt(isNum4) < 256;
+//            return isNum1 && isNum2 && isNum3 && isNum4 && isFirstCorrect && isSecondCorrect && isThirdCorrect && isFourthCorrect;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
+//    else
+//    {
+//        return false;
+//    }
 }
