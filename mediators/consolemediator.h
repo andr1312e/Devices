@@ -15,7 +15,7 @@
 class ConsoleMediator: public QObject
 {
 public:
-    ConsoleMediator(const std::string &logFilePath, RarmSocket *socket, MoxaMediator *moxa, UstirovMediator *ustirov, MeteoMediator *meteo, GeoSocket *geo, QObject *parent);
+    explicit ConsoleMediator(const std::string &logFilePath, RarmSocket *socket, MoxaMediator *moxa, UstirovMediator *ustirov, MeteoMediator *meteo, GeoSocket *geo, QObject *parent);
     ~ConsoleMediator();
 public Q_SLOTS:
     void OnStartLog();

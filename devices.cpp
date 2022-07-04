@@ -27,9 +27,9 @@ Devices::~Devices()
 void Devices::CreateObjects()
 {
 #ifdef QT_DEBUG
-    m_logger = new Logger(QCoreApplication::applicationDirPath().toStdString() + "/logDevices.txt");
+    m_logger = new Logger(QDir::homePath().toStdString() + "/devicesDebug.log");
 #else
-    m_logger = new Logger(QDir::homePath().toStdString() + "/logDevices.txt");
+    m_logger = new Logger(QDir::homePath().toStdString() + "/devices.log");
 #endif
     m_rarmSocket = new RarmSocket(m_logger, m_rarmAdress, m_rarmPort, this);
     m_moxaMediator = new MoxaMediator(QStringLiteral("moxaSettings.ini"), this);

@@ -8,7 +8,7 @@ class MoxaMessageRepository : public QObject
 {
     Q_OBJECT
 public:
-    MoxaMessageRepository(QObject *parent);
+    explicit MoxaMessageRepository(QObject *parent);
     ~MoxaMessageRepository();
 Q_SIGNALS:
     void ToSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);

@@ -1,6 +1,7 @@
 #include <QCoreApplication>
 
 #include "devices.h"
+#include "enviroment.h"
 #include "singleinstancemaker.h"
 
 int main(int argc, char *argv[])

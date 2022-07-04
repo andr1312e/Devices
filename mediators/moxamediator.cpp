@@ -1,10 +1,10 @@
 #include "moxamediator.h"
 
-MoxaMediator::MoxaMediator(const QString &settingsFileName, QObject *parent)
+MoxaMediator::MoxaMediator(QObject *parent)
     : QObject(parent)
     , m_messageRepository(new MoxaMessageRepository(this))
 {
-    ReadDataFromSettingsFile(settingsFileName);
+    ReadDataFromEnviroment();
     InitObjects();
     ConnectObjects();
 }
@@ -15,29 +15,38 @@ MoxaMediator::~MoxaMediator()
     delete m_messageRepository;
 }
 
-void MoxaMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
+void MoxaMediator::ReadDataFromEnviroment()
 {
-    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
-    if (mediatorSettings.contains(QStringLiteral("moxaIpAdress")))
+    const QString moxaIpAdress=Enviroment::GetEnviroment(QLatin1Literal("moxaIpAdress"));
+    if(IsIpCorrect(moxaIpAdress))
     {
-        m_moxaIpAdress = mediatorSettings.value(QStringLiteral("moxaIpAdress"), "192.168.111.254").toString();
+        m_moxaIpAdress=moxaIpAdress;
     }
     else
     {
-        m_moxaIpAdress = QStringLiteral("192.168.111.254");
-        mediatorSettings.setValue(QStringLiteral("moxaIpAdress"), m_moxaIpAdress);
+        m_moxaIpAdress=QLatin1Literal("192.168.111.254");
+        Enviroment::SetEnviroment(QLatin1Literal("moxaIpAdress"), m_moxaIpAdress);
     }
-
-    if (mediatorSettings.contains(QStringLiteral("moxaCheckMiliseconds")))
+    const QString moxaCheckMiliseconds=Enviroment::GetEnviroment(QLatin1Literal("moxaCheckMiliseconds"));
+    if(moxaCheckMiliseconds.isEmpty())
     {
-        m_moxaCheckMiliseconds = mediatorSettings.value(QStringLiteral("moxaCheckMiliseconds"), 10000).toUInt();
+        m_moxaCheckMiliseconds=10000;
+        Enviroment::SetEnviroment(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
     }
     else
     {
-        m_moxaCheckMiliseconds = 10000;
-        mediatorSettings.setValue(QStringLiteral("moxaCheckMiliseconds"), m_moxaCheckMiliseconds);
+        bool isNum=false;
+        const quint16=moxaCheckMiliseconds.toUInt(&isNum);
+        if(isNum)
+        {
+            m_moxaCheckMiliseconds=moxaCheckMiliseconds;
+        }
+        else
+        {
+            m_moxaCheckMiliseconds=10000;
+            Enviroment::SetEnviroment(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
+        }
     }
-    mediatorSettings.sync();
 }
 
 void MoxaMediator::InitObjects()
@@ -82,5 +91,37 @@ void MoxaMediator::timerEvent(QTimerEvent *event)
     else
     {
         m_messageRepository->SetMoxaState(0);
+    }
+}
+
+bool MoxaMediator::IsIpCorrect(const QString &ip) const noexcept
+{
+    const int firstPointIndex=ip.indexOf('.');
+    const int secondPointIndex=ip.indexOf('.', firstPointIndex+1);
+    const int thirdPointIndex=ip.indexOf('.', secondPointIndex+1);
+    const int fourthPointIndex=ip.indexOf('.', thirdPointIndex+1);
+    if( firstPointIndex>0 && secondPointIndex>0 && thirdPointIndex>0 && fourthPointIndex>0)
+    {
+        if(firstPointIndex!=secondPointIndex && secondPointIndex!= thirdPointIndex && firstPointIndex!= fourthPointIndex)
+        {
+            const QString firstSubString=ip.left(firstPointIndex);
+            const QString secondSubString=ip.mid(firstPointIndex, secondPointIndex-firstPointIndex);
+            const QString thirdSubString=ip.mid(secondPointIndex, thirdPointIndex-secondPointIndex);
+            const QString fourthSubString=ip.mid(fourthPointIndex);
+            bool isNum1, isNum2, isNum3, isNum4;
+            const bool isFirstCorrect=firstSubString.toUInt(isNum1) < 256;
+            const bool isSecondCorrect=secondSubString.toUInt(isNum2) < 256;
+            const bool isThirdCorrect=thirdSubString.toUInt(isNum3) < 256;
+            const bool isFourthCorrect=fourthSubString.toUInt(isNum4) < 256;
+            return isNum1 && isNum2 && isNum3 && isNum4 && isFirstCorrect && isSecondCorrect && isThirdCorrect && isFourthCorrect;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
     }
 }

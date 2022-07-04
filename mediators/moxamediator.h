@@ -5,6 +5,7 @@
 #include <QSettings>
 #include <QProcess>
 
+#include "enviroment.h"
 #include "messageRepositories/moxamessagerepository.h"
 #include "mediators/logger.h"
 
@@ -12,10 +13,10 @@ class MoxaMediator : public QObject
 {
     Q_OBJECT
 public:
-    explicit MoxaMediator(const QString &settingsFileName, QObject *parent);
+    explicit MoxaMediator(QObject *parent);
     ~MoxaMediator();
 private:
-    void ReadDataFromSettingsFile(const QString &settingsFileName);
+    void ReadDataFromEnviroment();
     void InitObjects();
     void ConnectObjects();
 Q_SIGNALS:
@@ -27,6 +28,8 @@ public:
     bool IsMoxaConnected() const;
 protected:
     virtual void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
+private:
+    bool IsIpCorrect(const QString &ip) const noexcept;
 private:
     QStringList m_processParametrs;
     QString m_moxaIpAdress;

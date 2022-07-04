@@ -20,37 +20,93 @@ MeteoMediator::~MeteoMediator()
 
 void MeteoMediator::ReadDataFromSettingsFile(const QString &settingsFileName)
 {
-    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
-    if (mediatorSettings.contains(QStringLiteral("meteoRequestInterval")))
-    {
-        m_meteoRequestInterval=mediatorSettings.value(QStringLiteral("meteoRequestInterval"), 5000).toUInt();
-    }
-    else
+    const QString meteoRequestInterval=Enviroment::GetEnviroment(QLatin1Literal("meteoRequestInterval"));
+    if(meteoRequestInterval.isEmpty())
     {
         m_meteoRequestInterval=5000;
-        mediatorSettings.setValue(QStringLiteral("meteoRequestInterval"), m_meteoRequestInterval);
-    }
-
-    if (mediatorSettings.contains(QStringLiteral("meteoTimeOutInterval")))
-    {
-        m_meteoTimeOutInterval=mediatorSettings.value(QStringLiteral("meteoTimeOutInterval"), 500).toUInt();
+        Enviroment::SetEnviroment(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
     }
     else
+    {
+        bool isNum=false;
+        const quint16=meteoRequestInterval.toUInt(&isNum);
+        if(isNum)
+        {
+            m_meteoRequestInterval=meteoRequestInterval;
+        }
+        else
+        {
+            m_meteoRequestInterval=5000;
+            Enviroment::SetEnviroment(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
+        }
+    }
+
+    const QString meteoTimeOutInterval=Enviroment::GetEnviroment(QLatin1Literal("meteoTimeOutInterval"));
+    if(meteoTimeOutInterval.isEmpty())
     {
         m_meteoTimeOutInterval=500;
-        mediatorSettings.setValue(QStringLiteral("meteoTimeOutInterval"), m_meteoTimeOutInterval);
-    }
-
-    if (mediatorSettings.contains(QStringLiteral("moxaPort")))
-    {
-        m_moxaPort=mediatorSettings.value(QStringLiteral("moxaPort"), 4101).toUInt();
+        Enviroment::SetEnviroment(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
     }
     else
     {
-        m_moxaPort=4101;
-        mediatorSettings.setValue(QStringLiteral("moxaPort"), m_moxaPort);
-
+        bool isNum=false;
+        const quint16=meteoTimeOutInterval.toUInt(&isNum);
+        if(isNum)
+        {
+            m_meteoTimeOutInterval=meteoTimeOutInterval;
+        }
+        else
+        {
+            m_meteoTimeOutInterval=500;
+            Enviroment::SetEnviroment(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
+        }
     }
+
+    const QString moxaPort=Enviroment::GetEnviroment(QLatin1Literal("moxaPort"));
+    if(moxaPort.isEmpty())
+    {
+        m_moxaPort=4101;
+        Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+    }
+    else
+    {
+        bool isNum=false;
+        const quint16=moxaPort.toUInt(&isNum);
+        if(isNum)
+        {
+            m_moxaPort=moxaPort;
+        }
+        else
+        {
+            m_moxaPort=4101;
+            Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+        }
+    }
+
+
+    const QString moxaPort=Enviroment::GetEnviroment(QLatin1Literal("moxaPort"));
+    if(moxaPort.isEmpty())
+    {
+        m_moxaPort=4101;
+        Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+    }
+    else
+    {
+        bool isNum=false;
+        const quint16=moxaPort.toUInt(&isNum);
+        if(isNum)
+        {
+            m_moxaPort=moxaPort;
+        }
+        else
+        {
+            m_moxaPort=4101;
+            Enviroment::SetEnviroment(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+        }
+    }
+
+    QSettings mediatorSettings(settingsFileName, QSettings::IniFormat, this);
+
 
     if (mediatorSettings.contains(QStringLiteral("meteoKitPort")))
     {

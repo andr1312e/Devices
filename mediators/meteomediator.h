@@ -6,6 +6,7 @@
 #include <QSettings>
 #include <QQueue>
 
+#include "enviroment.h"
 #include "messageCreatrors/meteomessagegetter.h"
 #include "mediators/logger.h"
 #include "sockets/meteosocket.h"

@@ -51,5 +51,6 @@ HEADERS += \
     singleinstancemaker.h \
     devices.h \
     mediators/consolemediator.h \
-    mediators/logger.h
+    mediators/logger.h \
+    enviroment.h
 
