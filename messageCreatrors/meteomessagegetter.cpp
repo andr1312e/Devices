@@ -25,28 +25,25 @@ void MeteoMessageGetter::ParseMessage(const QByteArray &message)
         QByteArray floatBytes = message.mid(6, 4);
         float variable;
         memcpy(&variable, floatBytes.data(), sizeof(float));
-
-        switch(message.at(4))
+        METEO meteoType=static_cast<METEO>(message.at(4));
+        switch(meteoType)
         {
-        case METEO_PRESSURE:
+        case METEO::METEO_PRESSURE:
         {
             m_repository->ResetRepository();
             m_repository->SetPressure(variable);
-//            qDebug()<< "Метео : Давление " << variable;
             break;
         }
-        case METEO_TEMPERATURE:
+        case METEO::METEO_TEMPERATURE:
         {
             m_repository->SetTemperature(variable);
-//            qDebug()<< "Метео : Температура " << variable;
             break;
         }
-        case METEO_WET:
+        case METEO::METEO_WET:
         {
             m_repository->SetWet(variable);
             m_repository->SetGoodState();
             Q_EMIT ToAllDataCollected();
-//            qDebug()<< "Метео : влажность " << variable;
             break;
         }
         default:
@@ -71,12 +68,12 @@ const DevicesMeteoKitGetMessage &MeteoMessageGetter::NoConnectionMessage()
     return m_repository->GetMessage();
 }
 
-const DevicesMeteoKitGetMessage &MeteoMessageGetter::GetMessage() const
+const DevicesMeteoKitGetMessage &MeteoMessageGetter::GetMessage() const noexcept
 {
     return m_repository->GetMessage();
 }
 
-const std::string MeteoMessageGetter::GetLastMessageTime() const
+const std::string MeteoMessageGetter::GetLastMessageTime() const noexcept
 {
     return m_repository->GetLastMessageTime();
 }

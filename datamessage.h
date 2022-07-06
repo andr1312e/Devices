@@ -85,11 +85,13 @@ enum MESSAGES_ID
     PC_SYNC_MESSAGE                         = 150,                  // Сообщение синхронизации
 
     // MOXA id 160 - 169
-    DEVICES_ADJUSTING_KIT_SET_STATE         = 160,                  // Сообщение c данными в модуль обмена с периферийными устройствами(юстировочный комплект)
-    DEVICES_ADJUSTING_KIT_GET_STATE         = 161,                  // Сообщение с информацией из модуля обмена с периферийными устройствами(юстировочный комплект)
+    DEVICES_ADJUSTING_KIT_SET_STATE         = 160,                  // Сообщение установки данных Юстировочного комлпекта в нормальном режиме работы
+    DEVICES_ADJUSTING_KIT_GET_STATE         = 161,                  // Сообщение получения данных Юстировочного комлпекта в нормальном режиме работы
     DEVICES_METEO_KIT_GET_MESSAGE           = 162,                  // Сообщение с информацией из модуля обмена с периферийными устройствами(метеостанция)
     DEVICES_MOXA_STATE_MESSAGE              = 163,                  // Сообщение о состоянии преобразователя последовательных интерфейсов, 4xRS-232/422/485(Moxa)
     DEVICES_GEO_STATE_MESSAGE               = 164,                  // Сообщение с координатами от геомодуля ZED-F9P
+    DEVICES_ADJUSTING_KIT_BRAR_SET_STATE    = 165,                  // Сообщение с установкой режима БПАР (юстировочный комплект)
+    DEVICES_ADJUSTING_KIT_BRAR_GET_STATE    = 166,                  // Сообщение с получением режима БПАР (юстировочный комплект)
     //id message Registration 240 - 249
 
     REG_CHANGE_FILE                         = 240,                  // Сообщение об изменении файла для воспроизведения
@@ -1133,17 +1135,19 @@ struct RMOSilenceMessage
 
 //DEVICES_ADJUSTING_KIT_SET_STATE = 160
 //DEVICES_ADJUSTING_KIT_GET_STATE = 161
-struct DevicesAdjustingKitMessage    // Отправка состояний в юстировочный комлект из РМО
+// Отправка состояний в юстировочный комлект из РМО
+struct DevicesAdjustingKitMessage
 {
     timeval64 sTimeMeasurement; // Время создание сообщения
-    quint32 Fvco; // Рабочая точка Fvco для частот Tx и Rx: [Герцы]
-    int DoplerFrequency ; // Частота Доплера (по желанию) для частоты Tx: можеть быть меньше 0 [Герцы]
+    quint32 FvcoRx; // Рабочая точка Fvco для частоты Rx: [Герцы]
+    quint32 FvcoTx; // Рабочая точка Fvco для частоты Rx: [Герцы]
+    int DoplerFrequency ; // Частота Доплера (по желанию) можеть быть меньше 0 [Герцы]
     quint32 Distance; // Дальность ответного сигнала [Метры]
     quint32 DistanceToLocator; //Дальность от ответчика до локатора [Метры]
     float GAIN_TX;//Усиление TX, <=31.5 [Децибелы]
     float GAIN_RX;//Усиление RX, <=31.5 [Децибелы]
     quint8 Attenuator;//Установка ослабления [Децибелы]
-    bool WorkMode;//Режимы работы: 0-false - все отключено, 1-true - ответчик включен
+    quint8 WorkMode;//Режимы работы: 0 - все отключено, 1(true) - ответчик включен, 2 - режим БПАР
     quint8 state; // 0 - нет связи, 1 - всё штатно работает, 2 - время ожидания ответа истекло, 3 - сброс данных
 };
 
@@ -1178,5 +1182,22 @@ struct DevicesGeoStateMessage
     float latitude;// Широта в формате "ГГ.ГГГГГГ" + север, - юг
     float longtitude;// Долгота в формате "ГГГ.ГГГГГГ" + восток, - запад
     float height;// высота над уровнем моря (метры)
+};
+
+// ID: DEVICES_ADJUSTING_KIT_BRAR_SET_STATE = 165,
+// ID: DEVICES_ADJUSTING_KIT_BRAR_GET_STATE = 166,
+// Отправка состояний в юстировочный комлект из РМО (режим БПАР)
+struct DevicesBparAdjustingKitMessage
+{
+    timeval64 sTimeMeasurement; // Время создание сообщения
+    quint8 foId; // Текущий индекс Fo (0...5)
+    bool isLcm; // Наличие ЛЧМ(Линейно-частотной модуляции) (0 - выключен, 1 - включен)
+    quint8 tksIndex ; // Индекс Тк (0..2) (ЛЧМ включен - всегда 0)
+    bool hasThreshold; // Включить порог
+    quint16 threshold; // Порог сигнала
+    int answerDelay;// Задержка сигнала (0..5999)
+    quint32 DistanceToLocator; //Дальность от ответчика до локатора [Метры]
+    quint8 WorkMode;// Режимы работы: 0 - все отключено, 1(true) - режим БПАР, 2 - ответчик включен
+    quint8 state; // 0 - нет связи, 1 - всё штатно работает, 2 - время ожидания ответа истекло, 3 - сброс данных
 };
 #endif // DATAMESSAGE_H

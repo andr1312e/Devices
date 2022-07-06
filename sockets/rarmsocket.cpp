@@ -36,7 +36,8 @@ void RarmSocket::InitObjects()
     m_timeToReConnectToRarm->start();
     m_messagesIdWantedFromRarm =
     {
-        DEVICES_ADJUSTING_KIT_SET_STATE//id 151 Отправка состояний в юстировочный комлект
+        DEVICES_ADJUSTING_KIT_SET_STATE,//id 160 Отправка состояний в юстировочный комлект
+        DEVICES_ADJUSTING_KIT_BRAR_SET_STATE//id 165 Сообщение с установкой режима БПАР (юстировочный комплект)
     };
     m_pTcpSocketToRarm->connectToHost(m_rarmAdress, m_port, QIODevice::ReadWrite);
 }
@@ -104,15 +105,33 @@ void RarmSocket::OnReadyRead()
             //160 Отправка данных в модуль обмена с периферийными устройствами(юстировочный комплект
             if (sizeof (DevicesAdjustingKitMessage) == (messageSize - 1))
             {
-                DevicesAdjustingKitMessage setStateMessage;
-                in.readRawData((char *) &setStateMessage, messageSize - 1);
+                DevicesAdjustingKitMessage setNormalStateMessage;
+                in.readRawData((char *) &setNormalStateMessage, messageSize - 1);
                 m_logger->Appends("RS: Получили DEVICES_ADJUSTING_KIT_SET_STATE");
-                Q_EMIT ToSetUstirovState(setStateMessage);
+                Q_EMIT ToSetUstirovNormalState(setNormalStateMessage);
                 gettingMessageArray.clear();
             }
             else
             {
                 m_logger->Appends("RS: DEVICES_ADJUSTING_KIT_SET_STATE неверный размер");
+                in.skipRawData(messageSize - 1);
+            }
+            break;
+        }
+        case DEVICES_ADJUSTING_KIT_BRAR_SET_STATE:
+        {
+            //165 Сообщение с установкой режима БПАР (юстировочный комплект)
+            if (sizeof (DevicesBparAdjustingKitMessage) == (messageSize - 1))
+            {
+                DevicesBparAdjustingKitMessage setBparMessage;
+                in.readRawData((char *) &setBparMessage, messageSize - 1);
+                m_logger->Appends("RS: Получили DEVICES_ADJUSTING_KIT_BRAR_SET_STATE");
+                Q_EMIT ToSetUstirovBparState(setBparMessage);
+                gettingMessageArray.clear();
+            }
+            else
+            {
+                m_logger->Appends("RS: DEVICES_ADJUSTING_KIT_BRAR_SET_STATE неверный размер");
                 in.skipRawData(messageSize - 1);
             }
             break;
@@ -220,9 +239,9 @@ void RarmSocket::OnSendRarmMeteoState(const DevicesMeteoKitGetMessage &meteoStat
     SendRarmMessage(meteoMessage);
 }
 
-void RarmSocket::OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState)
+void RarmSocket::OnSendRarmUPCBNormalState(const DevicesAdjustingKitMessage &upcbState)
 {
-    m_logger->Appends("RS: Отправляем юстировочное. Состояние: " + std::to_string(upcbState.state));
+    m_logger->Appends("RS: Отправляем юстировочное НОРМАЛЬНО. Состояние: " + std::to_string(upcbState.state));
     QByteArray ustirovMessage;
 
     QDataStream out(&ustirovMessage, QIODevice::WriteOnly);
@@ -233,6 +252,22 @@ void RarmSocket::OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState
     out << qint16(sizeof (DevicesAdjustingKitMessage) + 1);
     out << quint8(DEVICES_ADJUSTING_KIT_GET_STATE);//id сообщения которое я отправляю
     out.writeRawData(reinterpret_cast<const char *>(&upcbState), sizeof(DevicesAdjustingKitMessage));
+    SendRarmMessage(ustirovMessage);
+}
+
+void RarmSocket::OnSendRarmUPCBBparState(const DevicesBparAdjustingKitMessage &bparState)
+{
+    m_logger->Appends("RS: Отправляем юстировочное БПАР. Состояние: " + std::to_string(bparState.state));
+    QByteArray ustirovMessage;
+
+    QDataStream out(&ustirovMessage, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_5_3);
+    out.setByteOrder(QDataStream::LittleEndian);
+    out.setFloatingPointPrecision(QDataStream::SinglePrecision);
+
+    out << qint16(sizeof (DevicesBparAdjustingKitMessage) + 1);
+    out << quint8(DEVICES_ADJUSTING_KIT_BRAR_GET_STATE);//id сообщения которое я отправляю
+    out.writeRawData(reinterpret_cast<const char *>(&bparState), sizeof(DevicesBparAdjustingKitMessage));
     SendRarmMessage(ustirovMessage);
 }
 

@@ -1,5 +1,5 @@
-#ifndef CONSOLEMEDIATOR_H
-#define CONSOLEMEDIATOR_H
+#ifndef MEDIATORS_CONSOLEMEDIATOR_H
+#define MEDIATORS_CONSOLEMEDIATOR_H
 #include <QObject>
 
 
@@ -22,14 +22,14 @@ public Q_SLOTS:
 protected:
     virtual void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
 private:
-    void ClearConsole();
-    void ToPrintLogFilePath();
-    void PrintProcess();
-    void PrintRarmState();
-    void PrintMoxaState();
-    void PrintUkitState();
-    void PrintMeteoState();
-    void PrintGeoState();
+    void ClearConsole() noexcept;
+    void ToPrintLogFilePath() noexcept;
+    void PrintProcess() noexcept;
+    void PrintRarmState() noexcept;
+    void PrintMoxaState() noexcept;
+    void PrintUkitState() noexcept;
+    void PrintMeteoState() noexcept;
+    void PrintGeoState() noexcept;
 private:
     const std::string m_logFileMessagePath;
 private:
@@ -40,8 +40,8 @@ private:
     const GeoSocket *const m_geo;
 private:
     int m_updateIterval = 500;
-    std::string m_progress;
+    std::string m_progressIterationString;
     int m_iteration = 0;
 };
 
-#endif // CONSOLEMEDIATOR_H
+#endif // MEDIATORS_CONSOLEMEDIATOR_H

@@ -25,7 +25,7 @@ private:
     void CreateObjects();
     void PrepareObjects();
     void ConnectObjects();
-    void StartObjects();
+    void StartConsoleThread();
 private:
     const QString m_rarmAdress;
     const quint16 m_rarmPort;

@@ -4,7 +4,7 @@ MeteoMediator::MeteoMediator(const Logger *logger, QObject *parent)
     : QObject(parent)
     , m_logger(logger)
 {
-    ReadDataFromSettingsFile();
+    ReadParamsFromProfile();
     CreateObjects();
     InitObjects();
     ConnectObjects();
@@ -18,7 +18,7 @@ MeteoMediator::~MeteoMediator()
     delete m_makeNewRequestTimer;
 }
 
-void MeteoMediator::ReadDataFromSettingsFile()
+void MeteoMediator::ReadParamsFromProfile()
 {
 
     const QString meteoRequestInterval=ProFile::GetProFileField(QLatin1Literal("meteoRequestInterval"));
@@ -159,17 +159,17 @@ void MeteoMediator::OnAllDataCollected()
     Q_EMIT ToSendRarmMeteoState(m_meteoMessageParser->GetMessage());
 }
 
-bool MeteoMediator::IsMeteoConnected() const
+bool MeteoMediator::IsMeteoConnected() const noexcept
 {
     return m_meteoServer->IsMeteoConnected();
 }
 
-quint16 MeteoMediator::GetMeteoPort() const
+quint16 MeteoMediator::GetMeteoPort() const noexcept
 {
     return m_meteoServer->GetMeteoPort();
 }
 
-std::string MeteoMediator::GetMeteoData() const
+std::string MeteoMediator::GetMeteoData() const noexcept
 {
     const DevicesMeteoKitGetMessage &message=m_meteoMessageParser->GetMessage();
     if(0==message.state)
@@ -194,7 +194,7 @@ std::string MeteoMediator::GetMeteoData() const
     }
 }
 
-std::string MeteoMediator::GetMeteoError() const
+std::string MeteoMediator::GetMeteoError() const noexcept
 {
     return m_meteoServer->GetMeteoError();
 }

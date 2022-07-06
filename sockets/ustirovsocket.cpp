@@ -59,7 +59,6 @@ void UstirovSocket::ConnectObjects()
 
 void UstirovSocket::OnReadyRead()
 {
-//    qDebug()<< m_readyReadBuffer
     StopNoAnswerTimer();
     m_readyReadBuffer.append(m_socket->readAll());
     m_logger->Appends("US Получили сообщение " + m_readyReadBuffer.toHex().toStdString());
@@ -192,7 +191,7 @@ bool UstirovSocket::IsUstirovConnected() const
 //    return QAbstractSocket::ConnectedState == m_socket->state();
 }
 
-QString UstirovSocket::GetLastUstirovErrorMessage() const
+QString UstirovSocket::GetLastUstirovErrorMessage() const noexcept
 {
     return m_socket->errorString();
 }

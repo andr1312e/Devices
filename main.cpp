@@ -6,11 +6,11 @@
 
 int main(int argc, char *argv[])
 {
-    SingleInstanceMaker guard(QStringLiteral("DEVICES"));
+    SingleInstanceMaker guard(QLatin1Literal("DEVICES"));
     if (guard.CanRunApp())
     {
         QCoreApplication applicaton(argc, argv);
-        Devices devices;
+        const Devices devices;
         return applicaton.exec();
     }
     else

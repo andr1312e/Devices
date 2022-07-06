@@ -17,42 +17,44 @@ class UstirovMediator : public QObject
 {
     Q_OBJECT
 public:
-    explicit UstirovMediator(const Logger *logger, const QString &moxaIpAdress, const QString &settingsFileName, QObject *parent);
+    explicit UstirovMediator(const Logger *logger, const QString &moxaIpAdress, QObject *parent);
     ~UstirovMediator();
 private:
-    void ReadDataFromSettingsFile(const QString &settingsFileName);
+    void ReadParamsFromProfile();
     void CreateObjects();
     void ConnectObjects();
     void StartPingTimer();
 Q_SIGNALS:
-    void ToSendRarmUstirovState(const DevicesAdjustingKitMessage &upcbState);
+    void ToSendRarmNormalState(const DevicesAdjustingKitMessage &upcbState);
+    void ToSendRarmBparState(const DevicesBparAdjustingKitMessage &bparState);
     void ToSendPcbWork();
 public Q_SLOTS:
-    void OnSetDataToUstirov(const DevicesAdjustingKitMessage &state);
-    void OnGetDataFromUstirov();
+    void OnSetNormalSateToUstirov(const DevicesAdjustingKitMessage &state);
+    void OnSetBparStateToUstirov(const DevicesBparAdjustingKitMessage &state);
 private Q_SLOTS:
     void OnGetStateFromMessage(const QByteArray &message);
     void OnRequestTimeOut();
     void OnResetQueue();
-    void OnAllDataCollected();
+    void OnAllNormalDataCollected();
+    void OnAllBparDataCollected();
     void OnSendMessage();
     void OnSendPing();
 public:
     quint16 GetUstirovPort() const;
     bool IsUstirovConnected() const;
-    QString GetLastUstirovErrorMessage() const;
+    QString GetLastUstirovSocketErrorMessage() const;
     int GetMessagesCount() const;
     QList<QByteArray> GetMessageList() const;
 private:
     void RestartCommandsCreate();
     void SetStateCommandsCreate(const DevicesAdjustingKitMessage &state);
-    void GetStateCommandsCreate();
+    void GetNormalStateCommandsCreate();
     void SendToRarmMessageWithNoConnectionInfo();
 private:
     QString m_moxaIpAdress;
     quint16 m_ustirovPort;
-    double f;
-    double fref;
+    double m_f;
+    double m_fref;
     bool m_isRestartMode;
 private:
     const Logger *m_logger;

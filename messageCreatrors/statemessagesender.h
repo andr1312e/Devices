@@ -17,28 +17,32 @@ class UstirovMessageSender
 public:
     explicit UstirovMessageSender(const Logger *logger, const double f, const double fref);
     ~UstirovMessageSender();
-    QByteArray CreateRestartCommand() const;
-    QByteArray CreateZeroCommand() const;
-    QByteArray CreateFirstCommand(double fvcoFreq) const;
-    QByteArray CreateSecondCommand(double fvcoFreq, double doplerFreq) const;
-    QByteArray CreateThirdCommand(double distance, double distanceToLocator) const;
-    QByteArray CreateFourthCommand(double gainTX, double gainRX) const;
+public:
+    QByteArray CreateRestartCommand() const noexcept;
+    QByteArray CreateZeroCommand() const noexcept;
+    QByteArray CreateFirstCommand(double fvcoFreq) const noexcept;
+    QByteArray CreateSecondCommand(double fvcoFreq) const noexcept;
+    QByteArray CreateThirdCommand(double distance, double distanceToLocator) const noexcept;
+    QByteArray CreateFourthCommand(double gainTX, double gainRX) const  noexcept;
     QByteArray CreateFiveCommand(double attenuator) const;
-    QByteArray CreateSixCommand(double workMode) const;
-    QByteArray CreateSevenCommand(quint8 messageId) const;
+    QByteArray CreateSixCommand(quint8 workMode) const noexcept;
+    QByteArray CreateSevenCommand(quint8 messageId) const noexcept;
+    QByteArray CreateNineCommand(quint32 dopler) const noexcept;
+    QByteArray CreateBparCommand(const DevicesBparAdjustingKitMessage &message) const noexcept;
 private:
     quint16 CalculateInt(double fvcoFreq) const;
     quint32 CalculateFractNew(double fvcoFreq) const;
     quint32 CalculateFractOld(double fvcoFreq) const;
-    quint8 CalculateGain(double gain) const;
+    quint8 CalculateGain(double gain) const noexcept;
     quint8 CalculateAttenuator(quint16 attenuator) const;
-    bool CalculateDiv(double fvcoFreq) const;
+    bool CalculateDiv(double fvcoFreq) const noexcept;
+    quint16 CalculateBparDistance(int answerDelay, quint32 distanceToSolver) const;
 private:
     const Logger *const m_logger;
     const double m_c = 299792458.0;
     const double m_f;
     const double m_fref;
-    const QVarLengthArray<quint8, 8> m_messagesIds = {0, 1, 2, 3, 4, 5, 6, 7};
+    const QVarLengthArray<quint8, 8> m_messagesIds = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 };
 
 #endif // MESSAGECREATORS_STATEMESSAGESENDER_H

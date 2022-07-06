@@ -1,8 +1,6 @@
 #include "consolemediator.h"
 
-#include <QVector>
 #include <iterator>
-#include <QProcess>
 
 #if _WIN32
      #include <Windows.h>
@@ -16,7 +14,7 @@ ConsoleMediator::ConsoleMediator(const std::string &logFilePath, RarmSocket *rar
     , m_ustirov(ustirov)
     , m_meteo(meteo)
     , m_geo(geo)
-    , m_progress("Обновление раз в " + std::to_string(m_updateIterval) + "млс... ")
+    , m_progressIterationString("Обновление раз в " + std::to_string(m_updateIterval) + "млс... ")
 {
     setlocale(LC_ALL, "Russian"); //Функция setlocale() с аргументами
 #if _WIN32
@@ -48,7 +46,7 @@ void ConsoleMediator::timerEvent(QTimerEvent *event)
     PrintGeoState();
 }
 
-void ConsoleMediator::ClearConsole()
+void ConsoleMediator::ClearConsole() noexcept
 {
 #ifdef WINDOWS
     std::system("cls");
@@ -57,27 +55,31 @@ void ConsoleMediator::ClearConsole()
 #endif
 }
 
-void ConsoleMediator::ToPrintLogFilePath()
+void ConsoleMediator::ToPrintLogFilePath() noexcept
 {
     std::cout << m_logFileMessagePath << std::endl;
 }
 
-void ConsoleMediator::PrintProcess()
+void ConsoleMediator::PrintProcess() noexcept
 {
     m_iteration++;
     if (20 == m_iteration)
     {
         m_iteration = 0;
-        m_progress = "Обновление раз в " + std::to_string(m_updateIterval) + " млс... ";
+#ifdef QT_DEBUG
+    m_progressIterationString = "Режим отладки! Обновление раз в " + std::to_string(m_updateIterval) + " млс... ";
+#else
+    m_progressIterationString = "Обновление раз в " + std::to_string(m_updateIterval) + " млс... ";
+#endif
     }
     else
     {
-        m_progress += " " + std::to_string(m_iteration);
+        m_progressIterationString += " " + std::to_string(m_iteration);
     }
-    std::cout << m_progress << std::endl;
+    std::cout << m_progressIterationString << std::endl;
 }
 
-void ConsoleMediator::PrintRarmState()
+void ConsoleMediator::PrintRarmState() noexcept
 {
     std::string message = "**RARM ";
     if (m_rarmSocket->IsRarmConnected())
@@ -93,7 +95,7 @@ void ConsoleMediator::PrintRarmState()
     std::cout << message << std::endl;
 }
 
-void ConsoleMediator::PrintMoxaState()
+void ConsoleMediator::PrintMoxaState() noexcept
 {
     std::string message = "**MOXA NPort-54501 ";
     if (m_moxa->IsMoxaConnected())
@@ -109,7 +111,7 @@ void ConsoleMediator::PrintMoxaState()
     std::cout << message << std::endl;
 }
 
-void ConsoleMediator::PrintUkitState()
+void ConsoleMediator::PrintUkitState() noexcept
 {
     std::string message = "**Юстировочный СЮИТ.687263.035 ";
     if (m_ustirov->IsUstirovConnected())
@@ -127,13 +129,13 @@ void ConsoleMediator::PrintUkitState()
     else
     {
         message += "\033[31mX\033[0m "; //Красный красный крест
-        message += "\n    Ошибка: " + m_ustirov->GetLastUstirovErrorMessage().toStdString();
+        message += "\n    Ошибка: " + m_ustirov->GetLastUstirovSocketErrorMessage().toStdString();
     }
     message += "\n    Порт юк: " + std::to_string(m_ustirov->GetUstirovPort());
     std::cout << message << std::endl;
 }
 
-void ConsoleMediator::PrintMeteoState()
+void ConsoleMediator::PrintMeteoState() noexcept
 {
     std::string message = "**Метеокомплект АМЯ2.702.090 Д1 ";
     if (m_meteo->IsMeteoConnected())
@@ -152,7 +154,7 @@ void ConsoleMediator::PrintMeteoState()
 
 }
 
-void ConsoleMediator::PrintGeoState()
+void ConsoleMediator::PrintGeoState() noexcept
 {
     std::string message = "**Геодатчик u-blox ZED-F9P ";
     if (m_geo->IsGeoSocketConnected())

@@ -19,7 +19,7 @@ public:
     explicit MeteoMediator(const Logger *logger, QObject *parent);
     ~MeteoMediator();
 private:
-    void ReadDataFromSettingsFile();
+    void ReadParamsFromProfile();
     void CreateObjects();
     void InitObjects();
     void ConnectObjects();
@@ -31,10 +31,10 @@ private Q_SLOTS:
     void OnRequestTimeOut();
     void OnAllDataCollected();
 public:
-    bool IsMeteoConnected() const;
-    quint16 GetMeteoPort() const;
-    std::string GetMeteoData() const;
-    std::string GetMeteoError() const;
+    bool IsMeteoConnected() const noexcept;
+    quint16 GetMeteoPort() const noexcept;
+    std::string GetMeteoData() const noexcept;
+    std::string GetMeteoError() const noexcept;
     std::string GetLastMessageTime() const;
 private:
     void SendingNextMessageInQueue();

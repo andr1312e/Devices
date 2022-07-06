@@ -21,8 +21,8 @@ private:
    void InitObjects();
    void ConnectObjects();
 Q_SIGNALS:
-   void ToSetUstirovState(const DevicesAdjustingKitMessage &state);
-   void ToGetUstirovState();
+   void ToSetUstirovNormalState(const DevicesAdjustingKitMessage &state);
+   void ToSetUstirovBparState(const DevicesBparAdjustingKitMessage &state);
 private Q_SLOTS:
    void OnConnectedToRarm();
    void OnReadyRead();
@@ -33,7 +33,8 @@ private Q_SLOTS:
 public Q_SLOTS:
    void OnSendRarmMoxaWorksState(DevicesMoxaStateMessage &moxaState);
    void OnSendRarmMeteoState(const DevicesMeteoKitGetMessage &meteoState);
-   void OnSendRarmUPCBState(const DevicesAdjustingKitMessage &upcbState);
+   void OnSendRarmUPCBNormalState(const DevicesAdjustingKitMessage &upcbState);
+   void OnSendRarmUPCBBparState(const DevicesBparAdjustingKitMessage &bparState);
    void OnSendRarmGeoMessage(const DevicesGeoStateMessage  &state);
 
 private:

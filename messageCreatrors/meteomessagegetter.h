@@ -5,7 +5,7 @@
 #include <QSharedPointer>
 #include "messageRepositories/meteomessagerepository.h"
 
-enum METEO
+enum class METEO
 {
     METEO_PRESSURE      = 1, // давление
     METEO_TEMPERATURE   = 2, // температура
@@ -24,8 +24,8 @@ public:
     void ParseMessage(const QByteArray &message);
     const DevicesMeteoKitGetMessage &MessageTimeOut();
     const DevicesMeteoKitGetMessage &NoConnectionMessage();
-    const DevicesMeteoKitGetMessage &GetMessage() const;
-    const std::string GetLastMessageTime() const;
+    const DevicesMeteoKitGetMessage &GetMessage() const noexcept;
+    const std::string GetLastMessageTime() const noexcept;
 private:
     MeteoMessageRepository * const m_repository;
 

@@ -16,7 +16,7 @@ public:
     explicit MoxaMediator(QObject *parent);
     ~MoxaMediator();
 private:
-    void ReadDataFromEnviroment();
+    void ReadParamsFromProfile();
     void InitObjects();
     void ConnectObjects();
 Q_SIGNALS:

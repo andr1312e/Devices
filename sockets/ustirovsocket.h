@@ -34,7 +34,7 @@ public:
     void TryToSendLastMessageAgain();
 public:
     bool IsUstirovConnected() const;
-    QString GetLastUstirovErrorMessage() const;
+    QString GetLastUstirovErrorMessage() const noexcept;
 private:
     void StopNoAnswerTimer();
 private:

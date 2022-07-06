@@ -10,28 +10,36 @@ public:
     explicit UstrirovMessageRepository();
     ~UstrirovMessageRepository();
 public:
-    void SetFvco(quint32 fvco);
-    void SetDopler(int doplerFrequency);
-    void SetDistance(quint32 distance);
-    void SetDistanceToLocator(quint32 distanceToLocator);
-    void SetGainTx(float gainTx);
-    void SetGainRx(float gainRx);
-    void SetAttenuator(quint8 attenuator);
-    void SetWorkMode(quint8 workMode);
-    void SetWorkState();
+    void SetNormalFvcoRx(quint32 fvcoRx) noexcept;
+    void SetNormalFvcoTx(quint32 fvcoTx) noexcept;
+    void SetNormalDopler(int doplerFrequency) noexcept;
+    void SetNormalDistance(quint32 distance) noexcept;
+    void SetDistanceToLocator(quint32 distanceToLocator) noexcept;
+    void SetNormalGainTx(float gainTx) noexcept;
+    void SetNormalGainRx(float gainRx) noexcept;
+    void SetNormalAttenuator(quint8 attenuator) noexcept;
+    void SetNormalWorkMode(quint8 workMode) noexcept;
+    void SetNormalCompleteState() noexcept;
 
-    void SetNoConnectionState();
-    void SetTimeOutState();
+    void SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, bool hasThreshold, quint16 threshold, int answerDelay) noexcept;
 
-    const DevicesAdjustingKitMessage &GetMessage();
+    void SetNoConnectionStateNormal() noexcept;
+    void SetTimeOutStateNormal() noexcept;
+
+    void SetNoConnectionStateBpar() noexcept;
+    void SetTimeOutStateBpar() noexcept;
+
+    const DevicesAdjustingKitMessage &GetNormalMessage();
+    const DevicesBparAdjustingKitMessage &GetBparMessage();
 public:
     quint16 GetDistanceToLocator() const;
     quint32 GetFvco() const;
 private:
-    void ResetRepository();
-
+    void ResetNormalMessage();
+    void ResetBparMessage();
 private:
-    DevicesAdjustingKitMessage  m_repository;
+    DevicesAdjustingKitMessage     m_normalMessage;
+    DevicesBparAdjustingKitMessage m_bparMessage;
 };
 
 #endif // MESSAGEREPOSITORIES_USTRIROVMESSAGEREPOSITORY_H

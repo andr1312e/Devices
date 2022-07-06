@@ -4,7 +4,7 @@ MoxaMediator::MoxaMediator(QObject *parent)
     : QObject(parent)
     , m_messageRepository(new MoxaMessageRepository(this))
 {
-    ReadDataFromEnviroment();
+    ReadParamsFromProfile();
     InitObjects();
     ConnectObjects();
 }
@@ -15,7 +15,7 @@ MoxaMediator::~MoxaMediator()
     delete m_messageRepository;
 }
 
-void MoxaMediator::ReadDataFromEnviroment()
+void MoxaMediator::ReadParamsFromProfile()
 {
     const QString moxaIpAdress=ProFile::GetProFileField(QLatin1Literal("moxaIpAdress"));
     if(moxaIpAdress.isEmpty())

@@ -4,7 +4,7 @@
 
 UstrirovMessageRepository::UstrirovMessageRepository()
 {
-    ResetRepository();
+    ResetNormalMessage();
 }
 
 UstrirovMessageRepository::~UstrirovMessageRepository()
@@ -12,89 +12,138 @@ UstrirovMessageRepository::~UstrirovMessageRepository()
 
 }
 
-void UstrirovMessageRepository::SetFvco(quint32 fvco)
+void UstrirovMessageRepository::SetNormalFvcoRx(quint32 fvcoRx) noexcept
 {
-    m_repository.Fvco = fvco;
+    m_normalMessage.FvcoRx = fvcoRx;
 }
 
-void UstrirovMessageRepository::SetDopler(int doplerFrequency)
+void UstrirovMessageRepository::SetNormalFvcoTx(quint32 fvcoTx) noexcept
 {
-    m_repository.DoplerFrequency = doplerFrequency;
+    m_normalMessage.FvcoTx = fvcoTx;
 }
 
-void UstrirovMessageRepository::SetDistance(quint32 distance)
+void UstrirovMessageRepository::SetNormalDopler(int doplerFrequency) noexcept
 {
-    m_repository.Distance = distance;
+    m_normalMessage.DoplerFrequency = doplerFrequency;
 }
 
-void UstrirovMessageRepository::SetDistanceToLocator(quint32 distanceToLocator)
+void UstrirovMessageRepository::SetNormalDistance(quint32 distance) noexcept
 {
-    m_repository.DistanceToLocator = distanceToLocator;
+    m_normalMessage.Distance = distance;
 }
 
-void UstrirovMessageRepository::SetGainTx(float gainTx)
+void UstrirovMessageRepository::SetDistanceToLocator(quint32 distanceToLocator) noexcept
 {
-    m_repository.GAIN_TX = gainTx;
+    m_normalMessage.DistanceToLocator = distanceToLocator;
+    m_bparMessage.DistanceToLocator= distanceToLocator;
 }
 
-void UstrirovMessageRepository::SetGainRx(float gainRx)
+void UstrirovMessageRepository::SetNormalGainTx(float gainTx) noexcept
 {
-    m_repository.GAIN_RX = gainRx;
+    m_normalMessage.GAIN_TX = gainTx;
 }
 
-void UstrirovMessageRepository::SetAttenuator(quint8 attenuator)
+void UstrirovMessageRepository::SetNormalGainRx(float gainRx) noexcept
 {
-    m_repository.Attenuator = attenuator;
+    m_normalMessage.GAIN_RX = gainRx;
 }
 
-void UstrirovMessageRepository::SetWorkMode(quint8 workMode)
+void UstrirovMessageRepository::SetNormalAttenuator(quint8 attenuator) noexcept
 {
-    m_repository.WorkMode = workMode;
+    m_normalMessage.Attenuator = attenuator;
 }
 
-void UstrirovMessageRepository::SetWorkState()
+void UstrirovMessageRepository::SetNormalWorkMode(quint8 workMode) noexcept
 {
-    m_repository.state = 1;
+    m_normalMessage.WorkMode = workMode;
 }
 
-void UstrirovMessageRepository::SetNoConnectionState()
+void UstrirovMessageRepository::SetNormalCompleteState() noexcept
 {
-    ResetRepository();
-    m_repository.state = 0;
+    m_normalMessage.state = 1;
 }
 
-void UstrirovMessageRepository::SetTimeOutState()
+void UstrirovMessageRepository::SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, bool hasThreshold, quint16 threshold, int answerDelay) noexcept
 {
-    ResetRepository();
-    m_repository.state = 2;
+    m_bparMessage.foId=foId;
+    m_bparMessage.isLcm=isLcm;
+    m_bparMessage.tksIndex=tksIndex;
+    m_bparMessage.hasThreshold=hasThreshold;
+    m_bparMessage.threshold=threshold;
+    m_bparMessage.answerDelay=answerDelay;
 }
 
-const DevicesAdjustingKitMessage &UstrirovMessageRepository::GetMessage()
+void UstrirovMessageRepository::SetNoConnectionStateNormal() noexcept
+{
+    ResetNormalMessage();
+    m_normalMessage.state = 0;
+}
+
+void UstrirovMessageRepository::SetTimeOutStateNormal() noexcept
+{
+    ResetNormalMessage();
+    m_normalMessage.state = 2;
+}
+
+void UstrirovMessageRepository::SetNoConnectionStateBpar() noexcept
+{
+    ResetBparMessage();
+    m_bparMessage.state = 0;
+}
+
+void UstrirovMessageRepository::SetTimeOutStateBpar() noexcept
+{
+    ResetBparMessage();
+    m_bparMessage.state = 2;
+}
+
+const DevicesAdjustingKitMessage &UstrirovMessageRepository::GetNormalMessage()
 {
     const QDateTime currentDateTime(QDateTime::currentDateTime());
-    m_repository.sTimeMeasurement.usecs = currentDateTime.toMSecsSinceEpoch();
-    m_repository.sTimeMeasurement.secs = currentDateTime.toSecsSinceEpoch();
-    return m_repository;
+    m_normalMessage.sTimeMeasurement.usecs = currentDateTime.toMSecsSinceEpoch();
+    m_normalMessage.sTimeMeasurement.secs = currentDateTime.toSecsSinceEpoch();
+    return m_normalMessage;
 }
 
-void UstrirovMessageRepository::ResetRepository()
+const DevicesBparAdjustingKitMessage &UstrirovMessageRepository::GetBparMessage()
 {
-//    m_repository.Attenuator=0;
-//    m_repository.Distance=0;
-//    m_repository.DoplerFrequency=0;
-//    m_repository.Fvco=0;
-//    m_repository.GAIN_RX=0;
-//    m_repository.GAIN_TX=0;
-//    m_repository.WorkMode=false;
-//    m_repository.state=1;
+    const QDateTime currentDateTime(QDateTime::currentDateTime());
+    m_bparMessage.sTimeMeasurement.usecs = currentDateTime.toMSecsSinceEpoch();
+    m_bparMessage.sTimeMeasurement.secs = currentDateTime.toSecsSinceEpoch();
+    return m_bparMessage;
+}
+
+void UstrirovMessageRepository::ResetNormalMessage()
+{
+    m_normalMessage.Attenuator=0;
+    m_normalMessage.Distance=0;
+    m_normalMessage.DoplerFrequency=0;
+    m_normalMessage.FvcoRx=0;
+    m_normalMessage.FvcoTx=0;
+    m_normalMessage.GAIN_RX=0;
+    m_normalMessage.GAIN_TX=0;
+    m_normalMessage.WorkMode=0;
+    m_normalMessage.state=1;
+}
+
+void UstrirovMessageRepository::ResetBparMessage()
+{
+    m_bparMessage.answerDelay=0;
+    m_bparMessage.foId=0;
+    m_bparMessage.hasThreshold=false;
+    m_bparMessage.isLcm=false;
+    m_bparMessage.threshold=0;
+    m_bparMessage.tksIndex=0;
+    m_bparMessage.WorkMode=0;
+    m_bparMessage.state=1;
 }
 
 quint16 UstrirovMessageRepository::GetDistanceToLocator() const
 {
-    return m_repository.DistanceToLocator;
+    return m_normalMessage.DistanceToLocator;
 }
 
 quint32 UstrirovMessageRepository::GetFvco() const
 {
-    return m_repository.Fvco;
+    return m_normalMessage.FvcoRx;
 }

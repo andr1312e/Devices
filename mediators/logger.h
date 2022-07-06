@@ -6,7 +6,7 @@
 class Logger
 {
 public:
-    Logger(const std::string &logFileName)
+    explicit Logger(const std::string &logFileName)
         : m_logFileName(logFileName)
     {
         ClearLogFile();
@@ -22,7 +22,7 @@ public:
         return m_logFileName;
     }
 
-    void Appends(const std::string &message) const
+    void Appends(std::string &&message) const noexcept
     {
         std::ofstream fout;
         fout.open(m_logFileName, std::ios::app);
@@ -32,7 +32,7 @@ public:
     }
 
 private:
-    void ClearLogFile() const
+    void ClearLogFile() const noexcept
     {
         std::remove(m_logFileName.c_str());
     }
