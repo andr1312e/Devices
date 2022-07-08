@@ -25,7 +25,7 @@ bool UstirovMessageGetter::FillDataIntoStructFromMessage(const QByteArray &messa
     case 1:
         return SaveFvcoRxToRepository(message);
     case 2:
-        return SaveDoplerToRepository(message);
+        return SaveFvcoTxToRepository(message);
     case 3:
         return SaveDistanceToRepository(message);
     case 4:
@@ -34,6 +34,8 @@ bool UstirovMessageGetter::FillDataIntoStructFromMessage(const QByteArray &messa
         return SaveAttenuatorToRepository(message);
     case 6:
         return SaveWorkModeToRepository(message);
+    case 9:
+        return SaveDoplerToRepository(message);
     default:
         Q_UNREACHABLE();
     }
@@ -76,6 +78,7 @@ bool UstirovMessageGetter::SaveFvcoRxToRepository(const QByteArray &message)
         FRACT_RX = FRACT_RX * m_Fref * qPow(2, DIV_RX);
 
         m_messageRepository->SetNormalFvcoRx((quint32)FRACT_RX + 3000000.0); //поправка на 3
+
         return true;
     }
     return false;
@@ -144,28 +147,28 @@ bool UstirovMessageGetter::SaveAttenuatorToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveWorkModeToRepository(const QByteArray &message)
 {
-    if (3 == message.count())
+    if (3 == message.count() && quint8(message.at(2) == 5))
     {
-        const quint8 WorkModeIndex = quint8(message.at(2));
-        if (WorkModeIndex < m_countOfWorkModes)
+        const bool canBparParce = true;
+        SaveBparToRepository(QByteArray());
+        if (canBparParce)
         {
-            m_messageRepository->SetNormalWorkMode(WorkModeIndex);
-            m_messageRepository->SetNormalCompleteState();
-            Q_EMIT ToAllNormalDataCollected();
-            return true;
+            Q_EMIT ToAllBparDataCollected();
         }
-
+        return canBparParce;
     }
     else
     {
-        if(6== message.count())
+        if (3 == message.count())
         {
-            const bool canBparParce=SaveBparToRepository(message);
-            if(canBparParce)
+            const quint8 WorkModeIndex = quint8(message.at(2));
+            if (WorkModeIndex < m_countOfWorkModes)
             {
-                Q_EMIT ToAllBparDataCollected();
+                m_messageRepository->SetNormalWorkMode(WorkModeIndex);
+                m_messageRepository->SetNormalCompleteState();
+                Q_EMIT ToAllNormalDataCollected();
+                return true;
             }
-            return canBparParce;
         }
     }
     return false;
@@ -174,13 +177,13 @@ bool UstirovMessageGetter::SaveWorkModeToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
 {
-    if (message.count() == 6)
+    if (message.count() == 5)
     {
         QByteArray arrayDopler;
         arrayDopler.append(static_cast<char>(0x00));//иначе будет 0, нужно 4 байта
+        arrayDopler.append(message.at(2));
         arrayDopler.append(message.at(3));
         arrayDopler.append(message.at(4));
-        arrayDopler.append(message.at(5));
 
         QDataStream doplerDataStream(arrayDopler);
         quint32 dopler;
@@ -194,39 +197,41 @@ bool UstirovMessageGetter::SaveDoplerToRepository(const QByteArray &message)
 
 bool UstirovMessageGetter::SaveBparToRepository(const QByteArray &message)
 {
-    const quint8 bpar_mode = message.at(3);
+//    const quint8 bpar_mode = message.at(3);
 
-    //было  11000000
-    //стало 00000110
-    //-1 так как смотри таблицу, там первый начинается с 0
-    const quint8 fo = (bpar_mode >> 5) - 1;
+//    //было  11000000
+//    //стало 00000110
+//    //-1 так как смотри таблицу, там первый начинается с 0
+//    const quint8 fo = (bpar_mode >> 5) - 1;
 
-    //позиция начинается справа
-    //было  11011000  = 216
-    //маска 00010000  = 16
-    //сдвигаем на 4 разряда и получаем или 0 или 1
-    const quint8 hasLcmPos = 4;
-    const quint8 hasLcmMask = GetMask(hasLcmPos, sizeof(  quint8 ) );
-    const bool hasLcm = ( bpar_mode & hasLcmMask ) >> hasLcmPos;
-    //позиция начинается справа
-    //было  11011000  = 216
-    //маска 00001100  = 12
-    //сдвигаем на 4 разряда и получаем или 2 битовое число
-    quint8 tKmode = 0;
-    if (!hasLcm)
-    {
-        const quint8 tKmodePos = 2;
-        const quint8 tKMask = GetMask(tKmodePos, sizeof(  quint8 ) * 2 );
-        tKmode = ( bpar_mode & tKMask ) >> tKmodePos;
-    }
-    QByteArray signalDelayArray;
-    signalDelayArray.append(message.at(4));
-    signalDelayArray.append(message.at(5));
+//    //позиция начинается справа
+//    //было  11011000  = 216
+//    //маска 00010000  = 16
+//    //сдвигаем на 4 разряда и получаем или 0 или 1
+//    const quint8 hasLcmPos = 4;
+//    const quint8 hasLcmMask = GetMask(hasLcmPos, sizeof(  quint8 ) );
+//    const bool hasLcm = ( bpar_mode & hasLcmMask ) >> hasLcmPos;
+//    //позиция начинается справа
+//    //было  11011000  = 216
+//    //маска 00001100  = 12
+//    //сдвигаем на 4 разряда и получаем или 2 битовое число
+//    quint8 tKmode = 0;
+//    if (!hasLcm)
+//    {
+//        const quint8 tKmodePos = 2;
+//        const quint8 tKMask = GetMask(tKmodePos, sizeof(  quint8 ) * 2 );
+//        tKmode = ( bpar_mode & tKMask ) >> tKmodePos;
+//    }
+//    QByteArray signalDelayArray;
+//    signalDelayArray.append(message.at(4));
+//    signalDelayArray.append(message.at(5));
 
-    QDataStream sinusDataStream(signalDelayArray);
-    quint16 signalDelay;
-    sinusDataStream >> signalDelay;
+//    QDataStream sinusDataStream(signalDelayArray);
+//    quint16 signalDelay;
+//    sinusDataStream >> signalDelay;
 
+//    m_messageRepository->SetBpar(fo, hasLcm, tKmode, false, 0, signalDelay);
+    m_messageRepository->SetBpar(0, true, 0, false, 0, 0);
     return true;
 }
 

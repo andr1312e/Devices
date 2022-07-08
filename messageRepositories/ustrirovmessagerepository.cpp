@@ -35,7 +35,7 @@ void UstrirovMessageRepository::SetNormalDistance(quint32 distance) noexcept
 void UstrirovMessageRepository::SetDistanceToLocator(quint32 distanceToLocator) noexcept
 {
     m_normalMessage.DistanceToLocator = distanceToLocator;
-    m_bparMessage.DistanceToLocator= distanceToLocator;
+    m_bparMessage.DistanceToLocator = distanceToLocator;
 }
 
 void UstrirovMessageRepository::SetNormalGainTx(float gainTx) noexcept
@@ -65,12 +65,14 @@ void UstrirovMessageRepository::SetNormalCompleteState() noexcept
 
 void UstrirovMessageRepository::SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, bool hasThreshold, quint16 threshold, int answerDelay) noexcept
 {
-    m_bparMessage.foId=foId;
-    m_bparMessage.isLcm=isLcm;
-    m_bparMessage.tksIndex=tksIndex;
-    m_bparMessage.hasThreshold=hasThreshold;
-    m_bparMessage.threshold=threshold;
-    m_bparMessage.answerDelay=answerDelay;
+    m_bparMessage.foId = foId;
+    m_bparMessage.isLcm = isLcm;
+    m_bparMessage.tksIndex = tksIndex;
+    m_bparMessage.hasThreshold = hasThreshold;
+    m_bparMessage.threshold = threshold;
+    m_bparMessage.answerDelay = answerDelay;
+    m_bparMessage.WorkMode = 2;
+    m_bparMessage.state = 1;
 }
 
 void UstrirovMessageRepository::SetNoConnectionStateNormal() noexcept
@@ -115,27 +117,27 @@ const DevicesBparAdjustingKitMessage &UstrirovMessageRepository::GetBparMessage(
 
 void UstrirovMessageRepository::ResetNormalMessage()
 {
-    m_normalMessage.Attenuator=0;
-    m_normalMessage.Distance=0;
-    m_normalMessage.DoplerFrequency=0;
-    m_normalMessage.FvcoRx=0;
-    m_normalMessage.FvcoTx=0;
-    m_normalMessage.GAIN_RX=0;
-    m_normalMessage.GAIN_TX=0;
-    m_normalMessage.WorkMode=0;
-    m_normalMessage.state=1;
+    m_normalMessage.Attenuator = 0;
+    m_normalMessage.Distance = 0;
+    m_normalMessage.DoplerFrequency = 0;
+    m_normalMessage.FvcoRx = 0;
+    m_normalMessage.FvcoTx = 0;
+    m_normalMessage.GAIN_RX = 0;
+    m_normalMessage.GAIN_TX = 0;
+    m_normalMessage.WorkMode = 0;
+    m_normalMessage.state = 1;
 }
 
 void UstrirovMessageRepository::ResetBparMessage()
 {
-    m_bparMessage.answerDelay=0;
-    m_bparMessage.foId=0;
-    m_bparMessage.hasThreshold=false;
-    m_bparMessage.isLcm=false;
-    m_bparMessage.threshold=0;
-    m_bparMessage.tksIndex=0;
-    m_bparMessage.WorkMode=0;
-    m_bparMessage.state=1;
+    m_bparMessage.answerDelay = 0;
+    m_bparMessage.foId = 0;
+    m_bparMessage.hasThreshold = false;
+    m_bparMessage.isLcm = false;
+    m_bparMessage.threshold = 0;
+    m_bparMessage.tksIndex = 0;
+    m_bparMessage.WorkMode = 0;
+    m_bparMessage.state = 1;
 }
 
 quint16 UstrirovMessageRepository::GetDistanceToLocator() const

@@ -36,7 +36,7 @@ private:
     quint8 CalculateGain(double gain) const noexcept;
     quint8 CalculateAttenuator(quint16 attenuator) const;
     bool CalculateDiv(double fvcoFreq) const noexcept;
-    quint16 CalculateBparDistance(int answerDelay, quint32 distanceToSolver) const;
+    quint16 CalculateBparDistance(double answerDelay, quint32 distanceToSolver, bool isLcm) const;
 private:
     const Logger *const m_logger;
     const double m_c = 299792458.0;

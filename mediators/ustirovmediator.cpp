@@ -24,55 +24,55 @@ UstirovMediator::~UstirovMediator()
 
 void UstirovMediator::ReadParamsFromProfile()
 {
-    const QString ustirovKit=ProFile::GetProFileField(QLatin1Literal("ustirovport"));
-    if(ustirovKit.isEmpty())
+    const QString ustirovKit = ProFile::GetProFileField(QLatin1Literal("ustirovport"));
+    if (ustirovKit.isEmpty())
     {
-        m_ustirovPort=4004;
+        m_ustirovPort = 4004;
         ProFile::SetProfileField(QLatin1Literal("ustirovport"), QString::number(m_ustirovPort));
     }
     else
     {
-        bool isNum=false;
+        bool isNum = false;
         m_ustirovPort = ustirovKit.toUInt(&isNum);
-        if(!isNum)
+        if (!isNum)
         {
-            m_ustirovPort=4004;
+            m_ustirovPort = 4004;
             ProFile::SetProfileField(QLatin1Literal("ustirovport"), QString::number(m_ustirovPort));
         }
     }
 
 
-    const QString fString=ProFile::GetProFileField(QLatin1Literal("f"));
-    if(fString.isEmpty())
+    const QString fString = ProFile::GetProFileField(QLatin1Literal("f"));
+    if (fString.isEmpty())
     {
-        m_f=30250000;
+        m_f = 30250000;
         ProFile::SetProfileField(QLatin1Literal("f"), QString::number(m_f));
     }
     else
     {
-        bool isNum=false;
+        bool isNum = false;
         m_f = fString.toUInt(&isNum);
-        if(!isNum)
+        if (!isNum)
         {
-            m_f=30250000;
+            m_f = 30250000;
             ProFile::SetProfileField(QLatin1Literal("f"), QString::number(m_f));
         }
     }
 
 
-    const QString frefString=ProFile::GetProFileField(QLatin1Literal("fref"));
-    if(frefString.isEmpty())
+    const QString frefString = ProFile::GetProFileField(QLatin1Literal("fref"));
+    if (frefString.isEmpty())
     {
-        m_fref=40000000;
+        m_fref = 40000000;
         ProFile::SetProfileField(QLatin1Literal("fref"), QString::number(m_fref));
     }
     else
     {
-        bool isNum=false;
+        bool isNum = false;
         m_fref = frefString.toUInt(&isNum);
-        if(!isNum)
+        if (!isNum)
         {
-            m_fref=40000000;
+            m_fref = 40000000;
             ProFile::SetProfileField(QLatin1Literal("fref"), QString::number(m_fref));
         }
     }
@@ -112,6 +112,9 @@ void UstirovMediator::OnAllNormalDataCollected()
 {
     m_logger->Appends("UM: Отправляем сообщение нормальное в рарм");
     const DevicesAdjustingKitMessage &message = m_ustirovMessageGetter->GetMessageNormal();
+//    m_logger->Appends("РX " + QString::number(message.FvcoRx).toStdString());
+//    m_logger->Appends("TX " + QString::number(message.FvcoTx).toStdString());
+//    m_logger->Appends("Дист " + QString::number(message.Distance).toStdString());
     Q_EMIT ToSendRarmNormalState(message);
 }
 
@@ -265,7 +268,7 @@ void UstirovMediator::OnSetBparStateToUstirov(const DevicesBparAdjustingKitMessa
             m_ustirovMessageRepository->SetDistanceToLocator(state.DistanceToLocator);
             m_messagesToSendList.clear();
             m_messagesToSendList.append(m_ustirovMessageSetter->CreateBparCommand(state));
-            m_messagesToSendList.append(m_ustirovMessageSetter->CreateSevenCommand(5));
+            m_messagesToSendList.append(m_ustirovMessageSetter->CreateSevenCommand(6));
             OnSendMessage();
         }
     }
@@ -287,17 +290,18 @@ void UstirovMediator::SetStateCommandsCreate(const DevicesAdjustingKitMessage &s
     m_messagesToSendList.append(m_ustirovMessageSetter->CreateThirdCommand(state.Distance, state.DistanceToLocator));
     m_messagesToSendList.append(m_ustirovMessageSetter->CreateFourthCommand(state.GAIN_TX, state.GAIN_RX));
     m_messagesToSendList.append(m_ustirovMessageSetter->CreateFiveCommand(state.Attenuator));
-    m_messagesToSendList.append(m_ustirovMessageSetter->CreateSixCommand(state.WorkMode));
     m_messagesToSendList.append(m_ustirovMessageSetter->CreateNineCommand(state.DoplerFrequency));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateSixCommand(state.WorkMode));
 }
 
 void UstirovMediator::GetNormalStateCommandsCreate()
 {
-    for (int id = 1; id < 7; ++id)
+    for (int id = 1; id < 6; ++id)
     {
         m_messagesToSendList.append(m_ustirovMessageSetter->CreateSevenCommand(id));
     }
     m_messagesToSendList.append(m_ustirovMessageSetter->CreateSevenCommand(9));
+    m_messagesToSendList.append(m_ustirovMessageSetter->CreateSevenCommand(6));
 }
 
 void UstirovMediator::SendToRarmMessageWithNoConnectionInfo()

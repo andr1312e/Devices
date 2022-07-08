@@ -1,5 +1,5 @@
-#ifndef USTIROVSOCKET_H
-#define USTIROVSOCKET_H
+#ifndef SOCKETS_USTIROVSOCKET_H
+#define SOCKETS_USTIROVSOCKET_H
 
 #include <QObject>
 #include <QTcpSocket>
@@ -7,6 +7,10 @@
 #include <QTimer>
 
 #include "mediators/logger.h"
+
+#if _WIN32
+#include <QSerialPortInfo>
+#endif
 
 class UstirovSocket : public QObject
 {
@@ -39,7 +43,7 @@ private:
     void StopNoAnswerTimer();
 private:
 //    QSerialPort *m_socket;
-    bool state = false;
+//    bool state = false;
     QTcpSocket *m_socket;
     const QString m_moxaIpAdress;
     const quint16 m_moxaPort;
@@ -50,8 +54,8 @@ private:
     const Logger *const m_logger;
     QByteArray m_lastMessage;
     QByteArray m_readyReadBuffer;
-    const QVarLengthArray<quint8, 7> *m_messageSize;
+    const QVarLengthArray<quint8, 10> *m_messageSize;
     const char m_messagesIdToGetState;
 };
 
-#endif // USTIROVSOCKET_H
+#endif // SOCKETS_USTIROVSOCKET_H

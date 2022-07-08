@@ -1,7 +1,5 @@
 #include "ustirovsocket.h"
 
-#include <QSerialPortInfo>
-
 UstirovSocket::UstirovSocket(const Logger *logger, const QString &moxaIpAdress, const quint16 moxaPort, QObject *parent)
     : QObject(parent)
     , m_moxaIpAdress(moxaIpAdress)
@@ -31,8 +29,8 @@ void UstirovSocket::CreateObjects()
 //    m_socket->setBaudRate(QSerialPort::Baud115200);
 //    m_socket->setStopBits(QSerialPort::OneStop);
 
-    m_socket=new QTcpSocket(this);
-    m_messageSize = new QVarLengthArray<quint8, 7>({0, 8, 8, 4, 4, 3, 3});
+    m_socket = new QTcpSocket(this);
+    m_messageSize = new QVarLengthArray<quint8, 10>({0, 8, 8, 4, 4, 3, 3, 0, 0, 5});
     m_checkConnectionTimer = new QTimer(this);
     m_noAnswerTimer = new QTimer(this);
 }
@@ -67,7 +65,7 @@ void UstirovSocket::OnReadyRead()
         if (m_readyReadBuffer.count() != 1)
         {
             const quint8 messageId = m_readyReadBuffer.at(1);
-            if (messageId > 0 && messageId < 7)
+            if (messageId > 0 && messageId < 10)
             {
                 if (m_readyReadBuffer.count() == m_messageSize->at(messageId))
                 {
@@ -109,7 +107,7 @@ void UstirovSocket::OnHostConnected()
 void UstirovSocket::OnDisconnectedFromHost()
 {
     Q_EMIT ToResetQueue();
-//    m_socket->disconnectFromHost();
+    m_socket->disconnectFromHost();
     m_logger->Appends("US - отключен...");
 }
 
@@ -123,11 +121,12 @@ void UstirovSocket::OnCheckConnectionTimerTimeOut()
     if (!IsUstirovConnected())
     {
 //        const QList<QSerialPortInfo> list = QSerialPortInfo::availablePorts();
-////        for (int i = 0; i < list.count(); ++i)
-////        {
-//        qDebug() << "   " << list.front().portName() << " " << list.front().manufacturer();
-////        }
-//        m_socket->setPort(list.front());
+//        for (int i = 0; i < list.count(); ++i)
+//        {
+//            auto name = list.at(i).portName();
+//            qInfo() << "   " << list.front().portName() << " " << list.front().manufacturer();
+//        }
+//        m_socket->setPort(list.back());
 //        if (m_socket->open(QIODevice::ReadWrite))
 //        {
 //            state = true;
@@ -187,8 +186,8 @@ void UstirovSocket::TryToSendLastMessageAgain()
 
 bool UstirovSocket::IsUstirovConnected() const
 {
-    return state;
-//    return QAbstractSocket::ConnectedState == m_socket->state();
+//    return state;
+    return QAbstractSocket::ConnectedState == m_socket->state();
 }
 
 QString UstirovSocket::GetLastUstirovErrorMessage() const noexcept

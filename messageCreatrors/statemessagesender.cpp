@@ -158,7 +158,7 @@ QByteArray UstirovMessageSender::CreateBparCommand(const DevicesBparAdjustingKit
 {
     QByteArray command;
     QDataStream stream(&command, QIODevice::WriteOnly);
-    quint8 bpar_mode=message.foId;
+    quint8 bpar_mode = message.foId;
     if (message.isLcm)
     {
         const quint8 lcmMode = 8; //1000
@@ -173,7 +173,7 @@ QByteArray UstirovMessageSender::CreateBparCommand(const DevicesBparAdjustingKit
     {
         bpar_mode += 64;//0100000
     }
-    const quint16 delay = CalculateBparDistance(message.answerDelay, message.DistanceToLocator);
+    const quint16 delay = CalculateBparDistance(message.answerDelay, message.DistanceToLocator, message.isLcm);
     stream << (quint8)6;
     stream << (quint8)5;
     stream << bpar_mode;
@@ -254,7 +254,21 @@ bool UstirovMessageSender::CalculateDiv(double fvcoFreq) const noexcept
     }
 }
 
-quint16 UstirovMessageSender::CalculateBparDistance(int answerDelay, quint32 distanceToSolver) const
+quint16 UstirovMessageSender::CalculateBparDistance(double answerDelay, quint32 distanceToSolver, bool isLcm) const
 {
-    return (answerDelay-distanceToSolver)/m_f*m_c;
+    // 18 тактов /30.62 МГЦ
+    //0,0326583932 × 1000 = 32,6583932 = наносекунды (1/f) длительность такта
+    //176,233319492 для простого = 18*32.6583932*299792458/1000000000  | такты * (1/f) *c
+    //117,488879661 для лчм   =    12*32.6583932*299792458/1000000000  |
+    if (isLcm)
+    {
+        answerDelay += 117, 488879661;
+    }
+    else
+    {
+        answerDelay += 176, 233319492;
+    }
+    const double secondVal = m_f / m_c;
+    const quint16 distanceDouble = 2.0 * qAbs(answerDelay - distanceToSolver) * secondVal + 1.0;
+    return distanceDouble;
 }
