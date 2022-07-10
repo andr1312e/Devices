@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 7.0.2, 2022-07-07T18:25:00. -->
+<!-- Written by QtCreator 7.0.2, 2022-07-08T17:31:02. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -223,8 +223,9 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/Pilikin/Desktop/prog/Devices/devicesQmake.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/Pilikin/Desktop/prog/Devices/devicesQmake.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">devicesQmake2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:E:/Devices/Devices/devicesQmake.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">E:/Devices/Devices/devicesQmake.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
