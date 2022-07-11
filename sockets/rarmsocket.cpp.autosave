@@ -236,7 +236,7 @@ void RarmSocket::OnSendRarmMeteoState(const DevicesMeteoKitGetMessage &meteoStat
 
 void RarmSocket::OnSendRarmUPCBNormalState(const DevicesAdjustingKitMessage &upcbState)
 {
-    m_logger->Appends("RS: Отправляем юстировочное НОРМАЛЬНО. Состояние: " + std::to_string(upcbState.state));
+    m_logger->Appends("RS: Отправляем юстировочное обычное. Состояние: " + std::to_string(upcbState.state));
     QByteArray ustirovMessage;
 
     QDataStream out(&ustirovMessage, QIODevice::WriteOnly);

@@ -51,7 +51,7 @@ void UstirovMediator::ReadParamsFromProfile()
     else
     {
         bool isNum = false;
-        m_f = fString.toUInt(&isNum);
+        m_f = fString.toDouble(&isNum);
         if (!isNum)
         {
             m_f = 30250000;
@@ -69,7 +69,7 @@ void UstirovMediator::ReadParamsFromProfile()
     else
     {
         bool isNum = false;
-        m_fref = frefString.toUInt(&isNum);
+        m_fref = frefString.toDouble(&isNum);
         if (!isNum)
         {
             m_fref = 40000000;
@@ -110,7 +110,7 @@ void UstirovMediator::OnResetQueue()
 
 void UstirovMediator::OnAllNormalDataCollected()
 {
-    m_logger->Appends("UM: Отправляем сообщение нормальное в рарм");
+    m_logger->Appends("UM: Отправляем сообщение обычное в рарм");
     const DevicesAdjustingKitMessage &message = m_ustirovMessageGetter->GetMessageNormal();
 //    m_logger->Appends("РX " + QString::number(message.FvcoRx).toStdString());
 //    m_logger->Appends("TX " + QString::number(message.FvcoTx).toStdString());

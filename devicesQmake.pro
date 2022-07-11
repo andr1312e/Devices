@@ -1,6 +1,6 @@
 QT += network  serialport
 QT -= gui
-VERSION = 8
+VERSION = 8.1
 TARGET = devices_v_$$VERSION
 
 CONFIG += c++11 console no_lflags_merge rtti_off warn_on c++latest strict_c++ precompile_header utf8_source

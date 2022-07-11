@@ -16,7 +16,7 @@ static inline QString GetProFileField(const QString &name)
 
 static inline QString SetProfileField(const QString &name, const QString &value)
 {
-    const QString text=name+'='+value ;
+    const QString text="export " +name+'='+value ;
     const QString filePath=QLatin1Literal("/etc/profile");
     const QString command=QStringLiteral("sudo sh -c \"echo -e \"'") + text + QStringLiteral("'\" >> '") + filePath + QStringLiteral("'\"");
     QProcess process;

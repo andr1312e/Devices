@@ -46,23 +46,23 @@ void MeteoServer::OnNewSocketConnected()
 
     QTcpSocket * const socket = m_serverMeteo->nextPendingConnection();
 
-    m_logger->Appends("MS - новое подключение");
+    m_logger->Appends("MS: новое подключение");
     if(socket->peerPort() == m_meteoKitPort)
     {
-        m_logger->Appends("MS - подключено ");
+        m_logger->Appends("MS: подключено ");
         m_socketMeteo = socket;
         ConnectMeteoSocketObject();
     }
     else
     {
-        m_logger->Appends("MS - нужен порт: "+std::to_string(m_meteoKitPort)+ " однако наш: " + std::to_string(socket->peerPort()));
+        m_logger->Appends("MS: нужен порт: "+std::to_string(m_meteoKitPort)+ " однако наш: " + std::to_string(socket->peerPort()));
     }
 }
 
 void MeteoServer::OnReadyRead()
 {
     StopNoAnswerTimer();
-    m_logger->Appends("MS - получили сообщение");
+    m_logger->Appends("MS: получили сообщение");
     m_readyReadBuffer.append(m_socketMeteo->readAll());
     if(m_readyReadBuffer.length() >= m_returnedMessageSize) // длина ответа 11 байт
     {
@@ -76,12 +76,12 @@ void MeteoServer::OnReadyRead()
 void MeteoServer::OnDisconnectedFromHost()
 {
     m_socketMeteo->disconnectFromHost();
-    m_logger->Appends("MS - отключен");
+    m_logger->Appends("MS: отключен");
 }
 
 void MeteoServer::OnErrorOccurred()
 {
-    m_logger->Appends("MS - ошибка "+ m_socketMeteo->errorString().toStdString());
+    m_logger->Appends("MS: ошибка "+ m_socketMeteo->errorString().toStdString());
 }
 
 void MeteoServer::SendMessage(const QByteArray &array)
@@ -94,7 +94,7 @@ void MeteoServer::SendMessage(const QByteArray &array)
     }
     else
     {
-        m_logger->Appends("MS - нет подключения при попытке отправить сообщение");
+        m_logger->Appends("MS: нет подключения при попытке отправить сообщение");
     }
 }
 

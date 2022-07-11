@@ -59,7 +59,7 @@ void UstirovSocket::OnReadyRead()
 {
     StopNoAnswerTimer();
     m_readyReadBuffer.append(m_socket->readAll());
-    m_logger->Appends("US Получили сообщение " + m_readyReadBuffer.toHex().toStdString());
+    m_logger->Appends("US: Получили сообщение " + m_readyReadBuffer.toHex().toStdString());
     if (m_messagesIdToGetState == m_readyReadBuffer.front())
     {
         if (m_readyReadBuffer.count() != 1)
@@ -101,19 +101,19 @@ void UstirovSocket::OnReadyRead()
 
 void UstirovSocket::OnHostConnected()
 {
-    m_logger->Appends("US - подключен ...");
+    m_logger->Appends("US: подключен ...");
 }
 
 void UstirovSocket::OnDisconnectedFromHost()
 {
     Q_EMIT ToResetQueue();
     m_socket->disconnectFromHost();
-    m_logger->Appends("US - отключен...");
+    m_logger->Appends("US: отключен...");
 }
 
 void UstirovSocket::OnErrorOccurred()
 {
-    m_logger->Appends("Ошибка " + m_socket->errorString().toStdString());
+    m_logger->Appends("US: Ошибка " + m_socket->errorString().toStdString());
 }
 
 void UstirovSocket::OnCheckConnectionTimerTimeOut()

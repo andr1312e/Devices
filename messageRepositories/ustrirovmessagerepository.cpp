@@ -115,7 +115,7 @@ const DevicesBparAdjustingKitMessage &UstrirovMessageRepository::GetBparMessage(
     return m_bparMessage;
 }
 
-void UstrirovMessageRepository::ResetNormalMessage()
+void UstrirovMessageRepository::ResetNormalMessage() noexcept
 {
     m_normalMessage.Attenuator = 0;
     m_normalMessage.Distance = 0;
@@ -128,7 +128,7 @@ void UstrirovMessageRepository::ResetNormalMessage()
     m_normalMessage.state = 1;
 }
 
-void UstrirovMessageRepository::ResetBparMessage()
+void UstrirovMessageRepository::ResetBparMessage() noexcept
 {
     m_bparMessage.answerDelay = 0;
     m_bparMessage.foId = 0;
@@ -140,12 +140,12 @@ void UstrirovMessageRepository::ResetBparMessage()
     m_bparMessage.state = 1;
 }
 
-quint16 UstrirovMessageRepository::GetDistanceToLocator() const
+quint16 UstrirovMessageRepository::GetDistanceToLocator() const noexcept
 {
     return m_normalMessage.DistanceToLocator;
 }
 
-quint32 UstrirovMessageRepository::GetFvco() const
+quint32 UstrirovMessageRepository::GetFvco() const noexcept
 {
     return m_normalMessage.FvcoRx;
 }

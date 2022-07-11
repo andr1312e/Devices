@@ -32,11 +32,11 @@ public:
     const DevicesAdjustingKitMessage &GetNormalMessage();
     const DevicesBparAdjustingKitMessage &GetBparMessage();
 public:
-    quint16 GetDistanceToLocator() const;
-    quint32 GetFvco() const;
+    quint16 GetDistanceToLocator() const noexcept;
+    quint32 GetFvco() const noexcept;
 private:
-    void ResetNormalMessage();
-    void ResetBparMessage();
+    void ResetNormalMessage() noexcept;
+    void ResetBparMessage() noexcept;
 private:
     DevicesAdjustingKitMessage     m_normalMessage;
     DevicesBparAdjustingKitMessage m_bparMessage;

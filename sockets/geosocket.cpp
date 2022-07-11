@@ -29,7 +29,7 @@ void GeoSocket::InitObjects()
     const QList<QSerialPortInfo> serialPortInfoList(QSerialPortInfo::availablePorts());
     for (const QSerialPortInfo &serialPortInfo : serialPortInfoList)
     {
-        qDebug() << "GEOСокетПорты: " << serialPortInfo.portName();
+        qDebug() << "GS: Порты " << serialPortInfo.portName();
     }
     m_connectionPort->setPortName(serialPortInfoList.back().portName());
     startTimer(4000, Qt::VeryCoarseTimer);
