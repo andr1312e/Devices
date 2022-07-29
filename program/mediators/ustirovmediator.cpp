@@ -197,7 +197,7 @@ void UstirovMediator::OnGetGeoFromMessage(const QByteArray &message)
 void UstirovMediator::OnRequestTimeOut()
 {
     m_logger->Appends("UM: Время ожидания истекло");
-    m_ustirovMessageGetter->SetTimeOutState();
+    m_ustirovMessageGetter->SetTimeOutStateNormal();
     Q_EMIT ToSendRarmNormalState(m_ustirovMessageGetter->GetMessageNormal());
 }
 

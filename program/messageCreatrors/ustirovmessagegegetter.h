@@ -27,7 +27,7 @@ Q_SIGNALS:
 public:
     bool FillDataIntoStructFromMessage(const QByteArray &message);
     void SetNoConnectionStateNormal();
-    void SetTimeOutState();
+    void SetTimeOutStateNormal();
     const DevicesAdjustingKitMessage &GetMessageNormal();
     const DevicesBparAdjustingKitMessage &GetMessageBpar();
 private:

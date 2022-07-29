@@ -45,7 +45,7 @@ void UstirovMessageGetter::SetNoConnectionStateNormal()
     m_messageRepository.SetNoConnectionStateNormal();
 }
 
-void UstirovMessageGetter::SetTimeOutState()
+void UstirovMessageGetter::SetTimeOutStateNormal()
 {
     m_messageRepository.SetTimeOutStateNormal();
 }

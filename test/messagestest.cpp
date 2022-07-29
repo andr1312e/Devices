@@ -413,3 +413,12 @@ void MessagesTest::TestBparMessage()
 
     }
 }
+
+void MessagesTest::TimeOutStates()
+{
+    UstrirovMessageRepository ustirovRep;
+    GeoMessageRepository geoRep;
+    const int f = 30625000;
+    const int fref = 40000000;
+    UstirovMessageGetter getter(f, fref, ustirovRep, geoRep, Q_NULLPTR);
+}
