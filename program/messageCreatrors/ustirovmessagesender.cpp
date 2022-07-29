@@ -111,22 +111,19 @@ QByteArray UstirovMessageSender::CreateFiveCommand(double attenuator) const
     return command;
 }
 
-QByteArray UstirovMessageSender::CreateSixCommand(quint8 workMode) const noexcept
+QByteArray UstirovMessageSender::CreateSixCommand(quint8 workMode) const
 {
-    QByteArray command;
-    command.append(m_messagesIds.at(6));
-    command.append(workMode);
-    if (workMode > 2)
+    if (0 == workMode || 1 == workMode)
     {
-        quint32 sinusVal = 0;
-        const quint8 first = (sinusVal >> (8 * 0)) & 0xff;
-        const quint8 second = (sinusVal >> (8 * 1)) & 0xff;
-        const quint8 third = (sinusVal >> (8 * 2)) & 0xff;
-        command.append(third);
-        command.append(second);
-        command.append(first);
+        QByteArray command;
+        command.append(m_messagesIds.at(6));
+        command.append(workMode);
+        return command;
     }
-    return command;
+    else
+    {
+        throw std::runtime_error("Неизвестная команда");
+    }
 }
 
 QByteArray UstirovMessageSender::CreateSevenCommand(quint8 messageId) const noexcept
@@ -241,7 +238,7 @@ quint8 UstirovMessageSender::CalculateAttenuator(quint16 attenuator) const
     }
     else
     {
-        qFatal("нет значения в таблице");
+        throw std::runtime_error("нет значения в таблице");
     }
 }
 

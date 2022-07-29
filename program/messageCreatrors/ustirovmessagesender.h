@@ -1,12 +1,15 @@
 #ifndef MESSAGECREATORS_STATEMESSAGESENDER_H
 #define MESSAGECREATORS_STATEMESSAGESENDER_H
 
+#include <cmath>
+#include <exception>
+
 #include <QByteArray>
 #include <QIODevice>
 #include <QDataStream>
 #include <QVarLengthArray>
 #include <QSharedPointer>
-#include <cmath>
+
 #include <QtMath>
 
 #include "constants.h"
@@ -26,7 +29,7 @@ public:
     QByteArray CreateThirdCommand(double distance, double distanceToLocator) const noexcept;
     QByteArray CreateFourthCommand(double gainTX, double gainRX) const  noexcept;
     QByteArray CreateFiveCommand(double attenuator) const;
-    QByteArray CreateSixCommand(quint8 workMode) const noexcept;
+    QByteArray CreateSixCommand(quint8 workMode) const ;
     QByteArray CreateSevenCommand(quint8 messageId) const noexcept;
     QByteArray CreateNineCommand(quint32 dopler) const noexcept;
     QByteArray CreateBparCommand(const DevicesBparAdjustingKitMessage &message) const noexcept;

@@ -21,7 +21,7 @@ public:
     void SetNormalWorkMode(quint8 workMode) noexcept;
     void SetNormalCompleteState() noexcept;
 
-    void SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, int answerDelay) noexcept;
+    void SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, quint16 answerDelay, quint16 threshold) noexcept;
     void SetThreshold(bool hasThreshold, quint16 threshold) noexcept;
     void SetNoConnectionStateNormal() noexcept;
     void SetTimeOutStateNormal() noexcept;

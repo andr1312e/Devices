@@ -24,8 +24,8 @@ Q_TESTS:
     void TestFourthMessage();
     void TestFiveMessage();
     void TestSixMessage();
+    void TestNineMessage();
+    void TestBparMessage();
 };
-
-//#include "tst_tests.moc"
 
 #endif // MESSAGESTEST_H

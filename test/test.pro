@@ -1,7 +1,7 @@
 QT += testlib
 QT -= gui
 
-include(../program/build.pri)
+include(../program/app.pri)
 
 TEMPLATE = app
 

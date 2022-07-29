@@ -243,7 +243,7 @@ bool UstirovMessageGetter::SaveBparToRepository(const QByteArray &message)
             //было  11000000
             //стало 00000110
             //прибавляем к результату 1 так как смотри таблицу, там первый начинается с 0
-            const quint8 foId = (bpar_mode & 7) + 1;
+            const quint8 foId = (bpar_mode & 7);
 
             //позиция начинается справа
             //было  11011000  = 216
@@ -268,7 +268,15 @@ bool UstirovMessageGetter::SaveBparToRepository(const QByteArray &message)
             quint16 signalDelay;
             sinusDataStream >> signalDelay;
             const quint32 answerDelay = ParceDelay(isLcm, signalDelay);
-            m_messageRepository.SetBpar(foId, isLcm, tksIndex, answerDelay);
+
+            QByteArray thresholdArray;
+            thresholdArray.append(message.at(6));
+            thresholdArray.append(message.at(7));
+            QDataStream thresholdDataStream(thresholdArray);
+            quint16 threshold;
+            thresholdDataStream >> threshold;
+
+            m_messageRepository.SetBpar(foId, isLcm, tksIndex, answerDelay, threshold);
             return true;
         }
     }
@@ -328,9 +336,10 @@ quint32 UstirovMessageGetter::GetDistanceFromMessage(const QByteArray &message) 
 
 quint32 UstirovMessageGetter::ParceDelay(bool isLcm, quint16 delay) const
 {
+    delay -= 1;
     const double secondVal = m_c / m_f;
-    double distanceDouble = secondVal * (delay) / 2.0 - 1.0;
-    distanceDouble = qAbs(distanceDouble - m_messageRepository.GetDistanceToLocator());
+    double distanceDouble = secondVal * (delay) / 2.0;
+    distanceDouble = distanceDouble + m_messageRepository.GetDistanceToLocator();
     if (isLcm)
     {
         distanceDouble = qAbs(distanceDouble - 117.488879661);

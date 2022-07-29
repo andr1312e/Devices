@@ -19,7 +19,7 @@ DEFINES +=                 \
   QT_NO_FOREACH \
   QT_STRICT_ITERATORS
 
-include(build.pri)
+include(app.pri)
 
 SOURCES += \
        $$PWD/main.cpp \

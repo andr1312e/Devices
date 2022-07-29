@@ -63,12 +63,14 @@ void UstrirovMessageRepository::SetNormalCompleteState() noexcept
     m_normalMessage.state = 1;
 }
 
-void UstrirovMessageRepository::SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, int answerDelay) noexcept
+void UstrirovMessageRepository::SetBpar(quint8 foId, bool isLcm, quint8 tksIndex, quint16 answerDelay, quint16 threshold) noexcept
 {
     m_bparMessage.foId = foId;
     m_bparMessage.isLcm = isLcm;
     m_bparMessage.tksIndex = tksIndex;
     m_bparMessage.answerDelay = answerDelay;
+    m_bparMessage.threshold = threshold;
+    m_bparMessage.hasThreshold = threshold == 0 ? false : true;
     m_bparMessage.WorkMode = 2;
     m_bparMessage.state = 1;
 }
