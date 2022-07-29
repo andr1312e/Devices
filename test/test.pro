@@ -5,4 +5,9 @@ include(../program/build.pri)
 
 TEMPLATE = app
 
-SOURCES +=  tst_tests.cpp
+SOURCES +=  \
+    messagestest.cpp
+
+HEADERS += \
+    defines.h \
+    messagestest.h

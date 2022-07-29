@@ -12,7 +12,7 @@ UstrirovMessageRepository::~UstrirovMessageRepository()
 
 }
 
-void UstrirovMessageRepository::SetNormalFvcoRx(quint32 fvcoRx) noexcept
+void UstrirovMessageRepository::SetNormalFvcoRx(double fvcoRx) noexcept
 {
     m_normalMessage.FvcoRx = fvcoRx;
 }

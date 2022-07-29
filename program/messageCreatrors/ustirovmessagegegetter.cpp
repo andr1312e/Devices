@@ -36,7 +36,7 @@ bool UstirovMessageGetter::FillDataIntoStructFromMessage(const QByteArray &messa
     case 9:
         return SaveDoplerToRepository(message);
     default:
-        Q_UNREACHABLE();
+        throw std::runtime_error("Ид сообщения не обрабатываем");
     }
 }
 
@@ -76,7 +76,7 @@ bool UstirovMessageGetter::SaveFvcoRxToRepository(const QByteArray &message)
         FRACT_RX = FRACT_RX / 2.0;
         FRACT_RX = FRACT_RX * m_Fref * qPow(2, DIV_RX) + 22;
 
-        m_messageRepository.SetNormalFvcoRx((quint32)FRACT_RX + 3000000.0); //поправка на 3
+        m_messageRepository.SetNormalFvcoRx(FRACT_RX + 3000000.0); //поправка на 3
 
         return true;
     }

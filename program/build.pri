@@ -1,11 +1,11 @@
 QT += network
-CONFIG += serialPortUse
+CONFIG += serialMoxa
 
-serialPortUse {
+serialMoxa {
     QT +=serialport
     message("Serial configuration")
 } else {
-    message("Unknown configuration")
+    message("Ethernet configuration")
 }
 QT -= gui
 

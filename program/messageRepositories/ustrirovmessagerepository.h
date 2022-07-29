@@ -10,7 +10,7 @@ public:
     explicit UstrirovMessageRepository();
     ~UstrirovMessageRepository();
 public:
-    void SetNormalFvcoRx(quint32 fvcoRx) noexcept;
+    void SetNormalFvcoRx(double fvcoRx) noexcept;
     void SetNormalFvcoTx(quint32 fvcoTx) noexcept;
     void SetNormalDopler(int doplerFrequency) noexcept;
     void SetNormalDistance(quint32 distance) noexcept;

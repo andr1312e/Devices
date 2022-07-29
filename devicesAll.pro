@@ -1,9 +1,18 @@
 TEMPLATE = subdirs
 
-CONFIG += c++11
+CONFIG += debug_and_release c++11
 
-SUBDIRS = \
-    program \
-    test
+CONFIG(debug, debug|release) {
+    message("DEBUG")
+    SUBDIRS = \
+        program \
+        test
 
-tests.depends = program
+    tests.depends = program
+} else {
+    message("RELEASE")
+    SUBDIRS = \
+        program
+}
+
+
