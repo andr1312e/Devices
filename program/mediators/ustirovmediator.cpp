@@ -24,11 +24,11 @@ UstirovMediator::~UstirovMediator()
 
 void UstirovMediator::ReadParamsFromProfile()
 {
-    const QString ustirovKit = ProFile::GetProFileField(QLatin1Literal("ustirovport"));
+    const QString ustirovKit = ProFile::GetProFileField(QLatin1String("ustirovport"));
     if (ustirovKit.isEmpty())
     {
         m_ustirovPort = 4004;
-        ProFile::SetProfileField(QLatin1Literal("ustirovport"), QString::number(m_ustirovPort));
+        ProFile::SetProfileField(QLatin1String("ustirovport"), QString::number(m_ustirovPort));
     }
     else
     {
@@ -37,16 +37,16 @@ void UstirovMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_ustirovPort = 4004;
-            ProFile::SetProfileField(QLatin1Literal("ustirovport"), QString::number(m_ustirovPort));
+            ProFile::SetProfileField(QLatin1String("ustirovport"), QString::number(m_ustirovPort));
         }
     }
 
 
-    const QString fString = ProFile::GetProFileField(QLatin1Literal("f"));
+    const QString fString = ProFile::GetProFileField(QLatin1String("f"));
     if (fString.isEmpty())
     {
         m_f = 30625000;
-        ProFile::SetProfileField(QLatin1Literal("f"), QString::number(m_f));
+        ProFile::SetProfileField(QLatin1String("f"), QString::number(m_f));
     }
     else
     {
@@ -55,16 +55,16 @@ void UstirovMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_f = 30625000;
-            ProFile::SetProfileField(QLatin1Literal("f"), QString::number(m_f));
+            ProFile::SetProfileField(QLatin1String("f"), QString::number(m_f));
         }
     }
 
 
-    const QString frefString = ProFile::GetProFileField(QLatin1Literal("fref"));
+    const QString frefString = ProFile::GetProFileField(QLatin1String("fref"));
     if (frefString.isEmpty())
     {
         m_fref = 40000000;
-        ProFile::SetProfileField(QLatin1Literal("fref"), QString::number(m_fref));
+        ProFile::SetProfileField(QLatin1String("fref"), QString::number(m_fref));
     }
     else
     {
@@ -73,7 +73,7 @@ void UstirovMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_fref = 40000000;
-            ProFile::SetProfileField(QLatin1Literal("fref"), QString::number(m_fref));
+            ProFile::SetProfileField(QLatin1String("fref"), QString::number(m_fref));
         }
     }
 }

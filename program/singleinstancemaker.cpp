@@ -2,8 +2,8 @@
 
 SingleInstanceMaker::SingleInstanceMaker(const QString &sharedMemoryKey)
 {
-    const QString strMemLockKey = GenerateKeyHash( sharedMemoryKey, QLatin1Literal("_memLockKey"));// уникальный хэш по ключу
-    const QString strSharedMemKey =  GenerateKeyHash( sharedMemoryKey, QLatin1Literal("_sharedmemKey")); // другой хэш по ключу
+    const QString strMemLockKey = GenerateKeyHash( sharedMemoryKey, QLatin1String("_memLockKey"));// уникальный хэш по ключу
+    const QString strSharedMemKey =  GenerateKeyHash( sharedMemoryKey, QLatin1String("_sharedmemKey")); // другой хэш по ключу
     // Присоединение и отсоединение от блока общей памяти (в деструкторе), чтобы избежать ошибки Linux.
     // Это создает и уничтожает блок памяти, что-то вроде механизма «сброса».
     // Ссылка на исправление для linux: http://habrahabr.ru/post/173281/

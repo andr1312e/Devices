@@ -17,21 +17,21 @@ MoxaMediator::~MoxaMediator()
 
 void MoxaMediator::ReadParamsFromProfile()
 {
-    const QString moxaIpAdress = ProFile::GetProFileField(QLatin1Literal("moxaIpAdress"));
+    const QString moxaIpAdress = ProFile::GetProFileField(QLatin1String("moxaIpAdress"));
     if (moxaIpAdress.isEmpty())
     {
-        m_moxaIpAdress = QLatin1Literal("10.130.246.121");
-        ProFile::SetProfileField(QLatin1Literal("moxaIpAdress"), m_moxaIpAdress);
+        m_moxaIpAdress = QLatin1String("10.130.246.121");
+        ProFile::SetProfileField(QLatin1String("moxaIpAdress"), m_moxaIpAdress);
     }
     else
     {
         m_moxaIpAdress = moxaIpAdress;
     }
-    const QString moxaCheckMiliseconds = ProFile::GetProFileField(QLatin1Literal("moxaCheckMiliseconds"));
+    const QString moxaCheckMiliseconds = ProFile::GetProFileField(QLatin1String("moxaCheckMiliseconds"));
     if (moxaCheckMiliseconds.isEmpty())
     {
         m_moxaCheckMiliseconds = 10000;
-        ProFile::SetProfileField(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
+        ProFile::SetProfileField(QLatin1String("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
     }
     else
     {
@@ -40,7 +40,7 @@ void MoxaMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_moxaCheckMiliseconds = 10000;
-            ProFile::SetProfileField(QLatin1Literal("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
+            ProFile::SetProfileField(QLatin1String("moxaCheckMiliseconds"), QString::number(m_moxaCheckMiliseconds));
         }
     }
 }
@@ -48,9 +48,9 @@ void MoxaMediator::ReadParamsFromProfile()
 void MoxaMediator::InitObjects()
 {
 #ifdef Q_OS_WINDOWS
-    m_processParametrs << QLatin1Literal("-n") << QLatin1Literal("1");
+    m_processParametrs << QLatin1String("-n") << QLatin1String("1");
 #else
-    m_processParametrs << QLatin1Literal("-c 1");
+    m_processParametrs << QLatin1String("-c 1");
 #endif
     m_processParametrs.append(m_moxaIpAdress);
     startTimer(m_moxaCheckMiliseconds, Qt::VeryCoarseTimer);
@@ -79,7 +79,7 @@ bool MoxaMediator::IsMoxaConnected() const noexcept
 void MoxaMediator::timerEvent(QTimerEvent *event)
 {
     Q_UNUSED(event)
-    const int result = m_process.execute(QLatin1Literal("ping"), m_processParametrs);
+    const int result = m_process.execute(QLatin1String("ping"), m_processParametrs);
     if (0 == result)
     {
         m_messageRepository->SetMoxaState(1);

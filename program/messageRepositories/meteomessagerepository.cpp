@@ -78,5 +78,5 @@ void MeteoMessageRepository::ResetRepository() noexcept
 
 std::string MeteoMessageRepository::GetLastMessageTime() const noexcept
 {
-    return m_lastMessageDateTime.toString(QLatin1Literal("hh:mm:ss")).toStdString();
+    return m_lastMessageDateTime.toString(QLatin1String("hh:mm:ss")).toStdString();
 }

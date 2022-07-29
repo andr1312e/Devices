@@ -47,7 +47,9 @@ void RarmSocket::ConnectObjects()
 {
     connect(m_pTcpSocketToRarm, &QTcpSocket::connected, this, &RarmSocket::OnConnectedToRarm);
     connect(m_pTcpSocketToRarm, &QTcpSocket::disconnected, this, &RarmSocket::OnDisconnected);
-    connect(m_pTcpSocketToRarm,  QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), this, &RarmSocket::OnConnectionError);
+#ifndef QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+        connect(m_pTcpSocketToRarm,  QOverload<QAbstractSocket::SocketError>::of(&QTcpSocket::error), this, &RarmSocket::OnConnectionError);
+#endif
     connect(m_timeToReConnectToRarm, &QTimer::timeout, this, &RarmSocket::OnCheckConnection);
 }
 

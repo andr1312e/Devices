@@ -1,10 +1,13 @@
 #ifndef DEVICES_H
 #define DEVICES_H
 
+#define QLatin1Literal(a) QLatin1String(a)
+
 #include <QObject>
 #include <QThread>
 #include <QCoreApplication>
 #include <QDir>
+#include <QLatin1String>
 
 #include "sockets/rarmsocket.h"
 
@@ -13,6 +16,8 @@
 #include "mediators/ustirovmediator.h"
 #include "mediators/consolemediator.h"
 #include "mediators/logger.h"
+
+
 
 class Devices : public QObject
 {

@@ -24,6 +24,24 @@ void MessagesTest::WrongMessage()
     QVERIFY_EXCEPTION_THROWN(getter.FillDataIntoStructFromMessage(message), std::runtime_error);
 }
 
+void MessagesTest::TestRestartMessage()
+{
+    const int f = 30625000;
+    const int fref = 40000000;
+    UstirovMessageSender sender(Q_NULLPTR, f, fref);
+    const QByteArray message=sender.CreateRestartCommand();
+    QCOMPARE(message, QByteArrayLiteral("\x0d\x5a"));
+}
+
+void MessagesTest::TestZeroMessage()
+{
+    const int f = 30625000;
+    const int fref = 40000000;
+    UstirovMessageSender sender(Q_NULLPTR, f, fref);
+    const QByteArray message=sender.CreateZeroCommand();
+    QCOMPARE(message, QByteArrayLiteral("\x00\x00"));
+}
+
 void MessagesTest::TestFirstMessage()
 {
     UstrirovMessageRepository ustirovRep;
@@ -337,8 +355,9 @@ void MessagesTest::TestBparMessage()
         messageBpar.hasThreshold = false;
         messageBpar.isLcm = false;
         messageBpar.tksIndex = 1;
+        messageBpar.threshold=1;
         const QByteArray message = sender.CreateBparCommand(messageBpar);
-        QCOMPARE(message, QByteArrayLiteral("\x06\x05\x14\x00\x10"));
+        QCOMPARE(message, QByteArrayLiteral("\x06\x05\x14\x00\x10\x00\x01"));
     }
     //Неверный размер
     {

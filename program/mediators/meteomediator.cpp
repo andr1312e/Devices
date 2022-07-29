@@ -21,11 +21,11 @@ MeteoMediator::~MeteoMediator()
 void MeteoMediator::ReadParamsFromProfile()
 {
 
-    const QString meteoRequestInterval = ProFile::GetProFileField(QLatin1Literal("meteoRequestInterval"));
+    const QString meteoRequestInterval = ProFile::GetProFileField(QLatin1String("meteoRequestInterval"));
     if (meteoRequestInterval.isEmpty())
     {
         m_meteoRequestInterval = 5000;
-        ProFile::SetProfileField(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
+        ProFile::SetProfileField(QLatin1String("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
     }
     else
     {
@@ -34,15 +34,15 @@ void MeteoMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_meteoRequestInterval = 5000;
-            ProFile::SetProfileField(QLatin1Literal("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
+            ProFile::SetProfileField(QLatin1String("meteoRequestInterval"), QString::number(m_meteoRequestInterval));
         }
     }
 
-    const QString meteoTimeOutInterval = ProFile::GetProFileField(QLatin1Literal("meteoTimeOutInterval"));
+    const QString meteoTimeOutInterval = ProFile::GetProFileField(QLatin1String("meteoTimeOutInterval"));
     if (meteoTimeOutInterval.isEmpty())
     {
         m_meteoTimeOutInterval = 500;
-        ProFile::SetProfileField(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
+        ProFile::SetProfileField(QLatin1String("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
     }
     else
     {
@@ -51,15 +51,15 @@ void MeteoMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_meteoTimeOutInterval = 500;
-            ProFile::SetProfileField(QLatin1Literal("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
+            ProFile::SetProfileField(QLatin1String("meteoTimeOutInterval"), QString::number(m_meteoTimeOutInterval));
         }
     }
 
-    const QString moxaPort = ProFile::GetProFileField(QLatin1Literal("moxaPort"));
+    const QString moxaPort = ProFile::GetProFileField(QLatin1String("moxaPort"));
     if (moxaPort.isEmpty())
     {
         m_moxaPort = 4101;
-        ProFile::SetProfileField(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+        ProFile::SetProfileField(QLatin1String("moxaPort"), QString::number(m_moxaPort));
     }
     else
     {
@@ -68,16 +68,16 @@ void MeteoMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_moxaPort = 4101;
-            ProFile::SetProfileField(QLatin1Literal("moxaPort"), QString::number(m_moxaPort));
+            ProFile::SetProfileField(QLatin1String("moxaPort"), QString::number(m_moxaPort));
         }
     }
 
 
-    const QString meteoPort = ProFile::GetProFileField(QLatin1Literal("meteoKitPort"));
+    const QString meteoPort = ProFile::GetProFileField(QLatin1String("meteoKitPort"));
     if (meteoPort.isEmpty())
     {
         m_meteoPort = 5011;
-        ProFile::SetProfileField(QLatin1Literal("meteoKitPort"), QString::number(m_meteoPort));
+        ProFile::SetProfileField(QLatin1String("meteoKitPort"), QString::number(m_meteoPort));
     }
     else
     {
@@ -86,7 +86,7 @@ void MeteoMediator::ReadParamsFromProfile()
         if (!isNum)
         {
             m_meteoPort = 5011;
-            ProFile::SetProfileField(QLatin1Literal("meteoKitPort"), QString::number(m_meteoPort));
+            ProFile::SetProfileField(QLatin1String("meteoKitPort"), QString::number(m_meteoPort));
         }
     }
 }
